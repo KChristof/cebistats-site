@@ -919,7 +919,7 @@ const About = () => {
               <div className="absolute bottom-0 left-0 -ml-10 -mb-10 w-40 h-40 bg-indigo-500 rounded-full opacity-20 blur-2xl animate-pulse"></div>
               
               <BarChart2 size={64} className="mb-6 text-cyan-400" />
-              <h3 className="text-3xl font-bold mb-2">L'Equpe CEBI Stats</h3>
+              <h3 className="text-3xl font-bold mb-2">L'Equipe CEBI Stats</h3>
               <p className="text-blue-200 font-medium mb-6">Experts en Biostatistiques</p>
               
               <div className="space-y-4 text-sm text-blue-100">
@@ -929,7 +929,7 @@ const About = () => {
                 </div>
                 <div className="flex items-center">
                   <CheckCircle size={18} className="mr-3 text-cyan-400" />
-                  Expert en Santé Publique & Épidémiologie
+                  Expert en Santé Publique & Epidémiologie
                 </div>
                 <div className="flex items-center">
                   <CheckCircle size={18} className="mr-3 text-cyan-400" />
