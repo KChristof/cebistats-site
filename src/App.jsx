@@ -920,7 +920,7 @@ const About = () => {
               
               <BarChart2 size={64} className="mb-6 text-cyan-400" />
               <h3 className="text-3xl font-bold mb-2">L'Equipe CEBI Stats</h3>
-              <p className="text-blue-200 font-medium mb-6">Experts en Biostatistiques</p>
+              <p className="text-blue-200 font-medium mb-6">Experts en Biostatistique et Informatique</p>
               
               <div className="space-y-4 text-sm text-blue-100">
                 <div className="flex items-center">
