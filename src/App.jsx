@@ -130,7 +130,7 @@ const Reveal = ({ children, className = "", delay = 0 }) => {
 };
 
 // --- NOUVEAU COMPOSANT : OUTILS IA GEMINI ---
-const AITools = () => {
+const CEBIStatsTools = () => {
   const [activeTab, setActiveTab] = useState('advisor'); // 'advisor' ou 'writer'
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
@@ -152,7 +152,7 @@ const AITools = () => {
 
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -704,7 +704,7 @@ const Services = () => {
     {
       icon: Database,
       title: "Gestion de Données & Formulaires",
-      description: "Création de formulaires de collecte automatisés (ODK) et nettoyage de vos bases de données.",
+      description: "Création de formulaires de collecte de données mobiles et nettoyage de vos bases de données.",
       color: "from-blue-400 to-blue-600",
       intro: "Une bonne analyse commence par une collecte de données fiable et structurée.",
       details: [
@@ -713,7 +713,7 @@ const Services = () => {
         "Apurement et structuration des bases de données pour les rendre exploitables.",
         "Gestion et traitement de données massives."
       ],
-      tools: ["ODK Collect", "KoboToolbox", "Excel Avancé", "Access", "SQL"]
+      tools: ["ODK Collect", "EPI Info", "KoboToolbox", "Excel Avancé", "SQL"]
     },
     {
       icon: Activity,
@@ -727,12 +727,12 @@ const Services = () => {
         "Analyse de survie (Courbes de Kaplan-Meier, Modèles de Cox).",
         "Interprétation rigoureuse des résultats pour thèses et rapports."
       ],
-      tools: ["R Studio", "SPSS", "Stata", "Analyse de Survie", "Python"]
+      tools: ["R Studio", "SPSS", "Epi Info", "Stata", "Analyse de Survie", "Python"]
     },
     {
       icon: Monitor,
-      title: "Informatique & Formation",
-      description: "Vente/Installation de logiciels, maintenance et formation personnalisée (Office, Bureautique).",
+      title: "Formation en Informatique & Vente de Logiciels",
+      description: "Vente/Installation de logiciels, maintenance et formation personnalisée en Informatique (Office, Bureautique).",
       color: "from-slate-500 to-slate-700",
       intro: "Nous vous équipons et vous formons pour optimiser votre productivité au quotidien.",
       details: [
@@ -755,7 +755,7 @@ const Services = () => {
         "Création d'infographies récapitulatives pour valoriser vos résultats statistiques.",
         "Design de présentations PowerPoint institutionnelles."
       ],
-      tools: ["PowerPoint Pro", "InDesign", "Illustrator", "Word Avancé"]
+      tools: ["PowerPoint", "Adobe InDesign", "Adobe Illustrator"]
     }
   ];
 
@@ -829,7 +829,13 @@ const Portfolio = () => {
     {
       category: "Oncologie",
       title: "Survie Cancer du Sein",
-      description: "Analyse de survie des patients souffrant du cancer du sein.",
+      description: "Analyse de survie des patients souffrant du cancer du sein. (2024).",
+      tools: ["Kaplan-Meier", "Modèle de Cox", "R Studio"]
+    },
+        {
+      category: "Oncologie",
+      title: "Survie Cancer du Col de l'Utérus",
+      description: "Analyse de survie des patients souffrant du cancer du col de l'utérus (2025).",
       tools: ["Kaplan-Meier", "Modèle de Cox", "R Studio"]
     },
     {
@@ -913,21 +919,21 @@ const About = () => {
               <div className="absolute bottom-0 left-0 -ml-10 -mb-10 w-40 h-40 bg-indigo-500 rounded-full opacity-20 blur-2xl animate-pulse"></div>
               
               <BarChart2 size={64} className="mb-6 text-cyan-400" />
-              <h3 className="text-3xl font-bold mb-2">Christophe KOUAKOU</h3>
-              <p className="text-blue-200 font-medium mb-6">Biostatisticien</p>
+              <h3 className="text-3xl font-bold mb-2">L'Equpe CEBI Stats</h3>
+              <p className="text-blue-200 font-medium mb-6">Experts en Biostatistiques</p>
               
               <div className="space-y-4 text-sm text-blue-100">
                 <div className="flex items-center">
                   <CheckCircle size={18} className="mr-3 text-cyan-400" />
-                  Direction de l'Information Sanitaire (MSHPCMU)
+                  Cabinet d'Etudes Biostatistique & Informatique (CEBI Stats)
+                </div>
+                <div className="flex items-center">
+                  <CheckCircle size={18} className="mr-3 text-cyan-400" />
+                  Expert en Santé Publique & Épidémiologie
                 </div>
                 <div className="flex items-center">
                   <CheckCircle size={18} className="mr-3 text-cyan-400" />
                   Expert Logiciels & Bureautique
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle size={18} className="mr-3 text-cyan-400" />
-                  Double compétence Technique & Visuelle
                 </div>
               </div>
             </div>
@@ -1188,7 +1194,7 @@ const Contact = () => {
                   <div className="ml-5">
                     <h3 className="text-lg font-medium">Téléphone & WhatsApp</h3>
                     <p className="mt-1 text-slate-400">(+225) 01 41 97 41 32</p>
-                    <p className="text-xs text-slate-500">Disponible 8h - 18h</p>
+                    <p className="text-xs text-slate-500">Disponible 24/7</p>
                   </div>
                 </div>
 
@@ -1219,7 +1225,7 @@ const Contact = () => {
 
           <Reveal delay={200}>
             <div className="bg-white rounded-2xl p-8 shadow-2xl text-gray-800">
-              <h3 className="text-xl font-bold text-slate-900 mb-6">Envoyez-moi un message</h3>
+              <h3 className="text-xl font-bold text-slate-900 mb-6">Envoyez-nous un message</h3>
               <form className="space-y-5">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
@@ -1370,7 +1376,7 @@ const App = () => {
     const link = document.createElement('link');
     link.rel = 'icon';
     // Astuce : on ajoute ?v=2 pour forcer le navigateur à oublier l'ancienne image
-    link.href = "/logo_cebistats.png?v=2"; 
+    link.href = "/logo.png?v=2"; 
     
     document.getElementsByTagName('head')[0].appendChild(link);
   }, []);
@@ -1383,7 +1389,7 @@ const App = () => {
         <Hero />
         <Services />
         <Portfolio />
-        <AITools />
+        <CEBIStatsTools />
         <About />
         <FAQ />
         <Contact />
