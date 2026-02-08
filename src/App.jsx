@@ -1362,23 +1362,15 @@ const Footer = () => (
 
 const App = () => {
   // --- AJOUT POUR LE FAVICON ET LE TITRE ---
-  useEffect(() => {
-    // 1. Changer le titre de l'onglet
+   useEffect(() => {
     document.title = "CEBI Stats | Cabinet Biostatistique & Informatique";
-
-    // 2. FORCER le changement d'icône (Méthode Robuste)
-    
-    // a. Supprimer les anciennes icônes (pour éviter les conflits)
-    const existingFavicons = document.querySelectorAll("link[rel~='icon']");
-    existingFavicons.forEach(el => el.remove());
-
-    // b. Créer la nouvelle icône
-    const link = document.createElement('link');
-    link.rel = 'icon';
-    // Astuce : on ajoute ?v=2 pour forcer le navigateur à oublier l'ancienne image
-    link.href = "/logo.png?v=2"; 
-    
-    document.getElementsByTagName('head')[0].appendChild(link);
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.getElementsByTagName('head')[0].appendChild(link);
+    }
+    link.href = "/logo.png?v=3";
   }, []);
 
   return (
