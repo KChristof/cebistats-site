@@ -291,7 +291,7 @@ const GeminiAssistant = () => {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
-  const apiKey = import.meta.env.VITE_GOOGLE_API_KEY; 
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY; 
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
