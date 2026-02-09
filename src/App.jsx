@@ -145,7 +145,7 @@ const CEBIStatsTools = () => {
 
     let systemPrompt = "";
     if (activeTab === 'advisor') {
-      systemPrompt = "Tu es un expert biostatisticien senior. L'utilisateur va décrire ses données, ses variables ou son objectif de recherche. Tu dois recommander le test statistique le plus approprié (ex: Test t de Student, Chi-2, ANOVA, Régression logistique, Test de Mann-Whitney, etc.) et expliquer brièvement pourquoi en une phrase. Si l'information est incomplète, demande des précisions sur le type de variables. Sois précis et pédagogique.";
+      systemPrompt = "Tu es un expert biostatisticien senior. Ton nom est keycee. L'utilisateur va décrire ses données, ses variables ou son objectif de recherche. Tu dois recommander le test statistique le plus approprié (ex: Test t de Student, Chi-2, ANOVA, Régression logistique, Test de Mann-Whitney, etc.) et expliquer brièvement pourquoi en une phrase. Si l'information est incomplète, demande des précisions sur le type de variables. Sois précis et pédagogique.";
     } else {
       systemPrompt = "Tu es un éditeur scientifique académique francophone. L'utilisateur va te fournir un paragraphe brouillon (résumé, introduction, ou discussion). Tu dois le réécrire pour qu'il soit professionnel, clair, concis et adapté à une publication scientifique (thèse ou article). Améliore le vocabulaire et la structure sans changer le sens profond. Donne uniquement le texte réécrit.";
     }
@@ -286,7 +286,7 @@ const CEBIStatsTools = () => {
 const GeminiAssistant = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'assistant', text: "Bonjour ! Je suis l'assistant IA de CEBI Stats. Je peux vous renseigner sur nos tarifs, nos formations ou vous aider à prendre rendez-vous." }
+    { role: 'assistant', text: "Bonjour, Mon nom est keycee ! Je suis l'assistant IA de CEBI Stats. Je peux vous renseigner sur nos tarifs, nos formations ou vous aider à prendre rendez-vous." }
   ]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -311,9 +311,9 @@ const GeminiAssistant = () => {
     setIsLoading(true);
 
     try {
-      const systemPrompt = `Tu es l'assistant virtuel de CEBI Stats, un cabinet de biostatistique et informatique en Côte d'Ivoire.
-      Tes réponses doivent être courtes, chaleureuses et orientées vers la prise de contact.
-      Si on te pose une question technique complexe, invite l'utilisateur à utiliser la section 'Outils IA' du site ou à contacter M. KOUAKOU Christophe.`;
+      const systemPrompt = `Tu es l'assistant virtuel de CEBI Stats, un cabinet de biostatistique et informatique en Côte d'Ivoire. Ton nom est keycee.
+      Tes réponses doivent être courtes, chaleureuses et orientées vers la prise de contact. Pour les tarifs, précise que pour les étudiants, CEBI Stats a des tarifs défiant toute concurrence.
+      Si on te pose une question technique complexe, invite l'utilisateur à utiliser la section 'Outils IA' du site ou à contacter directement CEBI Stats en renseignant le formulaire de prise de contact situé en dessous du site.`;
 
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
@@ -350,7 +350,7 @@ const GeminiAssistant = () => {
       {isOpen && (
         <div className="fixed bottom-24 right-6 z-[60] w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden animate-fade-in-up max-h-[450px]">
           <div className="bg-blue-900 p-4 text-white flex justify-between items-center">
-            <span className="font-bold flex items-center"><Sparkles size={16} className="mr-2" /> Chat CEBI Stats</span>
+            <span className="font-bold flex items-center"><Sparkles size={16} className="mr-2" /> keycee </span>
             <button onClick={() => setIsOpen(false)}><X size={18}/></button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
