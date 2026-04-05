@@ -1,45 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Activity, 
-  BarChart2, 
-  Menu, 
-  X, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  ChevronRight, 
-  Database, 
-  PieChart,
-  CheckCircle,
-  Award,
-  Layers,
-  ExternalLink,
-  XCircle,
-  CheckSquare,
-  Monitor,
-  Plus,
-  Minus,
-  HelpCircle,
-  Facebook,
-  MessageSquare,
-  Send,
-  Sparkles,
-  Loader2,
-  MessageCircle,
-  BrainCircuit,
-  FilePenLine,
-  Lightbulb
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import {
+  Activity, BarChart2, Menu, X, Mail, Phone, MapPin, ChevronRight,
+  Database, PieChart, CheckCircle, Award, Layers, ExternalLink, XCircle,
+  CheckSquare, Monitor, Plus, Minus, HelpCircle, Facebook, MessageSquare,
+  Send, Sparkles, Loader2, MessageCircle, BrainCircuit, FilePenLine,
+  Lightbulb, Copy, Check, ArrowRight, Users, BookOpen, TrendingUp, Clock
 } from 'lucide-react';
 
-// --- FONCTION DE NAVIGATION UNIVERSELLE ---
+// --- NAVIGATION UNIVERSELLE ---
 const smoothScrollTo = (e, targetId) => {
   e.preventDefault();
   const element = document.getElementById(targetId.replace('#', ''));
   if (element) {
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 };
 
@@ -49,22 +22,13 @@ const GlobalStyles = () => (
     html {
       scroll-behavior: smooth;
       scroll-padding-top: 80px;
+      font-family: 'Inter', sans-serif;
     }
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f1f5f9;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
-    
-    /* Animation Flottante pour le Hero */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
     @keyframes float {
       0% { transform: translate(0px, 0px); }
       50% { transform: translate(10px, -20px); }
@@ -75,45 +39,45 @@ const GlobalStyles = () => (
       50% { transform: translate(-15px, 15px); }
       100% { transform: translate(0px, 0px); }
     }
-    .animate-float {
-      animation: float 8s ease-in-out infinite;
+    @keyframes fade-in-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    .animate-float-delayed {
-      animation: float-delayed 10s ease-in-out infinite;
-    }
-    
-    /* Gradient animé pour les outils IA */
-    .bg-gradient-animate {
-      background-size: 200% 200%;
-      animation: gradient-shift 5s ease infinite;
+    @keyframes fade-in-down {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
     @keyframes gradient-shift {
-      0% { background-position: 0% 50% }
-      50% { background-position: 100% 50% }
-      100% { background-position: 0% 50% }
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
+    @keyframes toast-slide-in {
+      from { opacity: 0; transform: translateY(16px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .animate-float          { animation: float 8s ease-in-out infinite; }
+    .animate-float-delayed  { animation: float-delayed 10s ease-in-out infinite; }
+    .animate-fade-in-up     { animation: fade-in-up 0.35s ease-out forwards; }
+    .animate-fade-in-down   { animation: fade-in-down 0.3s ease-out forwards; }
+    .animate-toast          { animation: toast-slide-in 0.3s ease-out forwards; }
+    .bg-gradient-animate    { background-size: 200% 200%; animation: gradient-shift 5s ease infinite; }
   `}</style>
 );
 
-// --- COMPOSANT DE RÉVÉLATION AU SCROLL ---
-const Reveal = ({ children, className = "", delay = 0 }) => {
+// --- COMPOSANT REVEAL AU SCROLL ---
+const Reveal = ({ children, className = '', delay = 0 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target); 
-        }
-      },
-      { threshold: 0.1 } 
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.unobserve(entry.target); } },
+      { threshold: 0.1 }
     );
     if (ref.current) observer.observe(ref.current);
-    return () => {
-      if (ref.current) observer.unobserve(ref.current);
-    };
+    return () => { if (ref.current) observer.unobserve(ref.current); };
   }, []);
 
   return (
@@ -121,7 +85,7 @@ const Reveal = ({ children, className = "", delay = 0 }) => {
       ref={ref}
       style={{ transitionDelay: `${delay}ms` }}
       className={`transition-all duration-1000 ease-out transform ${
-        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       } ${className}`}
     >
       {children}
@@ -129,13 +93,217 @@ const Reveal = ({ children, className = "", delay = 0 }) => {
   );
 };
 
-// --- NOUVEAU COMPOSANT : OUTILS IA GEMINI ---
+// --- TOAST NOTIFICATION (remplace alert) ---
+const Toast = ({ message, type = 'success', onClose }) => {
+  useEffect(() => {
+    const t = setTimeout(onClose, 4500);
+    return () => clearTimeout(t);
+  }, [onClose]);
+
+  const styles = {
+    success: 'bg-green-600',
+    error:   'bg-red-600',
+    info:    'bg-blue-700',
+  };
+
+  return (
+    <div className={`fixed bottom-28 left-1/2 -translate-x-1/2 z-[200] ${styles[type]} text-white px-5 py-3 rounded-xl shadow-2xl animate-toast flex items-center gap-3 text-sm font-semibold max-w-xs text-center`}>
+      {type === 'success' && <Check size={16} className="flex-shrink-0" />}
+      <span>{message}</span>
+      <button onClick={onClose} className="ml-1 opacity-70 hover:opacity-100 flex-shrink-0"><X size={14} /></button>
+    </div>
+  );
+};
+
+const useToast = () => {
+  const [toast, setToast] = useState(null);
+  const showToast = useCallback((message, type = 'success') => setToast({ message, type }), []);
+  const hideToast = useCallback(() => setToast(null), []);
+  return { toast, showToast, hideToast };
+};
+
+// --- COMPTEUR ANIMÉ ---
+const useCounter = (target, isVisible, duration = 2000) => {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!isVisible) return;
+    let startTime = null;
+    const step = (currentTime) => {
+      if (!startTime) startTime = currentTime;
+      const progress = Math.min((currentTime - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [target, isVisible, duration]);
+  return count;
+};
+
+const StatItem = ({ icon: Icon, label, value, suffix, color, isVisible, delay }) => {
+  const count = useCounter(value, isVisible, 2000 + delay);
+  return (
+    <div className="text-center group">
+      <div className="flex justify-center mb-3">
+        <div className="bg-white/10 p-3 rounded-xl group-hover:bg-white/20 transition-colors duration-300">
+          <Icon size={28} className={color} />
+        </div>
+      </div>
+      <div className={`text-4xl font-extrabold ${color} mb-1 tabular-nums`}>
+        {count}{suffix}
+      </div>
+      <div className="text-blue-200 text-sm font-medium">{label}</div>
+    </div>
+  );
+};
+
+// ============================================================
+// NOUVELLE SECTION : STATISTIQUES ANIMÉES
+// ============================================================
+const StatsSection = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setIsVisible(true); observer.disconnect(); } },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const stats = [
+    { icon: BookOpen,   label: 'Études réalisées',       value: 100, suffix: '+', color: 'text-cyan-400',   delay: 0 },
+    { icon: Users,      label: 'Étudiants accompagnés',  value: 200, suffix: '+', color: 'text-blue-300',   delay: 200 },
+    { icon: TrendingUp, label: 'Taux de satisfaction',   value: 98,  suffix: '%', color: 'text-green-400',  delay: 400 },
+    { icon: Clock,      label: "Années d'expérience",    value: 8,   suffix: '+', color: 'text-indigo-300', delay: 600 },
+  ];
+
+  return (
+    <section className="py-16 bg-blue-900 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900"></div>
+      <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+      <div ref={ref} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          {stats.map((s, i) => (
+            <StatItem key={i} {...s} isVisible={isVisible} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ============================================================
+// NOUVELLE SECTION : PROCESSUS EN 3 ÉTAPES
+// ============================================================
+const ProcessSection = () => {
+  const steps = [
+    {
+      number: '01',
+      icon: MessageCircle,
+      title: 'Prise de Contact',
+      description: "Décrivez votre projet via notre formulaire, WhatsApp ou email. Nous organisons un premier entretien d'évaluation gratuit et sans engagement.",
+      color: 'from-blue-500 to-blue-700',
+    },
+    {
+      number: '02',
+      icon: Activity,
+      title: 'Analyse & Traitement',
+      description: "Nos experts traitent vos données avec les méthodes statistiques adaptées (R, SPSS, Stata). Chaque étape est validée avec vous en toute transparence.",
+      color: 'from-cyan-500 to-cyan-700',
+    },
+    {
+      number: '03',
+      icon: CheckCircle,
+      title: 'Rapport & Livraison',
+      description: "Vous recevez un rapport d'analyse complet, interprété et formaté, prêt à intégrer dans votre thèse, mémoire ou article scientifique.",
+      color: 'from-indigo-500 to-indigo-700',
+    },
+  ];
+
+  return (
+    <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50 border-t border-slate-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div className="text-center mb-14">
+            <h2 className="text-sm font-bold text-cyan-600 uppercase tracking-widest mb-3">Comment ça marche</h2>
+            <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900">Notre Processus en 3 Étapes</h3>
+            <p className="mt-4 text-gray-500 max-w-2xl mx-auto">
+              Simple, transparent et rigoureux — de votre première question à la livraison finale.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {steps.map((step, i) => (
+            <Reveal key={i} delay={i * 200}>
+              <div className="bg-white rounded-2xl p-8 shadow-lg border border-slate-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 relative text-center overflow-hidden">
+                <span className="absolute top-4 right-5 text-6xl font-black text-slate-100 select-none leading-none">
+                  {step.number}
+                </span>
+                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br ${step.color} mb-6 shadow-lg relative z-10`}>
+                  <step.icon size={28} className="text-white" />
+                </div>
+                <h4 className="text-xl font-bold text-slate-900 mb-3 relative z-10">{step.title}</h4>
+                <p className="text-gray-600 text-sm leading-relaxed relative z-10">{step.description}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ============================================================
+// NOUVEAU BANDEAU CTA
+// ============================================================
+const CTABanner = () => (
+  <section className="py-16 bg-gradient-to-r from-blue-900 via-blue-800 to-slate-800 relative overflow-hidden">
+    <div className="absolute right-0 top-0 w-72 h-72 bg-cyan-500 rounded-full opacity-10 blur-3xl pointer-events-none"></div>
+    <div className="absolute left-0 bottom-0 w-72 h-72 bg-blue-400 rounded-full opacity-10 blur-3xl pointer-events-none"></div>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+      <Reveal>
+        <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4">
+          Votre thèse mérite une analyse irréprochable
+        </h2>
+        <p className="text-blue-200 mb-8 text-lg max-w-2xl mx-auto">
+          Rejoignez les +200 étudiants et chercheurs qui font confiance à CEBI Stats pour leurs données de santé.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <a
+            href="#contact"
+            onClick={(e) => smoothScrollTo(e, '#contact')}
+            className="inline-flex items-center justify-center px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-white font-bold rounded-xl transition-all hover:-translate-y-1 shadow-lg hover:shadow-cyan-500/30"
+          >
+            Obtenir un devis gratuit <ArrowRight size={20} className="ml-2" />
+          </a>
+          <a
+            href="https://api.whatsapp.com/send?phone=2250141974132&text=Bonjour%20CEBI%20Stats%2C%20je%20voudrais%20obtenir%20un%20devis."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center px-8 py-4 bg-green-500 hover:bg-green-400 text-white font-bold rounded-xl transition-all hover:-translate-y-1 shadow-lg"
+          >
+            <MessageCircle size={20} className="mr-2" /> Écrire sur WhatsApp
+          </a>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+);
+
+// ============================================================
+// OUTILS IA (clé API corrigée + bouton copier)
+// ============================================================
 const AITools = () => {
-  const [activeTab, setActiveTab] = useState('advisor'); // 'advisor' ou 'writer'
-  const [input, setInput] = useState('');
-  const [result, setResult] = useState('');
-  const [loading, setLoading] = useState(false);
-  const apiKey = ""; // La clé est injectée par l'environnement
+  const [activeTab, setActiveTab] = useState('advisor');
+  const [input, setInput]         = useState('');
+  const [result, setResult]       = useState('');
+  const [loading, setLoading]     = useState(false);
+  const [copied, setCopied]       = useState(false);
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
   const handleAISubmit = async (e) => {
     e.preventDefault();
@@ -143,40 +311,42 @@ const AITools = () => {
     setLoading(true);
     setResult('');
 
-    let systemPrompt = "";
-    if (activeTab === 'advisor') {
-      systemPrompt = "Tu es un expert biostatisticien senior. L'utilisateur va décrire ses données, ses variables ou son objectif de recherche. Tu dois recommander le test statistique le plus approprié (ex: Test t de Student, Chi-2, ANOVA, Régression logistique, Test de Mann-Whitney, etc.) et expliquer brièvement pourquoi en une phrase. Si l'information est incomplète, demande des précisions sur le type de variables. Sois précis et pédagogique.";
-    } else {
-      systemPrompt = "Tu es un éditeur scientifique académique francophone. L'utilisateur va te fournir un paragraphe brouillon (résumé, introduction, ou discussion). Tu dois le réécrire pour qu'il soit professionnel, clair, concis et adapté à une publication scientifique (thèse ou article). Améliore le vocabulaire et la structure sans changer le sens profond. Donne uniquement le texte réécrit.";
-    }
+    const systemPrompt = activeTab === 'advisor'
+      ? "Tu es un expert biostatisticien senior nommé Keycee, de CEBI Stats. L'utilisateur va décrire ses données, ses variables ou son objectif de recherche. Recommande le test statistique le plus approprié (Test t de Student, Chi-2, ANOVA, Régression logistique, Mann-Whitney, Kaplan-Meier, etc.) et explique brièvement pourquoi. Si l'information est incomplète, demande des précisions sur le type de variables. Sois précis et pédagogique."
+      : "Tu es un éditeur scientifique académique francophone expert. L'utilisateur te fournit un paragraphe brouillon (résumé, introduction, ou discussion). Réécris-le pour qu'il soit professionnel, clair, concis et adapté à une publication scientifique (thèse ou article). Améliore le vocabulaire et la structure sans changer le sens. Donne uniquement le texte réécrit.";
 
     try {
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{ parts: [{ text: input }] }],
-            systemInstruction: { parts: [{ text: systemPrompt }] }
-          })
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+          }),
         }
       );
-
       const data = await response.json();
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Erreur lors de l'analyse. Veuillez réessayer.";
       setResult(text);
-    } catch (error) {
-      setResult("Erreur de connexion à l'IA.");
+    } catch {
+      setResult("Erreur de connexion. Vérifiez votre réseau et réessayez.");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleCopy = () => {
+    if (!result) return;
+    navigator.clipboard.writeText(result);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
     <section id="ai-tools" className="py-24 bg-slate-900 relative overflow-hidden scroll-mt-28">
-      {/* Background Effects */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600 rounded-full blur-[120px] opacity-20 animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-600 rounded-full blur-[120px] opacity-20 animate-pulse"></div>
       </div>
@@ -188,56 +358,59 @@ const AITools = () => {
               <Sparkles size={14} className="mr-2" /> Powered by Gemini AI
             </div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
-              Outils IA & Recherche <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Intelligente</span>
+              Outils IA &{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+                Recherche Intelligente
+              </span>
             </h2>
             <p className="text-slate-400 max-w-2xl mx-auto">
-              Testez la puissance de l'IA pour vos projets de recherche. Ces outils gratuits vous aident à choisir vos tests ou à améliorer votre rédaction.
+              Des outils gratuits pour vous aider à choisir vos tests statistiques ou améliorer votre rédaction scientifique.
             </p>
           </div>
         </Reveal>
 
         <Reveal delay={200}>
-          <div className="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden max-w-4xl mx-auto flex flex-col md:flex-row min-h-[500px]">
-            {/* Sidebar / Tabs */}
-            <div className="md:w-1/3 bg-slate-900/50 border-r border-slate-700 p-6 flex flex-col gap-4">
+          <div className="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden max-w-4xl mx-auto flex flex-col md:flex-row min-h-[520px]">
+            {/* Sidebar */}
+            <div className="md:w-1/3 bg-slate-900/60 border-b md:border-b-0 md:border-r border-slate-700 p-6 flex flex-col gap-4">
               <button
                 onClick={() => { setActiveTab('advisor'); setResult(''); setInput(''); }}
-                className={`flex items-center p-4 rounded-xl transition-all duration-300 ${activeTab === 'advisor' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                className={`flex items-center p-4 rounded-xl transition-all duration-300 text-left ${activeTab === 'advisor' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
               >
                 <BrainCircuit size={24} className="mr-3 flex-shrink-0" />
-                <div className="text-left">
+                <div>
                   <div className="font-bold">Conseiller Stats</div>
-                  <div className="text-xs opacity-70">Choix du test</div>
+                  <div className="text-xs opacity-70">Quel test choisir ?</div>
                 </div>
               </button>
 
               <button
                 onClick={() => { setActiveTab('writer'); setResult(''); setInput(''); }}
-                className={`flex items-center p-4 rounded-xl transition-all duration-300 ${activeTab === 'writer' ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-900/50' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                className={`flex items-center p-4 rounded-xl transition-all duration-300 text-left ${activeTab === 'writer' ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-900/50' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
               >
                 <FilePenLine size={24} className="mr-3 flex-shrink-0" />
-                <div className="text-left">
+                <div>
                   <div className="font-bold">Rédacteur Pro</div>
                   <div className="text-xs opacity-70">Reformulation académique</div>
                 </div>
               </button>
-              
+
               <div className="mt-auto p-4 bg-slate-800 rounded-xl border border-slate-700 text-xs text-slate-400">
                 <Lightbulb size={16} className="text-yellow-400 mb-2" />
                 Ces outils utilisent l'IA Gemini. Vérifiez toujours les résultats avec un statisticien expert de CEBI Stats.
               </div>
             </div>
 
-            {/* Main Content Area */}
+            {/* Zone principale */}
             <div className="md:w-2/3 p-6 md:p-8 flex flex-col">
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-white mb-2 flex items-center">
-                  {activeTab === 'advisor' ? '🔎 Quel test choisir ?' : '📝 Améliorer mon texte'}
+              <div className="mb-5">
+                <h3 className="text-xl font-bold text-white mb-2">
+                  {activeTab === 'advisor' ? '🔎 Quel test statistique choisir ?' : '📝 Améliorer mon texte scientifique'}
                 </h3>
                 <p className="text-slate-400 text-sm">
-                  {activeTab === 'advisor' 
-                    ? "Décrivez vos variables (ex: 'Je veux comparer l'âge moyen entre 3 groupes de patients')." 
-                    : "Collez votre paragraphe ici pour le rendre plus professionnel et scientifique."}
+                  {activeTab === 'advisor'
+                    ? "Décrivez vos variables et votre objectif (ex : 'Je veux comparer l'âge moyen entre 3 groupes de patients')."
+                    : "Collez votre paragraphe brouillon pour le transformer en texte académique professionnel."}
                 </p>
               </div>
 
@@ -245,31 +418,45 @@ const AITools = () => {
                 <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder={activeTab === 'advisor' ? "Ex: J'ai une variable qualitative (Maladie Oui/Non) et je veux voir le lien avec le Sexe..." : "Ex: On a vu que le medicament marche bien sur les patients..."}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white placeholder-slate-600 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none resize-none h-32 transition-all"
+                  placeholder={activeTab === 'advisor'
+                    ? "Ex : J'ai une variable qualitative (Maladie Oui/Non) et je veux voir le lien avec le Sexe..."
+                    : "Ex : On a vu que le medicament marche bien sur les patients..."}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white placeholder-slate-600 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none resize-none h-32 transition-all text-sm"
                 />
-                
                 <div className="mt-4 flex justify-end">
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     disabled={loading || !input.trim()}
-                    className={`px-6 py-3 rounded-xl font-bold text-white transition-all transform active:scale-95 flex items-center ${activeTab === 'advisor' ? 'bg-blue-600 hover:bg-blue-500' : 'bg-cyan-600 hover:bg-cyan-500'} disabled:opacity-50 disabled:cursor-not-allowed`}
+                    className={`px-6 py-3 rounded-xl font-bold text-white transition-all transform active:scale-95 flex items-center gap-2 text-sm ${activeTab === 'advisor' ? 'bg-blue-600 hover:bg-blue-500' : 'bg-cyan-600 hover:bg-cyan-500'} disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
-                    {loading ? <Loader2 className="animate-spin mr-2" /> : <Sparkles className="mr-2" />}
-                    {loading ? "Analyse en cours..." : (activeTab === 'advisor' ? "Trouver le test" : "Améliorer le texte")}
+                    {loading
+                      ? <><Loader2 size={16} className="animate-spin" /> Analyse en cours...</>
+                      : <><Sparkles size={16} /> {activeTab === 'advisor' ? 'Trouver le test' : 'Améliorer le texte'}</>
+                    }
                   </button>
                 </div>
               </form>
 
-              {/* Result Area */}
-              <div className={`mt-6 p-4 rounded-xl border border-slate-700 bg-slate-900/80 min-h-[120px] transition-all duration-500 ${result ? 'opacity-100' : 'opacity-50'}`}>
+              {/* Zone de résultat */}
+              <div className={`mt-5 rounded-xl border border-slate-700 bg-slate-900/80 min-h-[130px] transition-all duration-500 ${result ? 'opacity-100' : 'opacity-40'}`}>
                 {result ? (
-                  <div>
-                    <div className="text-xs uppercase tracking-widest text-slate-500 mb-2 font-bold">Réponse de l'IA</div>
-                    <div className="text-slate-200 leading-relaxed whitespace-pre-wrap">{result}</div>
+                  <div className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs uppercase tracking-widest text-slate-500 font-bold">Réponse de l'IA</span>
+                      <button
+                        onClick={handleCopy}
+                        className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-400 transition-colors px-2 py-1 rounded-lg hover:bg-slate-800"
+                      >
+                        {copied
+                          ? <><Check size={13} className="text-green-400" /> Copié !</>
+                          : <><Copy size={13} /> Copier</>
+                        }
+                      </button>
+                    </div>
+                    <div className="text-slate-200 leading-relaxed whitespace-pre-wrap text-sm">{result}</div>
                   </div>
                 ) : (
-                  <div className="h-full flex items-center justify-center text-slate-600 italic">
+                  <div className="h-full flex items-center justify-center text-slate-600 italic text-sm p-4">
                     Le résultat s'affichera ici...
                   </div>
                 )}
@@ -282,56 +469,55 @@ const AITools = () => {
   );
 };
 
-// --- COMPOSANT ASSISTANT GEMINI ---
+// ============================================================
+// ASSISTANT CHATBOT (clé API + nom Keycee + meilleure UX)
+// ============================================================
 const GeminiAssistant = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen]     = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'assistant', text: "Bonjour ! Je suis l'assistant IA de CEBI Stats. Je peux vous renseigner sur nos tarifs, nos formations ou vous aider à prendre rendez-vous." }
+    { role: 'assistant', text: "Bonjour ! Mon nom est Keycee, l'assistant de CEBI Stats. Je peux vous renseigner sur nos services, nos tarifs ou vous aider à prendre rendez-vous. Comment puis-je vous aider ?" }
   ]);
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
-  const apiKey = ""; 
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isOpen]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!inputText.trim()) return;
-
     const userMessage = inputText;
     setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
     setInputText('');
     setIsLoading(true);
 
     try {
-      const systemPrompt = `Tu es l'assistant virtuel de CEBI Stats, un cabinet de biostatistique et informatique en Côte d'Ivoire.
-      Tes réponses doivent être courtes, chaleureuses et orientées vers la prise de contact.
-      Si on te pose une question technique complexe, invite l'utilisateur à utiliser la section 'Outils IA' du site ou à contacter M. Kouadio.`;
+      const systemPrompt = `Tu es Keycee, l'assistant virtuel de CEBI Stats, cabinet d'études biostatistique et informatique à Abidjan, Côte d'Ivoire.
+Tes réponses sont courtes (2-3 phrases), chaleureuses et professionnelles.
+Services : Biostatistique avancée (thèses, mémoires), Gestion et nettoyage de données, Formation bureautique et logiciels, Infographie et mise en forme.
+Tarifs : sur devis personnalisé, tarifs étudiants défiant toute concurrence.
+Contact : cebi.stat@yahoo.com | WhatsApp : +225 01 41 97 41 32 | Facebook : CEBISTATS.
+Pour les questions très techniques, renvoie vers la section "Outils IA" du site ou vers le formulaire de contact en bas de page.`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             contents: [{ parts: [{ text: userMessage }] }],
-            systemInstruction: { parts: [{ text: systemPrompt }] }
-          })
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+          }),
         }
       );
-
       const data = await response.json();
-      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "Désolé, problème de réseau.";
+      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || "Désolé, je n'ai pas pu traiter votre message. Contactez-nous directement.";
       setMessages(prev => [...prev, { role: 'assistant', text: aiResponse }]);
-    } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', text: "Erreur de connexion." }]);
+    } catch {
+      setMessages(prev => [...prev, { role: 'assistant', text: "Problème de connexion. Contactez-nous sur WhatsApp au +225 01 41 97 41 32." }]);
     } finally {
       setIsLoading(false);
     }
@@ -341,37 +527,62 @@ const GeminiAssistant = () => {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-[60] bg-gradient-to-r from-blue-600 to-cyan-500 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300 group"
-        aria-label="Assistant"
+        className="fixed bottom-6 right-6 z-[60] bg-gradient-to-r from-blue-700 to-cyan-500 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300"
+        aria-label={isOpen ? "Fermer l'assistant" : "Ouvrir l'assistant Keycee"}
       >
-        {isOpen ? <X size={24} /> : <MessageSquare size={24} className="group-hover:animate-bounce" />}
+        {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-[60] w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden animate-fade-in-up max-h-[450px]">
-          <div className="bg-blue-900 p-4 text-white flex justify-between items-center">
-            <span className="font-bold flex items-center"><Sparkles size={16} className="mr-2" /> Chat CEBI</span>
-            <button onClick={() => setIsOpen(false)}><X size={18}/></button>
+        <div className="fixed bottom-24 right-6 z-[60] w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden animate-fade-in-up"
+             style={{ maxHeight: '500px' }}>
+          <div className="bg-gradient-to-r from-blue-900 to-slate-800 p-4 text-white flex justify-between items-center flex-shrink-0">
+            <span className="font-bold flex items-center gap-2">
+              <Sparkles size={15} className="text-cyan-400" />
+              Keycee — CEBI Stats
+            </span>
+            <button onClick={() => setIsOpen(false)} className="opacity-70 hover:opacity-100 transition-opacity">
+              <X size={18} />
+            </button>
           </div>
+
           <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50">
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-white border border-gray-200 text-gray-700'}`}>
+                <div className={`max-w-[85%] rounded-xl px-3 py-2 text-sm leading-relaxed ${
+                  msg.role === 'user'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white border border-gray-200 text-gray-700 shadow-sm'
+                }`}>
                   {msg.text}
                 </div>
               </div>
             ))}
-            {isLoading && <div className="text-xs text-gray-400 ml-2">L'assistant écrit...</div>}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="bg-white border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-400 flex items-center gap-2 shadow-sm">
+                  <Loader2 size={13} className="animate-spin" /> Keycee écrit...
+                </div>
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
-          <form onSubmit={handleSendMessage} className="p-2 border-t flex">
-            <input 
-              className="flex-1 bg-gray-100 rounded-lg px-3 py-2 text-sm focus:outline-none"
-              placeholder="Question..."
+
+          <form onSubmit={handleSendMessage} className="p-3 border-t bg-white flex gap-2 flex-shrink-0">
+            <input
+              className="flex-1 bg-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              placeholder="Votre question..."
               value={inputText}
               onChange={e => setInputText(e.target.value)}
+              disabled={isLoading}
             />
-            <button type="submit" className="ml-2 text-blue-900"><Send size={20}/></button>
+            <button
+              type="submit"
+              disabled={isLoading || !inputText.trim()}
+              className="bg-blue-900 text-white p-2 rounded-xl disabled:opacity-40 hover:bg-blue-800 transition-colors"
+            >
+              <Send size={17} />
+            </button>
           </form>
         </div>
       )}
@@ -379,84 +590,71 @@ const GeminiAssistant = () => {
   );
 };
 
-// --- Composants UI Standard ---
+// --- COMPOSANTS UI STANDARD ---
 
 const Button = ({ children, variant = 'primary', className = '', href, onClick, ...props }) => {
-  const baseStyle = "inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-xl transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer";
+  const base = "inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-xl transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer";
   const variants = {
     primary: "border-transparent text-white bg-blue-900 hover:bg-blue-800 focus:ring-blue-900 shadow-lg hover:shadow-xl",
     secondary: "border-transparent text-white bg-cyan-500 hover:bg-cyan-600 focus:ring-cyan-500 shadow-md",
-    outline: "border-blue-100 text-blue-900 bg-white hover:bg-blue-50 focus:ring-blue-500"
+    outline: "border-blue-100 text-blue-900 bg-white hover:bg-blue-50 focus:ring-blue-500",
   };
-
   const handleClick = (e) => {
     if (onClick) onClick(e);
-    if (href && href.startsWith('#')) {
-      smoothScrollTo(e, href);
-    }
+    if (href && href.startsWith('#')) smoothScrollTo(e, href);
   };
-
   return (
-    <a 
-      href={href} 
-      onClick={handleClick}
-      className={`${baseStyle} ${variants[variant]} ${className}`} 
-      {...props}
-    >
+    <a href={href} onClick={handleClick} className={`${base} ${variants[variant]} ${className}`} {...props}>
       {children}
     </a>
   );
 };
 
+// --- MODAL SERVICE (avec Escape pour fermer) ---
 const ServiceModal = ({ service, onClose }) => {
+  useEffect(() => {
+    const handleEscape = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handleEscape);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = '';
+    };
+  }, [onClose]);
+
   if (!service) return null;
 
-  const handleDevisClick = (e) => {
-    onClose(); 
+  const handleDevisClick = () => {
+    onClose();
     setTimeout(() => {
-      const contactSection = document.getElementById('contact');
-      if (contactSection) {
-        contactSection.scrollIntoView({ behavior: 'smooth' });
-      }
+      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
     }, 100);
   };
 
   return (
-    <div className="fixed inset-0 z-[100] overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div className="fixed inset-0 z-[100] overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="modal-title">
       <div className="flex items-center justify-center min-h-screen px-4 text-center sm:block sm:p-0">
-        <div 
-          className="fixed inset-0 bg-slate-900 bg-opacity-80 transition-opacity backdrop-blur-sm" 
-          aria-hidden="true"
-          onClick={onClose}
-        ></div>
-
+        <div className="fixed inset-0 bg-slate-900 bg-opacity-80 backdrop-blur-sm" aria-hidden="true" onClick={onClose}></div>
         <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
         <div className="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl w-full relative animate-fade-in-up">
-          
           <div className={`bg-gradient-to-r ${service.color} p-6 flex justify-between items-start`}>
             <div className="flex items-center text-white">
               <div className="bg-white/20 p-2 rounded-lg mr-4">
                 <service.icon size={24} className="text-white" />
               </div>
-              <h3 className="text-xl font-bold leading-6" id="modal-title">
-                {service.title}
-              </h3>
+              <h3 className="text-xl font-bold" id="modal-title">{service.title}</h3>
             </div>
-            <button onClick={onClose} className="text-white/70 hover:text-white transition-colors">
+            <button onClick={onClose} className="text-white/70 hover:text-white transition-colors" aria-label="Fermer">
               <XCircle size={28} />
             </button>
           </div>
-          
+
           <div className="px-6 py-6">
-            <p className="text-gray-500 italic mb-6 text-sm border-l-4 border-blue-100 pl-4">
-              "{service.intro}"
-            </p>
-            
+            <p className="text-gray-500 italic mb-6 text-sm border-l-4 border-blue-100 pl-4">"{service.intro}"</p>
             <div className="space-y-4">
               <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wide flex items-center">
-                <Activity size={16} className="mr-2 text-cyan-500" /> 
-                Notre Offre
+                <Activity size={16} className="mr-2 text-cyan-500" /> Notre Offre
               </h4>
               <ul className="space-y-3">
                 {service.details.map((point, idx) => (
@@ -467,34 +665,23 @@ const ServiceModal = ({ service, onClose }) => {
                 ))}
               </ul>
             </div>
-
             <div className="mt-8 pt-6 border-t border-gray-100">
-              <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wide mb-3">
-                Outils & Logiciels
-              </h4>
+              <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wide mb-3">Outils & Logiciels</h4>
               <div className="flex flex-wrap gap-2">
                 {service.tools.map((tool, idx) => (
-                  <span key={idx} className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-bold border border-slate-200">
-                    {tool}
-                  </span>
+                  <span key={idx} className="px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-bold border border-slate-200">{tool}</span>
                 ))}
               </div>
             </div>
           </div>
-          
-          <div className="bg-gray-50 px-6 py-4 sm:flex sm:flex-row-reverse">
-            <button 
-              type="button" 
-              className="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-800 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
-              onClick={handleDevisClick}
-            >
+
+          <div className="bg-gray-50 px-6 py-4 sm:flex sm:flex-row-reverse gap-3">
+            <button type="button" onClick={handleDevisClick}
+              className="w-full sm:w-auto inline-flex justify-center rounded-xl px-5 py-2.5 bg-blue-900 text-sm font-semibold text-white hover:bg-blue-800 focus:outline-none transition-colors">
               Demander un devis
             </button>
-            <button 
-              type="button" 
-              className="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-              onClick={onClose}
-            >
+            <button type="button" onClick={onClose}
+              className="w-full sm:w-auto mt-3 sm:mt-0 inline-flex justify-center rounded-xl border border-gray-300 px-5 py-2.5 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none transition-colors">
               Fermer
             </button>
           </div>
@@ -504,25 +691,39 @@ const ServiceModal = ({ service, onClose }) => {
   );
 };
 
-// --- Sections du Site ---
-
+// ============================================================
+// NAVIGATION (avec surlignage de la section active)
+// ============================================================
 const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen]         = useState(false);
+  const [scrolled, setScrolled]     = useState(false);
+  const [activeSection, setActive]  = useState('home');
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const ids = ['home', 'services', 'portfolio', 'ai-tools', 'faq', 'about', 'contact'];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(e => { if (e.isIntersecting) setActive(e.target.id); });
+      },
+      { rootMargin: '-40% 0px -55% 0px' }
+    );
+    ids.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
+    return () => observer.disconnect();
   }, []);
 
   const navLinks = [
-    { name: 'Accueil', href: '#home' },
-    { name: 'Expertises', href: '#services' },
-    { name: 'Réalisations', href: '#portfolio' },
-    { name: 'Outils IA', href: '#ai-tools' }, // Ajout du lien vers la section IA
-    { name: 'FAQ', href: '#faq' },
-    { name: 'À Propos', href: '#about' },
+    { name: 'Accueil',      href: '#home',      id: 'home' },
+    { name: 'Expertises',   href: '#services',  id: 'services' },
+    { name: 'Réalisations', href: '#portfolio', id: 'portfolio' },
+    { name: 'Outils IA',   href: '#ai-tools',  id: 'ai-tools' },
+    { name: 'FAQ',          href: '#faq',        id: 'faq' },
+    { name: 'À Propos',    href: '#about',      id: 'about' },
   ];
 
   const handleNavClick = (e, href) => {
@@ -534,24 +735,17 @@ const Navigation = () => {
     <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-md py-2' : 'bg-transparent py-4'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div 
-            className="flex-shrink-0 flex items-center cursor-pointer" 
-            onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
-          >
-            {/* LOGO */}
-            <img 
-              src="/logo-cebistats.jpg" 
-              alt="Logo CEBI Stats" 
-              className="h-12 w-auto mr-3 rounded-lg shadow-sm bg-white hover:scale-105 transition-transform" 
-              onError={(e) => {
-                e.target.style.display='none';
-                e.target.nextSibling.style.display='flex'; 
-              }} 
+          {/* Logo */}
+          <div className="flex-shrink-0 flex items-center cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <img
+              src="/logo-cebistats.jpg"
+              alt="Logo CEBI Stats"
+              className="h-12 w-auto mr-3 rounded-lg shadow-sm bg-white hover:scale-105 transition-transform"
+              onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
             />
             <div className="hidden bg-blue-900 p-2 rounded-lg mr-2 items-center justify-center">
-               <BarChart2 size={24} className="text-white" />
+              <BarChart2 size={24} className="text-white" />
             </div>
-
             <div className="flex flex-col">
               <span className="font-extrabold text-2xl tracking-tighter leading-none text-slate-900">
                 CEBI <span className="text-cyan-500">Stats</span>
@@ -559,51 +753,62 @@ const Navigation = () => {
               <span className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">Côte d'Ivoire</span>
             </div>
           </div>
-          
-          <div className="hidden md:flex items-center space-x-8">
+
+          {/* Desktop links */}
+          <div className="hidden md:flex items-center space-x-6">
             {navLinks.map((link) => (
-              <a 
-                key={link.name} 
-                href={link.href} 
+              <a
+                key={link.name}
+                href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className={`text-sm font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer ${scrolled ? 'text-gray-600 hover:text-cyan-600' : 'text-gray-700 hover:text-cyan-600'}`}
+                className={`text-sm font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer relative pb-0.5
+                  ${activeSection === link.id
+                    ? 'text-cyan-600 after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-cyan-500 after:rounded-full'
+                    : scrolled ? 'text-gray-600 hover:text-cyan-600' : 'text-gray-700 hover:text-cyan-600'
+                  }`}
               >
                 {link.name}
               </a>
             ))}
-            <Button variant="primary" href="#contact" className="!px-5 !py-2 !text-sm !rounded-lg hover:scale-105">
+            <Button variant="primary" href="#contact" className="!px-5 !py-2 !text-sm !rounded-lg">
               Devis Gratuit
             </Button>
           </div>
 
-          <div className="md:hidden flex items-center">
-            <button 
-              onClick={() => setIsOpen(!isOpen)} 
-              className="text-gray-600 hover:text-blue-900 focus:outline-none p-2"
-            >
+          {/* Burger */}
+          <div className="md:hidden">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-blue-900 focus:outline-none p-2" aria-label="Menu">
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
         </div>
       </div>
 
+      {/* Mobile menu */}
       {isOpen && (
         <div className="md:hidden bg-white border-t border-gray-100 shadow-xl absolute w-full top-full left-0 animate-fade-in-down">
-          <div className="px-4 pt-4 pb-6 space-y-2">
+          <div className="px-4 pt-4 pb-6 space-y-1">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
                 onClick={(e) => handleNavClick(e, link.href)}
-                className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-cyan-600 hover:bg-blue-50 transition-colors cursor-pointer"
+                className={`flex items-center px-4 py-3 rounded-lg text-base font-medium transition-colors cursor-pointer ${
+                  activeSection === link.id
+                    ? 'text-cyan-600 bg-cyan-50'
+                    : 'text-gray-700 hover:text-cyan-600 hover:bg-blue-50'
+                }`}
               >
+                {activeSection === link.id && (
+                  <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full mr-3 flex-shrink-0"></span>
+                )}
                 {link.name}
               </a>
             ))}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, '#contact')}
-              className="block w-full text-center mt-4 px-5 py-3 rounded-xl bg-blue-900 text-white font-bold shadow-lg cursor-pointer"
+              className="block w-full text-center mt-4 px-5 py-3 rounded-xl bg-blue-900 text-white font-bold shadow-lg"
             >
               Démarrer un projet
             </a>
@@ -614,25 +819,42 @@ const Navigation = () => {
   );
 };
 
+// ============================================================
+// HERO (barres animées + badges de confiance + mini-stats)
+// ============================================================
 const Hero = () => {
+  const [barsVisible, setBarsVisible] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setBarsVisible(true), 1000);
+    return () => clearTimeout(t);
+  }, []);
+
+  const skills = [
+    { label: 'Biostatistique', level: 95, color: 'bg-cyan-500' },
+    { label: 'Informatique',   level: 90, color: 'bg-blue-500' },
+    { label: 'Infographie',    level: 88, color: 'bg-indigo-500' },
+  ];
+
   return (
     <section id="home" className="relative bg-gradient-to-br from-slate-50 via-blue-50 to-white pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden scroll-mt-28">
-      {/* Formes d'arrière-plan animées */}
       <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-cyan-100 opacity-40 blur-3xl animate-float"></div>
       <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-blue-100 opacity-40 blur-3xl animate-float-delayed"></div>
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
+          {/* Texte gauche */}
           <div className="lg:col-span-7 text-center lg:text-left mb-12 lg:mb-0">
             <Reveal>
               <div className="inline-flex items-center px-3 py-1 rounded-full bg-cyan-50 border border-cyan-100 text-cyan-800 text-xs font-bold mb-6 shadow-sm">
                 <Award size={14} className="mr-2 text-cyan-500" />
-                Cabinet d'Études Biostatistique & Informatique
+                Cabinet d'Études Biostatistique & Informatique — Abidjan
               </div>
             </Reveal>
             <Reveal delay={200}>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6">
-                Transformez vos données de santé en <br className="hidden lg:block"/>
+                Transformez vos données de santé en{' '}
+                <br className="hidden lg:block" />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-cyan-500">
                   décisions éclairées
                 </span>
@@ -640,7 +862,7 @@ const Hero = () => {
             </Reveal>
             <Reveal delay={400}>
               <p className="mt-4 text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                Nous combinons expertise statistique et solutions informatiques. Du nettoyage de vos données à la formation sur vos logiciels professionnels.
+                Nous combinons expertise statistique et solutions informatiques. Du nettoyage de vos données à la livraison de votre rapport final.
               </p>
             </Reveal>
             <Reveal delay={600}>
@@ -653,25 +875,60 @@ const Hero = () => {
                 </Button>
               </div>
             </Reveal>
+            <Reveal delay={800}>
+              <div className="mt-8 flex flex-wrap items-center gap-5 justify-center lg:justify-start text-sm text-gray-500">
+                <div className="flex items-center gap-1.5"><CheckCircle size={15} className="text-green-500" /> Devis gratuit</div>
+                <div className="flex items-center gap-1.5"><CheckCircle size={15} className="text-green-500" /> Résultats validés</div>
+                <div className="flex items-center gap-1.5"><CheckCircle size={15} className="text-green-500" /> Disponible 24/7</div>
+              </div>
+            </Reveal>
           </div>
-          
+
+          {/* Carte droite */}
           <div className="lg:col-span-5 relative hidden lg:block">
             <Reveal delay={800} className="relative rounded-2xl bg-white p-2 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
-               <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl opacity-10"></div>
-               <div className="bg-slate-50 rounded-xl p-8 border border-slate-100 h-96 flex flex-col justify-center items-center text-center">
-                  <div className="bg-white p-4 rounded-full shadow-lg mb-6">
-                    <Activity size={48} className="text-cyan-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl opacity-10"></div>
+              <div className="bg-slate-50 rounded-xl p-8 border border-slate-100">
+                <div className="flex items-center mb-7">
+                  <div className="bg-blue-900 p-3 rounded-xl mr-4 shadow-lg">
+                    <Activity size={28} className="text-cyan-400" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-2">Double Compétence</h3>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4 max-w-[200px]">
-                    <div className="bg-blue-600 h-2.5 rounded-full" style={{width: '95%'}}></div>
+                  <div>
+                    <div className="font-bold text-slate-800">L'Équipe CEBI Stats</div>
+                    <div className="text-xs text-gray-500 mt-0.5">Experts certifiés · Abidjan</div>
                   </div>
-                  <div className="space-y-2 text-sm text-gray-500 w-full max-w-[220px]">
-                    <div className="flex justify-between"><span>Biostatistique</span> <span>Expert</span></div>
-                    <div className="flex justify-between"><span>Informatique</span> <span>Expert</span></div>
-                    <div className="flex justify-between"><span>Infographie</span> <span>Expert</span></div>
-                  </div>
-               </div>
+                </div>
+
+                <div className="space-y-5">
+                  {skills.map((skill, i) => (
+                    <div key={i}>
+                      <div className="flex justify-between text-sm mb-1.5">
+                        <span className="font-semibold text-slate-700">{skill.label}</span>
+                        <span className="text-gray-500 font-bold">{skill.level}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
+                        <div
+                          className={`${skill.color} h-2.5 rounded-full transition-all duration-1000 ease-out`}
+                          style={{ width: barsVisible ? `${skill.level}%` : '0%', transitionDelay: `${i * 200}ms` }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-7 pt-5 border-t border-slate-200 grid grid-cols-3 gap-3 text-center">
+                  {[
+                    { val: '100+', label: 'Études', color: 'text-blue-900' },
+                    { val: '8+',   label: 'Années', color: 'text-cyan-600' },
+                    { val: '98%',  label: 'Satisfaction', color: 'text-indigo-600' },
+                  ].map((s, i) => (
+                    <div key={i} className="bg-white rounded-xl p-3 shadow-sm border border-slate-100">
+                      <div className={`text-xl font-black ${s.color}`}>{s.val}</div>
+                      <div className="text-[10px] text-gray-500 font-medium mt-0.5">{s.label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </Reveal>
           </div>
         </div>
@@ -680,23 +937,25 @@ const Hero = () => {
   );
 };
 
+// --- CARTE DE SERVICE ---
 const ServiceCard = ({ icon: Icon, title, description, color, onClick }) => (
-  <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group relative overflow-hidden flex flex-col h-full cursor-pointer">
+  <div
+    className="bg-white p-8 rounded-2xl shadow-lg border border-slate-100 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group relative overflow-hidden flex flex-col h-full cursor-pointer"
+    onClick={onClick}
+  >
     <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${color} opacity-10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-150`}></div>
-    <div className={`w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-blue-50 transition-colors`}>
+    <div className="w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-blue-50 transition-colors">
       <Icon size={28} className="text-slate-700 group-hover:text-blue-600 transition-colors" />
     </div>
     <h3 className="text-xl font-bold text-slate-900 mb-3">{title}</h3>
     <p className="text-gray-600 leading-relaxed text-sm flex-1">{description}</p>
-    <button 
-      onClick={onClick}
-      className="mt-6 flex items-center text-cyan-600 font-semibold text-sm hover:text-cyan-800 transition-colors group-hover:translate-x-1"
-    >
+    <button className="mt-6 flex items-center text-cyan-600 font-semibold text-sm hover:text-cyan-800 transition-colors group-hover:translate-x-1">
       En savoir plus <ChevronRight size={16} className="ml-1" />
     </button>
   </div>
 );
 
+// --- SECTION SERVICES ---
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
 
@@ -704,16 +963,16 @@ const Services = () => {
     {
       icon: Database,
       title: "Gestion de Données & Formulaires",
-      description: "Création de formulaires de collecte automatisés (ODK) et nettoyage de vos bases de données.",
+      description: "Création de formulaires de collecte de données mobiles et nettoyage de vos bases de données.",
       color: "from-blue-400 to-blue-600",
       intro: "Une bonne analyse commence par une collecte de données fiable et structurée.",
       details: [
         "Création de formulaires de saisie automatisés (ODK, KoboCollect) pour smartphones et tablettes.",
         "Facilitation de la collecte terrain et réduction des erreurs de saisie.",
         "Apurement et structuration des bases de données pour les rendre exploitables.",
-        "Gestion et traitement de données massives."
+        "Gestion et traitement de données massives.",
       ],
-      tools: ["ODK Collect", "KoboToolbox", "Excel Avancé", "Access", "SQL"]
+      tools: ["ODK Collect", "EPI Info", "KoboToolbox", "Excel Avancé", "SQL"],
     },
     {
       icon: Activity,
@@ -725,23 +984,23 @@ const Services = () => {
         "Analyses bivariées et multivariées pour éliminer les facteurs de confusion.",
         "Calcul des mesures d'association (OR, RR) et modélisation prédictive.",
         "Analyse de survie (Courbes de Kaplan-Meier, Modèles de Cox).",
-        "Interprétation rigoureuse des résultats pour thèses et rapports."
+        "Interprétation rigoureuse des résultats pour thèses et rapports.",
       ],
-      tools: ["R Studio", "SPSS", "Stata", "Analyse de Survie", "Python"]
+      tools: ["R Studio", "SPSS", "Epi Info", "Stata", "Analyse de Survie", "Python"],
     },
     {
       icon: Monitor,
-      title: "Informatique & Formation",
-      description: "Vente/Installation de logiciels, maintenance et formation personnalisée (Office, Bureautique).",
+      title: "Formation en Informatique & Logiciels",
+      description: "Vente/Installation de logiciels, maintenance et formation personnalisée en bureautique.",
       color: "from-slate-500 to-slate-700",
       intro: "Nous vous équipons et vous formons pour optimiser votre productivité au quotidien.",
       details: [
         "Vente et installation de logiciels professionnels (Suite Office, Adobe Creative Cloud).",
         "Installation de logiciels ludiques et jeux (PC & PlayStation) pour particuliers.",
         "Formation personnalisée à la suite Office (Word, Excel, PowerPoint) : du niveau débutant à expert.",
-        "Conseil en équipement informatique et maintenance logicielle."
+        "Conseil en équipement informatique et maintenance logicielle.",
       ],
-      tools: ["Microsoft Office 365", "Suite Adobe", "Windows", "Maintenance PC"]
+      tools: ["Microsoft Office 365", "Suite Adobe", "Windows", "Maintenance PC"],
     },
     {
       icon: PieChart,
@@ -753,10 +1012,10 @@ const Services = () => {
         "Mise en forme professionnelle de rapports d'études, thèses et mémoires.",
         "Conception de supports de formation clairs et pédagogiques.",
         "Création d'infographies récapitulatives pour valoriser vos résultats statistiques.",
-        "Design de présentations PowerPoint institutionnelles."
+        "Design de présentations PowerPoint institutionnelles.",
       ],
-      tools: ["PowerPoint Pro", "InDesign", "Illustrator", "Word Avancé"]
-    }
+      tools: ["PowerPoint", "Adobe InDesign", "Adobe Illustrator"],
+    },
   ];
 
   return (
@@ -774,48 +1033,34 @@ const Services = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {services.map((service, index) => (
             <Reveal key={index} delay={index * 150}>
-              <ServiceCard 
-                {...service} 
-                onClick={() => setSelectedService(service)}
-              />
+              <ServiceCard {...service} onClick={() => setSelectedService(service)} />
             </Reveal>
           ))}
         </div>
       </div>
-
       {selectedService && (
-        <ServiceModal 
-          service={selectedService} 
-          onClose={() => setSelectedService(null)} 
-        />
+        <ServiceModal service={selectedService} onClose={() => setSelectedService(null)} />
       )}
     </section>
   );
 };
 
+// --- CARTE PORTFOLIO ---
 const ProjectCard = ({ title, category, description, tools }) => (
-  <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-100 flex flex-col h-full hover:scale-[1.02] transform transition-transform">
-    <div className="h-3 bg-gradient-to-r from-blue-900 via-blue-700 to-cyan-500"></div>
-    
+  <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full hover:scale-[1.02] transform">
+    <div className="h-1.5 bg-gradient-to-r from-blue-900 via-blue-700 to-cyan-500"></div>
     <div className="p-6 flex-1 flex flex-col">
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xs font-bold uppercase tracking-wider text-cyan-600 bg-cyan-50 px-2 py-1 rounded">
+        <span className="text-xs font-bold uppercase tracking-wider text-cyan-600 bg-cyan-50 px-2.5 py-1 rounded-full border border-cyan-100">
           {category}
         </span>
-        <Layers size={16} className="text-gray-300" />
+        <Layers size={15} className="text-gray-300" />
       </div>
-      
-      <h3 className="text-base font-bold text-slate-900 mb-3 leading-tight uppercase">
-        {title}
-      </h3>
-      
-      <p className="text-gray-600 text-sm mb-6 flex-1">
-        {description}
-      </p>
-      
-      <div className="flex flex-wrap gap-2 mt-auto">
-        {tools.map((tool, index) => (
-          <span key={index} className="text-[10px] font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded border border-gray-200">
+      <h3 className="text-sm font-bold text-slate-900 mb-3 leading-tight uppercase tracking-wide">{title}</h3>
+      <p className="text-gray-600 text-sm mb-6 flex-1 leading-relaxed">{description}</p>
+      <div className="flex flex-wrap gap-1.5 mt-auto">
+        {tools.map((tool, i) => (
+          <span key={i} className="text-[10px] font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded border border-gray-200">
             {tool}
           </span>
         ))}
@@ -824,50 +1069,57 @@ const ProjectCard = ({ title, category, description, tools }) => (
   </div>
 );
 
+// --- SECTION PORTFOLIO ---
 const Portfolio = () => {
   const projects = [
     {
       category: "Oncologie",
       title: "Survie Cancer du Sein",
-      description: "Analyse de survie des patients souffrant du cancer du sein.",
-      tools: ["Kaplan-Meier", "Modèle de Cox", "R Studio"]
+      description: "Analyse de survie des patients souffrant du cancer du sein (2024).",
+      tools: ["Kaplan-Meier", "Modèle de Cox", "R Studio"],
+    },
+    {
+      category: "Oncologie",
+      title: "Survie Cancer du Col de l'Utérus",
+      description: "Analyse de survie des patients souffrant du cancer du col de l'utérus (2025).",
+      tools: ["Kaplan-Meier", "Modèle de Cox", "R Studio"],
     },
     {
       category: "Pédiatrie & Urgences",
       title: "Urgences Chirurgicales Pédiatriques",
       description: "Délais de prise en charge des urgences chirurgicales pédiatriques au CHU de Cocody (2023).",
-      tools: ["Analyses Descriptives", "Tests Comparatifs"]
+      tools: ["Analyses Descriptives", "Tests Comparatifs"],
     },
     {
       category: "Santé Publique",
       title: "Handicap & Abandon",
-      description: "Épidémiologie des enfants et adolescents handicapés abandonnés admis dans les pouponnières de Côte d’Ivoire (2023).",
-      tools: ["Enquête Transversale", "Cartographie"]
+      description: "Épidémiologie des enfants et adolescents handicapés abandonnés admis dans les pouponnières de Côte d'Ivoire (2023).",
+      tools: ["Enquête Transversale", "Cartographie"],
     },
     {
       category: "Neurologie",
       title: "Syndromes Épileptiques",
-      description: "Facteurs pronostiques des syndromes épileptiques vus en consultation d’épileptologie au CHU de Cocody.",
-      tools: ["Régression Logistique", "Pronostic"]
+      description: "Facteurs pronostiques des syndromes épileptiques vus en consultation d'épileptologie au CHU de Cocody.",
+      tools: ["Régression Logistique", "Pronostic"],
     },
     {
       category: "Santé au Travail",
       title: "Nuisances Sonores",
-      description: "Étude des lésions auditives de l’exposition aux nuisances sonores chez les téléopérateurs (Téléphonie Mobile, 2010-2020).",
-      tools: ["Étude Longitudinale", "Audiométrie"]
+      description: "Étude des lésions auditives liées à l'exposition aux nuisances sonores chez les téléopérateurs (2010-2020).",
+      tools: ["Étude Longitudinale", "Audiométrie"],
     },
     {
       category: "Cardiologie",
       title: "Urgences Cardiologiques",
-      description: "Analyse de la fréquentation du service des urgences de l’Institut de Cardiologie d’Abidjan.",
-      tools: ["Séries Temporelles", "Analyse de Flux"]
+      description: "Analyse de la fréquentation du service des urgences de l'Institut de Cardiologie d'Abidjan.",
+      tools: ["Séries Temporelles", "Analyse de Flux"],
     },
     {
       category: "Endocrinologie",
       title: "Prévention Diabète",
-      description: "Connaissance, attitude et pratique (CAP) des patients diabétiques sur les stratégies de prévention des plaies de pied (CHU Cocody, 2024).",
-      tools: ["Étude CAP", "SPSS"]
-    }
+      description: "Connaissance, attitude et pratique (CAP) des patients diabétiques sur la prévention des plaies de pied (CHU Cocody, 2024).",
+      tools: ["Étude CAP", "SPSS"],
+    },
   ];
 
   return (
@@ -883,7 +1135,11 @@ const Portfolio = () => {
               </p>
             </div>
             <div className="mt-6 md:mt-0">
-              <a href="#contact" className="inline-flex items-center font-bold text-blue-900 hover:text-cyan-600 transition-colors">
+              <a
+                href="#contact"
+                onClick={(e) => smoothScrollTo(e, '#contact')}
+                className="inline-flex items-center font-bold text-blue-900 hover:text-cyan-600 transition-colors"
+              >
                 Discuter d'un projet similaire <ExternalLink size={18} className="ml-2" />
               </a>
             </div>
@@ -892,7 +1148,7 @@ const Portfolio = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {projects.map((project, index) => (
-            <Reveal key={index} delay={index * 100}>
+            <Reveal key={index} delay={index * 80}>
               <ProjectCard {...project} />
             </Reveal>
           ))}
@@ -902,107 +1158,98 @@ const Portfolio = () => {
   );
 };
 
-const About = () => {
-  return (
-    <section id="about" className="py-24 bg-white overflow-hidden scroll-mt-28">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-          <Reveal className="relative mb-12 lg:mb-0">
-            <div className="relative rounded-2xl shadow-2xl bg-blue-900 text-white overflow-hidden p-10 z-10 hover:scale-[1.01] transition-transform duration-500">
-              <div className="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-cyan-500 rounded-full opacity-20 blur-2xl animate-pulse"></div>
-              <div className="absolute bottom-0 left-0 -ml-10 -mb-10 w-40 h-40 bg-indigo-500 rounded-full opacity-20 blur-2xl animate-pulse"></div>
-              
-              <BarChart2 size={64} className="mb-6 text-cyan-400" />
-              <h3 className="text-3xl font-bold mb-2">Christophe KOUAKOU</h3>
-              <p className="text-blue-200 font-medium mb-6">Biostatisticien</p>
-              
-              <div className="space-y-4 text-sm text-blue-100">
-                <div className="flex items-center">
-                  <CheckCircle size={18} className="mr-3 text-cyan-400" />
-                  Direction de l'Information Sanitaire (MSHPCMU)
+// --- SECTION À PROPOS ---
+const About = () => (
+  <section id="about" className="py-24 bg-white overflow-hidden scroll-mt-28">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+        <Reveal className="relative mb-12 lg:mb-0">
+          <div className="relative rounded-2xl shadow-2xl bg-blue-900 text-white overflow-hidden p-10 z-10 hover:scale-[1.01] transition-transform duration-500">
+            <div className="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-cyan-500 rounded-full opacity-20 blur-2xl animate-pulse"></div>
+            <div className="absolute bottom-0 left-0 -ml-10 -mb-10 w-40 h-40 bg-indigo-500 rounded-full opacity-20 blur-2xl animate-pulse"></div>
+            <BarChart2 size={64} className="mb-6 text-cyan-400" />
+            <h3 className="text-3xl font-bold mb-2">L'Équipe CEBI Stats</h3>
+            <p className="text-blue-200 font-medium mb-6">Experts en Biostatistique et Informatique</p>
+            <div className="space-y-4 text-sm text-blue-100">
+              {[
+                "Cabinet d'Études Biostatistique & Informatique (CEBI Stats)",
+                "Expert en Santé Publique & Épidémiologie — Ministère de la Santé",
+                "Expert Logiciels & Bureautique",
+              ].map((item, i) => (
+                <div key={i} className="flex items-center">
+                  <CheckCircle size={18} className="mr-3 text-cyan-400 flex-shrink-0" />
+                  {item}
                 </div>
-                <div className="flex items-center">
-                  <CheckCircle size={18} className="mr-3 text-cyan-400" />
-                  Expert Logiciels & Bureautique
-                </div>
-                <div className="flex items-center">
-                  <CheckCircle size={18} className="mr-3 text-cyan-400" />
-                  Double compétence Technique & Visuelle
-                </div>
-              </div>
-            </div>
-            <div className="absolute top-4 -right-4 w-full h-full border-2 border-cyan-200 rounded-2xl z-0"></div>
-          </Reveal>
-          
-          <Reveal delay={200}>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">
-              Plus qu'un statisticien, <br/>
-              <span className="text-blue-700">un partenaire de décision.</span>
-            </h2>
-            <div className="prose prose-lg text-gray-600 space-y-6 text-justify">
-              <p>
-                <strong>Pourquoi CEBI Stats ?</strong> Vous avez les données, vous avez l'expertise médicale, mais l'analyse statistique vous freine ? Vous n'êtes pas seul.
-                Nous avons observé que trop de thèses et d'articles scientifiques sont retardés parce que les auteurs peinent à exploiter leurs propres données. Trop souvent, pour "aller vite", le recours à des personnes non qualifiées en biostatistique conduit à des résultats erronés ou rejetés par les jurys. 
-                Nous avons créé ce cabinet pour briser ce cercle vicieux. 
-                Ne confiez plus vos années de travail au hasard. Avec CEBI Stats, nous mettons notre expertise de statisticien à votre service pour transformer vos données en résultats indiscutables.
-              </p>
-              <p>
-                Fort de notre expérience au sein du <strong>Ministère de la Santé</strong>, nous maîtrisons toute la chaîne de production des données : 
-                de la conception du formulaire de collecte sur tablette (ODK) jusqu'à la mise en page finale du rapport, en passant par l'analyse statistique rigoureuse.
-              </p>
-              <p>
-                Nous proposons également des <strong>formations personnalisées</strong> et l'installation de vos outils de travail, car nous croyons que l'autonomie de nos clients est la clé de leur succès.
-              </p>
-              
-              <div className="pt-4">
-                <a href="#contact" className="text-cyan-600 font-bold hover:text-cyan-700 flex items-center">
-                  Discutons de votre projet <ChevronRight size={20} className="ml-1" />
-                </a>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-// --- NOUVELLE SECTION : FAQ ---
-const FAQItem = ({ question, answer, isOpen, toggle }) => {
-  return (
-    <div className="border-b border-gray-200 last:border-0">
-      <button
-        className="w-full py-6 text-left focus:outline-none flex justify-between items-start group"
-        onClick={toggle}
-      >
-        <span className={`text-lg font-bold pr-8 transition-colors ${isOpen ? 'text-blue-900' : 'text-slate-800 group-hover:text-blue-700'}`}>
-          {question}
-        </span>
-        <div className={`flex-shrink-0 mt-1 flex items-center justify-center w-6 h-6 rounded-full border transition-all ${isOpen ? 'bg-blue-900 border-blue-900 text-white' : 'border-gray-300 text-gray-400 group-hover:border-blue-900 group-hover:text-blue-900'}`}>
-           {isOpen ? <Minus size={14} /> : <Plus size={14} />}
-        </div>
-      </button>
-      <div 
-        className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[500px] opacity-100 mb-6' : 'max-h-0 opacity-0'}`}
-      >
-        <div className="text-gray-600 leading-relaxed pr-8">
-          {Array.isArray(answer) ? (
-            <ul className="space-y-2">
-              {answer.map((item, i) => (
-                <li key={i} className="flex items-start">
-                  <span className="mr-2 mt-1.5 w-1.5 h-1.5 bg-cyan-500 rounded-full flex-shrink-0"></span>
-                  <span>{item}</span>
-                </li>
               ))}
-            </ul>
-          ) : (
-            <p>{answer}</p>
-          )}
-        </div>
+            </div>
+          </div>
+          <div className="absolute top-4 -right-4 w-full h-full border-2 border-cyan-200 rounded-2xl z-0"></div>
+        </Reveal>
+
+        <Reveal delay={200}>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">
+            Plus qu'un statisticien,{' '}
+            <br />
+            <span className="text-blue-700">un partenaire de décision.</span>
+          </h2>
+          <div className="prose prose-lg text-gray-600 space-y-6 text-justify">
+            <p>
+              <strong>Pourquoi CEBI Stats ?</strong> Vous avez les données, vous avez l'expertise médicale, mais l'analyse statistique vous freine ? Vous n'êtes pas seul.
+              Trop de thèses et d'articles scientifiques sont retardés parce que leurs auteurs peinent à exploiter leurs propres données. Trop souvent, le recours à des personnes non qualifiées conduit à des résultats erronés ou rejetés par les jurys.
+              Nous avons créé CEBI Stats pour briser ce cercle vicieux.
+            </p>
+            <p>
+              Fort de notre expérience au sein du <strong>Ministère de la Santé</strong>, nous maîtrisons toute la chaîne de production des données :
+              de la conception du formulaire de collecte sur tablette (ODK) jusqu'à la mise en page finale du rapport, en passant par l'analyse statistique rigoureuse.
+            </p>
+            <p>
+              Nous proposons également des <strong>formations personnalisées</strong> et l'installation de vos outils de travail, car nous croyons que l'autonomie de nos clients est la clé de leur succès.
+            </p>
+            <div className="pt-4">
+              <a
+                href="#contact"
+                onClick={(e) => smoothScrollTo(e, '#contact')}
+                className="text-cyan-600 font-bold hover:text-cyan-700 flex items-center"
+              >
+                Discutons de votre projet <ChevronRight size={20} className="ml-1" />
+              </a>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </div>
-  );
-};
+  </section>
+);
+
+// --- FAQ ---
+const FAQItem = ({ question, answer, isOpen, toggle }) => (
+  <div className="border-b border-gray-200 last:border-0">
+    <button className="w-full py-6 text-left focus:outline-none flex justify-between items-start group" onClick={toggle}>
+      <span className={`text-lg font-bold pr-8 transition-colors ${isOpen ? 'text-blue-900' : 'text-slate-800 group-hover:text-blue-700'}`}>
+        {question}
+      </span>
+      <div className={`flex-shrink-0 mt-1 flex items-center justify-center w-6 h-6 rounded-full border transition-all ${isOpen ? 'bg-blue-900 border-blue-900 text-white' : 'border-gray-300 text-gray-400 group-hover:border-blue-900 group-hover:text-blue-900'}`}>
+        {isOpen ? <Minus size={14} /> : <Plus size={14} />}
+      </div>
+    </button>
+    <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[500px] opacity-100 mb-6' : 'max-h-0 opacity-0'}`}>
+      <div className="text-gray-600 leading-relaxed pr-8">
+        {Array.isArray(answer) ? (
+          <ul className="space-y-2">
+            {answer.map((item, i) => (
+              <li key={i} className="flex items-start">
+                <span className="mr-2 mt-1.5 w-1.5 h-1.5 bg-cyan-500 rounded-full flex-shrink-0"></span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>{answer}</p>
+        )}
+      </div>
+    </div>
+  </div>
+);
 
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(0);
@@ -1010,29 +1257,29 @@ const FAQ = () => {
   const faqs = [
     {
       question: "Comment procéder pour une demande de prestation ?",
-      answer: "Vous pouvez nous contacter via le formulaire dédié, par email, ou par téléphone. Nous vous recommandons de décrire brièvement votre projet (type d’étude, objectifs principaux, état d’avancement des données). Cela nous permet d’organiser un premier entretien d’évaluation rapide et ciblé, sans engagement, afin de comprendre précisément votre besoin en biostatistique."
+      answer: "Vous pouvez nous contacter via le formulaire dédié, par WhatsApp ou par email. Décrivez brièvement votre projet (type d'étude, objectifs, état d'avancement des données). Nous organisons un premier entretien d'évaluation rapide, sans engagement, pour comprendre précisément votre besoin.",
     },
     {
-      question: "Quelles sont les informations nécessaires pour l’analyse statistique ?",
+      question: "Quelles sont les informations nécessaires pour l'analyse statistique ?",
       answer: [
         "Le protocole de recherche (ou une description détaillée de votre méthodologie).",
         "La base de données (pour évaluation de la qualité, des données manquantes et de la structure).",
-        "Le Plan d’Analyse Statistique (PAS) si celui-ci existe déjà.",
-        "Ces éléments sont essentiels pour déterminer la complexité et les méthodes requises (Score de Propension, Régression de Cox, etc.)."
-      ]
+        "Le Plan d'Analyse Statistique (PAS) si celui-ci existe déjà.",
+        "Ces éléments sont essentiels pour déterminer la complexité et les méthodes requises (Score de Propension, Régression de Cox, etc.).",
+      ],
     },
     {
       question: "Comment se déroule la prestation ?",
       answer: [
-        "Conception : Validation du protocole et du PAS, ainsi que le calcul de la puissance statistique.",
-        "Analyse : Réalisation des analyses avancées (multivariées, Analyse de Survie), incluant la gestion des données complexes.",
-        "Rapport et Rédaction : Livraison d’un rapport d’analyse détaillé et de la section résultats, prêts pour votre manuscrit scientifique."
-      ]
+        "Conception : Validation du protocole et du PAS, calcul de la puissance statistique.",
+        "Analyse : Réalisation des analyses avancées (multivariées, Analyse de Survie), gestion des données complexes.",
+        "Rapport et Rédaction : Livraison d'un rapport d'analyse détaillé, section résultats prête pour votre manuscrit.",
+      ],
     },
     {
-      question: "Quels sont les tarifs pour une prestation en statistique ?",
-      answer: "Nos tarifs sont établis sur devis personnalisé. Nous n’avons pas de forfait standard car le coût dépend de l'étendue de l’accompagnement (consultation ponctuelle ou aide complète) et de la complexité méthodologique de l’étude. Le devis détaillé vous est fourni rapidement après l’évaluation de votre projet."
-    }
+      question: "Quels sont les tarifs pour une prestation ?",
+      answer: "Nos tarifs sont établis sur devis personnalisé. Le coût dépend de l'étendue de l'accompagnement et de la complexité méthodologique. Pour les étudiants, nous proposons des tarifs spéciaux défiant toute concurrence. Le devis vous est fourni rapidement après l'évaluation de votre projet.",
+    },
   ];
 
   return (
@@ -1047,221 +1294,160 @@ const FAQ = () => {
             </p>
           </div>
         </Reveal>
-
         <Reveal delay={200}>
           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sm:p-8">
             {faqs.map((faq, index) => (
-              <FAQItem 
-                key={index} 
-                question={faq.question} 
-                answer={faq.answer} 
+              <FAQItem
+                key={index}
+                question={faq.question}
+                answer={faq.answer}
                 isOpen={openIndex === index}
                 toggle={() => setOpenIndex(openIndex === index ? -1 : index)}
               />
             ))}
           </div>
         </Reveal>
-        
         <div className="mt-10 text-center">
-           <p className="text-gray-500 text-sm mb-4">Vous ne trouvez pas votre réponse ?</p>
-           <a href="#contact" className="inline-flex items-center text-blue-900 font-bold hover:text-cyan-600 transition-colors">
-              <HelpCircle size={18} className="mr-2" /> Posez-nous votre question directement
-           </a>
+          <p className="text-gray-500 text-sm mb-4">Vous ne trouvez pas votre réponse ?</p>
+          <a
+            href="#contact"
+            onClick={(e) => smoothScrollTo(e, '#contact')}
+            className="inline-flex items-center text-blue-900 font-bold hover:text-cyan-600 transition-colors"
+          >
+            <HelpCircle size={18} className="mr-2" /> Posez-nous votre question directement
+          </a>
         </div>
       </div>
     </section>
   );
 };
 
+// ============================================================
+// CONTACT (alert → Toast inline)
+// ============================================================
 const Contact = () => {
+  const { toast, showToast, hideToast } = useToast();
   const [formData, setFormData] = useState({
-    nom: '',
-    prenom: '',
-    email: '',
-    type: 'Analyse Statistique (Thèse/Mémoire)',
-    message: ''
+    nom: '', prenom: '', email: '', type: 'Analyse Statistique (Thèse/Mémoire)', message: '',
   });
 
-  const handleChange = (e) => {
-    setFormData({...formData, [e.target.name]: e.target.value});
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
-    
-    // 1. Validation : On vérifie que les champs ne sont pas vides
     if (!formData.nom || !formData.email || !formData.message) {
-      alert("⚠️ Attention : Merci de remplir au moins votre Nom, votre Email et votre Message.");
+      showToast("Merci de remplir votre Nom, Email et Message.", 'error');
       return;
     }
-
     const subject = encodeURIComponent(`Demande de devis - ${formData.type} - ${formData.nom} ${formData.prenom}`);
     const body = encodeURIComponent(
-      `Nom: ${formData.nom}\n` +
-      `Prénom: ${formData.prenom}\n` +
-      `Email: ${formData.email}\n` +
-      `Type de projet: ${formData.type}\n` +
-      `--------------------------------\n` +
-      `Message:\n${formData.message}`
+      `Nom: ${formData.nom}\nPrénom: ${formData.prenom}\nEmail: ${formData.email}\nType de projet: ${formData.type}\n---\nMessage:\n${formData.message}`
     );
-    
-    // 2. Création du lien Mailto
     const mailtoLink = `mailto:cebi.stat@yahoo.com?subject=${subject}&body=${body}`;
-
-    // 3. Méthode Robuste : Création d'un lien temporaire et clic simulé
-    // Cela contourne les blocages fréquents de window.location
     try {
-        const link = document.createElement('a');
-        link.href = mailtoLink;
-        link.target = '_self'; // Important pour mailto
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        // Message de succès pour rassurer l'utilisateur
-        setTimeout(() => {
-             alert("✅ Action envoyée !\n\nVotre logiciel de messagerie devrait s'ouvrir.\nS'il ne s'ouvre pas, c'est qu'aucun compte mail n'est configuré sur cet appareil.");
-        }, 500);
-    } catch (err) {
-        alert("Une erreur est survenue. Vous pouvez nous écrire directement à : cebi.stat@yahoo.com");
-        console.error("Erreur mailto:", err);
+      const link = document.createElement('a');
+      link.href = mailtoLink;
+      link.target = '_self';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => showToast("Votre messagerie devrait s'ouvrir. Sinon, écrivez à cebi.stat@yahoo.com", 'info'), 500);
+    } catch {
+      showToast("Erreur. Écrivez directement à cebi.stat@yahoo.com", 'error');
     }
   };
 
   const handleWhatsAppSubmit = (e) => {
     e.preventDefault();
-    
     if (!formData.nom || !formData.message) {
-      alert("⚠️ Attention : Merci de remplir au moins votre Nom et votre Message.");
+      showToast("Merci de remplir au moins votre Nom et votre Message.", 'error');
       return;
     }
-
-    const phoneNumber = "2250141974132"; 
-    
     const message = encodeURIComponent(
-      `*Demande de Devis CEBI Stats*\n` +
-      `👤 Nom: ${formData.nom} ${formData.prenom}\n` +
-      `📧 Email: ${formData.email}\n` +
-      `📂 Projet: ${formData.type}\n` +
-      `--------------------------------\n` +
-      `📝 Message:\n${formData.message}`
+      `*Demande de Devis CEBI Stats*\n👤 Nom: ${formData.nom} ${formData.prenom}\n📧 Email: ${formData.email}\n📂 Projet: ${formData.type}\n---\n📝 Message:\n${formData.message}`
     );
-
-    // Utilisation de l'API officielle au lieu de "wa.me" pour réduire les erreurs Windows
-    const waUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
-    
-    window.open(waUrl, '_blank');
+    window.open(`https://api.whatsapp.com/send?phone=2250141974132&text=${message}`, '_blank');
   };
+
+  const contactItems = [
+    { icon: Mail,        title: 'Email',                   content: 'cebi.stat@yahoo.com',     href: 'mailto:cebi.stat@yahoo.com', sub: 'Réponse sous 24h' },
+    { icon: Phone,       title: 'Téléphone & WhatsApp',   content: '(+225) 01 41 97 41 32',   href: 'https://api.whatsapp.com/send?phone=2250141974132', sub: 'Disponible 24/7', external: true },
+    { icon: Facebook,    title: 'Facebook',                content: 'facebook.com/CEBISTATS',  href: 'https://facebook.com/CEBISTATS', external: true },
+    { icon: MapPin,      title: 'Localisation',            content: "Abidjan, Côte d'Ivoire",  href: null },
+  ];
 
   return (
     <section id="contact" className="py-24 bg-slate-900 text-white relative overflow-hidden scroll-mt-28">
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+      {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
+      <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-16">
           <Reveal>
             <div>
-              <h2 className="text-3xl font-extrabold mb-6">Contactez CEBI Stats</h2>
+              <h2 className="text-3xl font-extrabold mb-4">Contactez CEBI Stats</h2>
               <p className="text-slate-400 mb-10 text-lg">
-                Une thèse à finaliser ? Un logiciel à installer ? Une formation à organiser ? 
-                Nous sommes basés à Abidjan et disponible pour échanger.
+                Une thèse à finaliser ? Un logiciel à installer ? Une formation à organiser ?
+                Nous sommes basés à Abidjan et disponibles pour vous.
               </p>
-
-              <div className="space-y-8">
-                <div className="flex items-start group">
-                  <div className="flex-shrink-0 bg-blue-800 p-4 rounded-xl group-hover:bg-cyan-600 transition-colors">
-                    <Mail className="w-6 h-6 text-cyan-200 group-hover:text-white" />
+              <div className="space-y-7">
+                {contactItems.map((item, i) => (
+                  <div key={i} className="flex items-start group">
+                    <div className="flex-shrink-0 bg-blue-800 p-4 rounded-xl group-hover:bg-cyan-600 transition-colors">
+                      <item.icon className="w-6 h-6 text-cyan-200 group-hover:text-white" />
+                    </div>
+                    <div className="ml-5">
+                      <h3 className="text-lg font-medium">{item.title}</h3>
+                      {item.href ? (
+                        <a
+                          href={item.href}
+                          target={item.external ? '_blank' : undefined}
+                          rel={item.external ? 'noopener noreferrer' : undefined}
+                          className="mt-1 text-slate-400 block hover:text-white transition-colors"
+                        >
+                          {item.content}
+                        </a>
+                      ) : (
+                        <p className="mt-1 text-slate-400">{item.content}</p>
+                      )}
+                      {item.sub && <span className="text-xs text-slate-600">{item.sub}</span>}
+                    </div>
                   </div>
-                  <div className="ml-5">
-                    <h3 className="text-lg font-medium">Email</h3>
-                    <a href="mailto:cebi.stat@yahoo.com" className="mt-1 text-slate-400 block hover:text-white transition-colors">
-                      cebi.stat@yahoo.com
-                    </a>
-                    <span className="text-xs text-slate-600">Réponse sous 24h</span>
-                  </div>
-                </div>
-                
-                <div className="flex items-start group">
-                  <div className="flex-shrink-0 bg-blue-800 p-4 rounded-xl group-hover:bg-cyan-600 transition-colors">
-                    <Phone className="w-6 h-6 text-cyan-200 group-hover:text-white" />
-                  </div>
-                  <div className="ml-5">
-                    <h3 className="text-lg font-medium">Téléphone & WhatsApp</h3>
-                    <p className="mt-1 text-slate-400">(+225) 01 41 97 41 32</p>
-                    <p className="text-xs text-slate-500">Disponible 8h - 18h</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start group">
-                  <div className="flex-shrink-0 bg-blue-800 p-4 rounded-xl group-hover:bg-cyan-600 transition-colors">
-                    <Facebook className="w-6 h-6 text-cyan-200 group-hover:text-white" />
-                  </div>
-                  <div className="ml-5">
-                    <h3 className="text-lg font-medium">Facebook</h3>
-                    <a href="https://facebook.com/CEBISTATS" target="_blank" rel="noopener noreferrer" className="mt-1 text-slate-400 block hover:text-white transition-colors">
-                      facebook.com/CEBISTATS
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start group">
-                  <div className="flex-shrink-0 bg-blue-800 p-4 rounded-xl group-hover:bg-cyan-600 transition-colors">
-                    <MapPin className="w-6 h-6 text-cyan-200 group-hover:text-white" />
-                  </div>
-                  <div className="ml-5">
-                    <h3 className="text-lg font-medium">Localisation</h3>
-                    <p className="mt-1 text-slate-400">Abidjan, Côte d'Ivoire</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </Reveal>
 
           <Reveal delay={200}>
             <div className="bg-white rounded-2xl p-8 shadow-2xl text-gray-800">
-              <h3 className="text-xl font-bold text-slate-900 mb-6">Envoyez-moi un message</h3>
+              <h3 className="text-xl font-bold text-slate-900 mb-6">Envoyez-nous un message</h3>
               <form className="space-y-5">
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Nom</label>
-                    <input 
-                      type="text" 
-                      name="nom" 
-                      required 
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition" 
-                      placeholder="Votre nom"
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-1">Prénom</label>
-                    <input 
-                      type="text" 
-                      name="prenom" 
-                      className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition" 
-                      placeholder="Votre prénom"
-                      onChange={handleChange}
-                    />
-                  </div>
+                  {[
+                    { label: 'Nom', name: 'nom', placeholder: 'Votre nom', required: true },
+                    { label: 'Prénom', name: 'prenom', placeholder: 'Votre prénom' },
+                  ].map((f) => (
+                    <div key={f.name}>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1">{f.label}</label>
+                      <input
+                        type="text" name={f.name} required={f.required}
+                        placeholder={f.placeholder} onChange={handleChange}
+                        className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition"
+                      />
+                    </div>
+                  ))}
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
-                  <input 
-                    type="email" 
-                    name="email"
-                    required 
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition" 
-                    placeholder="votre@email.com"
-                    onChange={handleChange}
+                  <input
+                    type="email" name="email" required placeholder="votre@email.com" onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">Type de projet</label>
-                  <select 
-                    name="type"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition"
-                    onChange={handleChange}
-                  >
+                  <select name="type" onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition">
                     <option>Analyse Statistique (Thèse/Mémoire)</option>
                     <option>Formation & Logiciels</option>
                     <option>Nettoyage de Données</option>
@@ -1270,35 +1456,23 @@ const Contact = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">Message</label>
-                  <textarea 
-                    name="message"
-                    rows="4" 
-                    required 
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition" 
-                    placeholder="Décrivez votre besoin..."
-                    onChange={handleChange}
+                  <textarea
+                    name="message" rows="4" required placeholder="Décrivez votre besoin..." onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition"
                   ></textarea>
                 </div>
-                
-                {/* Double Boutons d'Action - type="button" ajouté pour sécurité */}
                 <div className="flex flex-col sm:flex-row gap-3">
-                   <button 
-                    type="button"
-                    onClick={handleWhatsAppSubmit}
-                    className="flex-1 bg-green-500 text-white font-bold py-4 rounded-xl hover:bg-green-600 hover:shadow-lg transition duration-300 transform active:scale-95 flex items-center justify-center"
-                   >
-                     <MessageCircle size={20} className="mr-2" /> Envoyer par WhatsApp
-                   </button>
-                   <button 
-                    type="button"
-                    onClick={handleEmailSubmit}
-                    className="flex-1 bg-blue-900 text-white font-bold py-4 rounded-xl hover:bg-blue-800 hover:shadow-lg transition duration-300 transform active:scale-95 flex items-center justify-center"
-                   >
-                     <Mail size={20} className="mr-2" /> Envoyer par Email
-                   </button>
+                  <button type="button" onClick={handleWhatsAppSubmit}
+                    className="flex-1 bg-green-500 text-white font-bold py-4 rounded-xl hover:bg-green-600 hover:shadow-lg transition duration-300 transform active:scale-95 flex items-center justify-center gap-2">
+                    <MessageCircle size={19} /> Envoyer par WhatsApp
+                  </button>
+                  <button type="button" onClick={handleEmailSubmit}
+                    className="flex-1 bg-blue-900 text-white font-bold py-4 rounded-xl hover:bg-blue-800 hover:shadow-lg transition duration-300 transform active:scale-95 flex items-center justify-center gap-2">
+                    <Mail size={19} /> Envoyer par Email
+                  </button>
                 </div>
-                <p className="text-xs text-gray-400 text-center mt-2">
-                   *L'envoi par email ouvrira votre logiciel de messagerie par défaut.
+                <p className="text-xs text-gray-400 text-center">
+                  *L'envoi par email ouvrira votre logiciel de messagerie par défaut.
                 </p>
               </form>
             </div>
@@ -1309,6 +1483,7 @@ const Contact = () => {
   );
 };
 
+// --- FOOTER ---
 const Footer = () => (
   <footer className="bg-slate-950 text-slate-500 py-12 border-t border-slate-900">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1322,22 +1497,51 @@ const Footer = () => (
             Cabinet d'Études Biostatistique et Informatique.
             La référence ivoirienne pour l'analyse de données de santé, la formation et les solutions informatiques.
           </p>
+          <a
+            href="https://api.whatsapp.com/send?phone=2250141974132&text=Bonjour%20CEBI%20Stats%20!"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-500 text-white text-xs font-bold rounded-lg transition-colors"
+          >
+            <MessageCircle size={14} /> WhatsApp : +225 01 41 97 41 32
+          </a>
         </div>
         <div>
           <h4 className="text-white font-bold mb-4">Liens Rapides</h4>
           <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:text-cyan-400 transition">Accueil</a></li>
-            <li><a href="#services" className="hover:text-cyan-400 transition">Nos Services</a></li>
-            <li><a href="#about" className="hover:text-cyan-400 transition">À Propos</a></li>
-            <li><a href="#contact" className="hover:text-cyan-400 transition">Contact</a></li>
+            {[
+              { label: 'Accueil',      href: '#home' },
+              { label: 'Nos Services', href: '#services' },
+              { label: 'Outils IA',   href: '#ai-tools' },
+              { label: 'À Propos',    href: '#about' },
+              { label: 'Contact',     href: '#contact' },
+            ].map((l) => (
+              <li key={l.label}>
+                <a href={l.href} onClick={(e) => smoothScrollTo(e, l.href)} className="hover:text-cyan-400 transition cursor-pointer">
+                  {l.label}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
         <div>
           <h4 className="text-white font-bold mb-4">Réseaux Sociaux</h4>
-          <ul className="space-y-2 text-sm">
+          <ul className="space-y-3 text-sm">
             <li>
-              <a href="https://facebook.com/CEBISTATS" target="_blank" rel="noopener noreferrer" className="flex items-center hover:text-cyan-400 transition">
-                <Facebook size={16} className="mr-2" /> Facebook
+              <a href="https://facebook.com/CEBISTATS" target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:text-cyan-400 transition">
+                <Facebook size={15} /> facebook.com/CEBISTATS
+              </a>
+            </li>
+            <li>
+              <a href="https://api.whatsapp.com/send?phone=2250141974132" target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-2 hover:text-cyan-400 transition">
+                <MessageCircle size={15} /> WhatsApp
+              </a>
+            </li>
+            <li>
+              <a href="mailto:cebi.stat@yahoo.com" className="flex items-center gap-2 hover:text-cyan-400 transition">
+                <Mail size={15} /> cebi.stat@yahoo.com
               </a>
             </li>
           </ul>
@@ -1345,34 +1549,27 @@ const Footer = () => (
       </div>
       <div className="border-t border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
         <p>&copy; {new Date().getFullYear()} CEBI Stats Abidjan. Tous droits réservés.</p>
-        <div className="mt-4 md:mt-0 flex items-center">
-           <span className="mr-2">Design par</span>
-           <span className="text-cyan-500 font-bold">Christophe KOUAKOU</span>
+        <div className="mt-4 md:mt-0 flex items-center gap-1">
+          <span>Design par</span>
+          <span className="text-cyan-500 font-bold">Christophe KOUAKOU</span>
         </div>
       </div>
     </div>
   </footer>
 );
 
+// ============================================================
+// APP PRINCIPAL
+// ============================================================
 const App = () => {
-  // --- AJOUT POUR LE FAVICON ET LE TITRE ---
   useEffect(() => {
-    // 1. Changer le titre de l'onglet
     document.title = "CEBI Stats | Cabinet Biostatistique & Informatique";
-
-    // 2. FORCER le changement d'icône (Méthode Robuste)
-    
-    // a. Supprimer les anciennes icônes (pour éviter les conflits)
     const existingFavicons = document.querySelectorAll("link[rel~='icon']");
     existingFavicons.forEach(el => el.remove());
-
-    // b. Créer la nouvelle icône
     const link = document.createElement('link');
     link.rel = 'icon';
-    // Astuce : on ajoute ?v=2 pour forcer le navigateur à oublier l'ancienne image
-    link.href = "/logo_cebistats.png?v=2"; 
-    
-    document.getElementsByTagName('head')[0].appendChild(link);
+    link.href = '/logo-cebistats.jpg?v=4';
+    document.head.appendChild(link);
   }, []);
 
   return (
@@ -1381,8 +1578,11 @@ const App = () => {
       <Navigation />
       <main>
         <Hero />
+        <StatsSection />
         <Services />
+        <ProcessSection />
         <Portfolio />
+        <CTABanner />
         <AITools />
         <About />
         <FAQ />
