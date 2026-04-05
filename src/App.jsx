@@ -23,6 +23,18 @@ const GlobalStyles = () => (
       scroll-behavior: smooth;
       scroll-padding-top: 80px;
       font-family: 'Inter', sans-serif;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+    body {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    h1, h2, h3, h4, h5 {
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
+    p {
+      line-height: 1.75;
     }
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: #f1f5f9; }
@@ -55,6 +67,12 @@ const GlobalStyles = () => (
     @keyframes toast-slide-in {
       from { opacity: 0; transform: translateY(16px) scale(0.95); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    :root {
+      --cebi-indigo: #2B3490;
+      --cebi-indigo-light: #3D4DB7;
+      --cebi-indigo-dark: #1E2566;
     }
 
     .animate-float          { animation: float 8s ease-in-out infinite; }
@@ -103,7 +121,7 @@ const Toast = ({ message, type = 'success', onClose }) => {
   const styles = {
     success: 'bg-green-600',
     error:   'bg-red-600',
-    info:    'bg-blue-700',
+    info:    'bg-indigo-700',
   };
 
   return (
@@ -152,7 +170,7 @@ const StatItem = ({ icon: Icon, label, value, suffix, color, isVisible, delay })
       <div className={`text-4xl font-extrabold ${color} mb-1 tabular-nums`}>
         {count}{suffix}
       </div>
-      <div className="text-blue-200 text-sm font-medium">{label}</div>
+      <div className="text-indigo-200 text-sm font-medium">{label}</div>
     </div>
   );
 };
@@ -174,15 +192,15 @@ const StatsSection = () => {
   }, []);
 
   const stats = [
-    { icon: BookOpen,   label: 'Études réalisées',       value: 100, suffix: '+', color: 'text-cyan-400',   delay: 0 },
-    { icon: Users,      label: 'Étudiants accompagnés',  value: 200, suffix: '+', color: 'text-blue-300',   delay: 200 },
+    { icon: BookOpen,   label: 'Études réalisées',        value: 50,  suffix: '+', color: 'text-sky-400',    delay: 0 },
+    { icon: Users,      label: 'Personnes accompagnées', value: 50,  suffix: '+', color: 'text-indigo-300', delay: 200 },
     { icon: TrendingUp, label: 'Taux de satisfaction',   value: 98,  suffix: '%', color: 'text-green-400',  delay: 400 },
-    { icon: Clock,      label: "Années d'expérience",    value: 8,   suffix: '+', color: 'text-indigo-300', delay: 600 },
+    { icon: Clock,      label: "Années d'existence",     value: 5,   suffix: '+', color: 'text-violet-300', delay: 600 },
   ];
 
   return (
-    <section className="py-16 bg-blue-900 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-900 via-blue-800 to-slate-900"></div>
+    <section className="py-16 bg-indigo-900 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900"></div>
       <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
       <div ref={ref} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
@@ -205,14 +223,14 @@ const ProcessSection = () => {
       icon: MessageCircle,
       title: 'Prise de Contact',
       description: "Décrivez votre projet via notre formulaire, WhatsApp ou email. Nous organisons un premier entretien d'évaluation gratuit et sans engagement.",
-      color: 'from-blue-500 to-blue-700',
+      color: 'from-indigo-500 to-indigo-700',
     },
     {
       number: '02',
       icon: Activity,
       title: 'Analyse & Traitement',
       description: "Nos experts traitent vos données avec les méthodes statistiques adaptées (R, SPSS, Stata). Chaque étape est validée avec vous en toute transparence.",
-      color: 'from-cyan-500 to-cyan-700',
+      color: 'from-sky-500 to-sky-700',
     },
     {
       number: '03',
@@ -224,11 +242,11 @@ const ProcessSection = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50 border-t border-slate-100">
+    <section className="py-20 bg-gradient-to-br from-slate-50 to-indigo-50 border-t border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal>
           <div className="text-center mb-14">
-            <h2 className="text-sm font-bold text-cyan-600 uppercase tracking-widest mb-3">Comment ça marche</h2>
+            <h2 className="text-sm font-bold text-sky-600 uppercase tracking-widest mb-3">Comment ça marche</h2>
             <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900">Notre Processus en 3 Étapes</h3>
             <p className="mt-4 text-gray-500 max-w-2xl mx-auto">
               Simple, transparent et rigoureux — de votre première question à la livraison finale.
@@ -261,22 +279,22 @@ const ProcessSection = () => {
 // NOUVEAU BANDEAU CTA
 // ============================================================
 const CTABanner = () => (
-  <section className="py-16 bg-gradient-to-r from-blue-900 via-blue-800 to-slate-800 relative overflow-hidden">
-    <div className="absolute right-0 top-0 w-72 h-72 bg-cyan-500 rounded-full opacity-10 blur-3xl pointer-events-none"></div>
-    <div className="absolute left-0 bottom-0 w-72 h-72 bg-blue-400 rounded-full opacity-10 blur-3xl pointer-events-none"></div>
+  <section className="py-16 bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-800 relative overflow-hidden">
+    <div className="absolute right-0 top-0 w-72 h-72 bg-sky-500 rounded-full opacity-10 blur-3xl pointer-events-none"></div>
+    <div className="absolute left-0 bottom-0 w-72 h-72 bg-indigo-400 rounded-full opacity-10 blur-3xl pointer-events-none"></div>
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
       <Reveal>
         <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-4">
           Votre thèse mérite une analyse irréprochable
         </h2>
-        <p className="text-blue-200 mb-8 text-lg max-w-2xl mx-auto">
-          Rejoignez les +200 étudiants et chercheurs qui font confiance à CEBI Stats pour leurs données de santé.
+        <p className="text-indigo-200 mb-8 text-lg max-w-2xl mx-auto">
+          Rejoignez les +50 personnes qui font confiance à CEBI Stats pour leurs données de santé.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
             href="#contact"
             onClick={(e) => smoothScrollTo(e, '#contact')}
-            className="inline-flex items-center justify-center px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-white font-bold rounded-xl transition-all hover:-translate-y-1 shadow-lg hover:shadow-cyan-500/30"
+            className="inline-flex items-center justify-center px-8 py-4 bg-sky-500 hover:bg-sky-400 text-white font-bold rounded-xl transition-all hover:-translate-y-1 shadow-lg hover:shadow-sky-500/30"
           >
             Obtenir un devis gratuit <ArrowRight size={20} className="ml-2" />
           </a>
@@ -347,19 +365,19 @@ const AITools = () => {
   return (
     <section id="ai-tools" className="py-24 bg-slate-900 relative overflow-hidden scroll-mt-28">
       <div className="absolute inset-0 overflow-hidden z-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600 rounded-full blur-[120px] opacity-20 animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-600 rounded-full blur-[120px] opacity-20 animate-pulse"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600 rounded-full blur-[120px] opacity-20 animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-sky-600 rounded-full blur-[120px] opacity-20 animate-pulse"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <Reveal>
           <div className="text-center mb-12">
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-cyan-400 text-xs font-bold mb-6">
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-sky-400 text-xs font-bold mb-6">
               <Sparkles size={14} className="mr-2" /> Powered by Gemini AI
             </div>
             <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
               Outils IA &{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-500">
                 Recherche Intelligente
               </span>
             </h2>
@@ -375,7 +393,7 @@ const AITools = () => {
             <div className="md:w-1/3 bg-slate-900/60 border-b md:border-b-0 md:border-r border-slate-700 p-6 flex flex-col gap-4">
               <button
                 onClick={() => { setActiveTab('advisor'); setResult(''); setInput(''); }}
-                className={`flex items-center p-4 rounded-xl transition-all duration-300 text-left ${activeTab === 'advisor' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/50' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                className={`flex items-center p-4 rounded-xl transition-all duration-300 text-left ${activeTab === 'advisor' ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
               >
                 <BrainCircuit size={24} className="mr-3 flex-shrink-0" />
                 <div>
@@ -386,7 +404,7 @@ const AITools = () => {
 
               <button
                 onClick={() => { setActiveTab('writer'); setResult(''); setInput(''); }}
-                className={`flex items-center p-4 rounded-xl transition-all duration-300 text-left ${activeTab === 'writer' ? 'bg-cyan-600 text-white shadow-lg shadow-cyan-900/50' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
+                className={`flex items-center p-4 rounded-xl transition-all duration-300 text-left ${activeTab === 'writer' ? 'bg-sky-600 text-white shadow-lg shadow-sky-900/50' : 'bg-slate-800 text-slate-400 hover:bg-slate-700'}`}
               >
                 <FilePenLine size={24} className="mr-3 flex-shrink-0" />
                 <div>
@@ -421,13 +439,13 @@ const AITools = () => {
                   placeholder={activeTab === 'advisor'
                     ? "Ex : J'ai une variable qualitative (Maladie Oui/Non) et je veux voir le lien avec le Sexe..."
                     : "Ex : On a vu que le medicament marche bien sur les patients..."}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white placeholder-slate-600 focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none resize-none h-32 transition-all text-sm"
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white placeholder-slate-600 focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none resize-none h-32 transition-all text-sm"
                 />
                 <div className="mt-4 flex justify-end">
                   <button
                     type="submit"
                     disabled={loading || !input.trim()}
-                    className={`px-6 py-3 rounded-xl font-bold text-white transition-all transform active:scale-95 flex items-center gap-2 text-sm ${activeTab === 'advisor' ? 'bg-blue-600 hover:bg-blue-500' : 'bg-cyan-600 hover:bg-cyan-500'} disabled:opacity-50 disabled:cursor-not-allowed`}
+                    className={`px-6 py-3 rounded-xl font-bold text-white transition-all transform active:scale-95 flex items-center gap-2 text-sm ${activeTab === 'advisor' ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-sky-600 hover:bg-sky-500'} disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     {loading
                       ? <><Loader2 size={16} className="animate-spin" /> Analyse en cours...</>
@@ -445,7 +463,7 @@ const AITools = () => {
                       <span className="text-xs uppercase tracking-widest text-slate-500 font-bold">Réponse de l'IA</span>
                       <button
                         onClick={handleCopy}
-                        className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-cyan-400 transition-colors px-2 py-1 rounded-lg hover:bg-slate-800"
+                        className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-sky-400 transition-colors px-2 py-1 rounded-lg hover:bg-slate-800"
                       >
                         {copied
                           ? <><Check size={13} className="text-green-400" /> Copié !</>
@@ -527,7 +545,7 @@ Pour les questions très techniques, renvoie vers la section "Outils IA" du site
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-[60] bg-gradient-to-r from-blue-700 to-cyan-500 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300"
+        className="fixed bottom-6 right-6 z-[60] bg-gradient-to-r from-indigo-700 to-sky-500 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform duration-300"
         aria-label={isOpen ? "Fermer l'assistant" : "Ouvrir l'assistant Keycee"}
       >
         {isOpen ? <X size={24} /> : <MessageSquare size={24} />}
@@ -536,9 +554,9 @@ Pour les questions très techniques, renvoie vers la section "Outils IA" du site
       {isOpen && (
         <div className="fixed bottom-24 right-6 z-[60] w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden animate-fade-in-up"
              style={{ maxHeight: '500px' }}>
-          <div className="bg-gradient-to-r from-blue-900 to-slate-800 p-4 text-white flex justify-between items-center flex-shrink-0">
+          <div className="bg-gradient-to-r from-indigo-900 to-slate-800 p-4 text-white flex justify-between items-center flex-shrink-0">
             <span className="font-bold flex items-center gap-2">
-              <Sparkles size={15} className="text-cyan-400" />
+              <Sparkles size={15} className="text-sky-400" />
               Keycee — CEBI Stats
             </span>
             <button onClick={() => setIsOpen(false)} className="opacity-70 hover:opacity-100 transition-opacity">
@@ -551,7 +569,7 @@ Pour les questions très techniques, renvoie vers la section "Outils IA" du site
               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] rounded-xl px-3 py-2 text-sm leading-relaxed ${
                   msg.role === 'user'
-                    ? 'bg-blue-600 text-white'
+                    ? 'bg-indigo-600 text-white'
                     : 'bg-white border border-gray-200 text-gray-700 shadow-sm'
                 }`}>
                   {msg.text}
@@ -570,7 +588,7 @@ Pour les questions très techniques, renvoie vers la section "Outils IA" du site
 
           <form onSubmit={handleSendMessage} className="p-3 border-t bg-white flex gap-2 flex-shrink-0">
             <input
-              className="flex-1 bg-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="flex-1 bg-gray-100 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
               placeholder="Votre question..."
               value={inputText}
               onChange={e => setInputText(e.target.value)}
@@ -579,7 +597,7 @@ Pour les questions très techniques, renvoie vers la section "Outils IA" du site
             <button
               type="submit"
               disabled={isLoading || !inputText.trim()}
-              className="bg-blue-900 text-white p-2 rounded-xl disabled:opacity-40 hover:bg-blue-800 transition-colors"
+              className="bg-indigo-900 text-white p-2 rounded-xl disabled:opacity-40 hover:bg-indigo-800 transition-colors"
             >
               <Send size={17} />
             </button>
@@ -595,9 +613,9 @@ Pour les questions très techniques, renvoie vers la section "Outils IA" du site
 const Button = ({ children, variant = 'primary', className = '', href, onClick, ...props }) => {
   const base = "inline-flex items-center justify-center px-6 py-3 border text-base font-medium rounded-xl transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-offset-2 cursor-pointer";
   const variants = {
-    primary: "border-transparent text-white bg-blue-900 hover:bg-blue-800 focus:ring-blue-900 shadow-lg hover:shadow-xl",
-    secondary: "border-transparent text-white bg-cyan-500 hover:bg-cyan-600 focus:ring-cyan-500 shadow-md",
-    outline: "border-blue-100 text-blue-900 bg-white hover:bg-blue-50 focus:ring-blue-500",
+    primary: "border-transparent text-white bg-indigo-900 hover:bg-indigo-800 focus:ring-indigo-900 shadow-lg hover:shadow-xl",
+    secondary: "border-transparent text-white bg-sky-500 hover:bg-sky-600 focus:ring-sky-500 shadow-md",
+    outline: "border-indigo-100 text-indigo-900 bg-white hover:bg-indigo-50 focus:ring-indigo-500",
   };
   const handleClick = (e) => {
     if (onClick) onClick(e);
@@ -651,15 +669,15 @@ const ServiceModal = ({ service, onClose }) => {
           </div>
 
           <div className="px-6 py-6">
-            <p className="text-gray-500 italic mb-6 text-sm border-l-4 border-blue-100 pl-4">"{service.intro}"</p>
+            <p className="text-gray-500 italic mb-6 text-sm border-l-4 border-indigo-100 pl-4">"{service.intro}"</p>
             <div className="space-y-4">
               <h4 className="font-bold text-slate-900 text-sm uppercase tracking-wide flex items-center">
-                <Activity size={16} className="mr-2 text-cyan-500" /> Notre Offre
+                <Activity size={16} className="mr-2 text-sky-500" /> Notre Offre
               </h4>
               <ul className="space-y-3">
                 {service.details.map((point, idx) => (
                   <li key={idx} className="flex items-start text-gray-600 text-sm leading-relaxed">
-                    <CheckSquare size={16} className="mr-3 mt-1 text-cyan-500 flex-shrink-0" />
+                    <CheckSquare size={16} className="mr-3 mt-1 text-sky-500 flex-shrink-0" />
                     <span>{point}</span>
                   </li>
                 ))}
@@ -677,7 +695,7 @@ const ServiceModal = ({ service, onClose }) => {
 
           <div className="bg-gray-50 px-6 py-4 sm:flex sm:flex-row-reverse gap-3">
             <button type="button" onClick={handleDevisClick}
-              className="w-full sm:w-auto inline-flex justify-center rounded-xl px-5 py-2.5 bg-blue-900 text-sm font-semibold text-white hover:bg-blue-800 focus:outline-none transition-colors">
+              className="w-full sm:w-auto inline-flex justify-center rounded-xl px-5 py-2.5 bg-indigo-900 text-sm font-semibold text-white hover:bg-indigo-800 focus:outline-none transition-colors">
               Demander un devis
             </button>
             <button type="button" onClick={onClose}
@@ -743,12 +761,12 @@ const Navigation = () => {
               className="h-12 w-auto mr-3 rounded-lg shadow-sm bg-white hover:scale-105 transition-transform"
               onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
             />
-            <div className="hidden bg-blue-900 p-2 rounded-lg mr-2 items-center justify-center">
+            <div className="hidden bg-indigo-900 p-2 rounded-lg mr-2 items-center justify-center">
               <BarChart2 size={24} className="text-white" />
             </div>
             <div className="flex flex-col">
-              <span className="font-extrabold text-2xl tracking-tighter leading-none text-slate-900">
-                CEBI <span className="text-cyan-500">Stats</span>
+              <span className="font-extrabold text-2xl tracking-tighter leading-none" style={{ color: 'var(--cebi-indigo)' }}>
+                CEBI <span style={{ color: 'var(--cebi-indigo-light)' }}>Stats</span>
               </span>
               <span className="text-[10px] font-bold tracking-widest text-gray-500 uppercase">Côte d'Ivoire</span>
             </div>
@@ -763,8 +781,8 @@ const Navigation = () => {
                 onClick={(e) => handleNavClick(e, link.href)}
                 className={`text-sm font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer relative pb-0.5
                   ${activeSection === link.id
-                    ? 'text-cyan-600 after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-cyan-500 after:rounded-full'
-                    : scrolled ? 'text-gray-600 hover:text-cyan-600' : 'text-gray-700 hover:text-cyan-600'
+                    ? 'text-sky-600 after:content-[""] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-sky-500 after:rounded-full'
+                    : scrolled ? 'text-gray-600 hover:text-sky-600' : 'text-gray-700 hover:text-sky-600'
                   }`}
               >
                 {link.name}
@@ -777,7 +795,7 @@ const Navigation = () => {
 
           {/* Burger */}
           <div className="md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-blue-900 focus:outline-none p-2" aria-label="Menu">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-600 hover:text-indigo-900 focus:outline-none p-2" aria-label="Menu">
               {isOpen ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
@@ -795,12 +813,12 @@ const Navigation = () => {
                 onClick={(e) => handleNavClick(e, link.href)}
                 className={`flex items-center px-4 py-3 rounded-lg text-base font-medium transition-colors cursor-pointer ${
                   activeSection === link.id
-                    ? 'text-cyan-600 bg-cyan-50'
-                    : 'text-gray-700 hover:text-cyan-600 hover:bg-blue-50'
+                    ? 'text-sky-600 bg-sky-50'
+                    : 'text-gray-700 hover:text-sky-600 hover:bg-indigo-50'
                 }`}
               >
                 {activeSection === link.id && (
-                  <span className="w-1.5 h-1.5 bg-cyan-500 rounded-full mr-3 flex-shrink-0"></span>
+                  <span className="w-1.5 h-1.5 bg-sky-500 rounded-full mr-3 flex-shrink-0"></span>
                 )}
                 {link.name}
               </a>
@@ -808,7 +826,7 @@ const Navigation = () => {
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, '#contact')}
-              className="block w-full text-center mt-4 px-5 py-3 rounded-xl bg-blue-900 text-white font-bold shadow-lg"
+              className="block w-full text-center mt-4 px-5 py-3 rounded-xl bg-indigo-900 text-white font-bold shadow-lg"
             >
               Démarrer un projet
             </a>
@@ -831,23 +849,23 @@ const Hero = () => {
   }, []);
 
   const skills = [
-    { label: 'Biostatistique', level: 95, color: 'bg-cyan-500' },
-    { label: 'Informatique',   level: 90, color: 'bg-blue-500' },
+    { label: 'Biostatistique', level: 95, color: 'bg-sky-500' },
+    { label: 'Informatique',   level: 90, color: 'bg-indigo-500' },
     { label: 'Infographie',    level: 88, color: 'bg-indigo-500' },
   ];
 
   return (
-    <section id="home" className="relative bg-gradient-to-br from-slate-50 via-blue-50 to-white pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden scroll-mt-28">
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-cyan-100 opacity-40 blur-3xl animate-float"></div>
-      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-blue-100 opacity-40 blur-3xl animate-float-delayed"></div>
+    <section id="home" className="relative bg-gradient-to-br from-slate-50 via-indigo-50 to-white pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden scroll-mt-28">
+      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-sky-100 opacity-40 blur-3xl animate-float"></div>
+      <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-indigo-100 opacity-40 blur-3xl animate-float-delayed"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="lg:grid lg:grid-cols-12 lg:gap-8 items-center">
           {/* Texte gauche */}
           <div className="lg:col-span-7 text-center lg:text-left mb-12 lg:mb-0">
             <Reveal>
-              <div className="inline-flex items-center px-3 py-1 rounded-full bg-cyan-50 border border-cyan-100 text-cyan-800 text-xs font-bold mb-6 shadow-sm">
-                <Award size={14} className="mr-2 text-cyan-500" />
+              <div className="inline-flex items-center px-3 py-1 rounded-full bg-sky-50 border border-sky-100 text-sky-800 text-xs font-bold mb-6 shadow-sm">
+                <Award size={14} className="mr-2 text-sky-500" />
                 Cabinet d'Études Biostatistique & Informatique — Abidjan
               </div>
             </Reveal>
@@ -855,7 +873,7 @@ const Hero = () => {
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6">
                 Transformez vos données de santé en{' '}
                 <br className="hidden lg:block" />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-cyan-500">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2B3490] to-[#3D4DB7]">
                   décisions éclairées
                 </span>
               </h1>
@@ -887,11 +905,11 @@ const Hero = () => {
           {/* Carte droite */}
           <div className="lg:col-span-5 relative hidden lg:block">
             <Reveal delay={800} className="relative rounded-2xl bg-white p-2 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl opacity-10"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-sky-500 rounded-xl opacity-10"></div>
               <div className="bg-slate-50 rounded-xl p-8 border border-slate-100">
                 <div className="flex items-center mb-7">
-                  <div className="bg-blue-900 p-3 rounded-xl mr-4 shadow-lg">
-                    <Activity size={28} className="text-cyan-400" />
+                  <div className="bg-indigo-900 p-3 rounded-xl mr-4 shadow-lg">
+                    <Activity size={28} className="text-sky-400" />
                   </div>
                   <div>
                     <div className="font-bold text-slate-800">L'Équipe CEBI Stats</div>
@@ -918,9 +936,9 @@ const Hero = () => {
 
                 <div className="mt-7 pt-5 border-t border-slate-200 grid grid-cols-3 gap-3 text-center">
                   {[
-                    { val: '100+', label: 'Études', color: 'text-blue-900' },
-                    { val: '8+',   label: 'Années', color: 'text-cyan-600' },
-                    { val: '98%',  label: 'Satisfaction', color: 'text-indigo-600' },
+                    { val: '50+',  label: 'Études',       color: 'text-indigo-900' },
+                    { val: '5+',   label: 'Années',       color: 'text-sky-600' },
+                    { val: '98%',  label: 'Satisfaction', color: 'text-violet-600' },
                   ].map((s, i) => (
                     <div key={i} className="bg-white rounded-xl p-3 shadow-sm border border-slate-100">
                       <div className={`text-xl font-black ${s.color}`}>{s.val}</div>
@@ -944,12 +962,12 @@ const ServiceCard = ({ icon: Icon, title, description, color, onClick }) => (
     onClick={onClick}
   >
     <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${color} opacity-10 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-150`}></div>
-    <div className="w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-blue-50 transition-colors">
-      <Icon size={28} className="text-slate-700 group-hover:text-blue-600 transition-colors" />
+    <div className="w-14 h-14 rounded-xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-indigo-50 transition-colors">
+      <Icon size={28} className="text-slate-700 group-hover:text-indigo-600 transition-colors" />
     </div>
     <h3 className="text-xl font-bold text-slate-900 mb-3">{title}</h3>
     <p className="text-gray-600 leading-relaxed text-sm flex-1">{description}</p>
-    <button className="mt-6 flex items-center text-cyan-600 font-semibold text-sm hover:text-cyan-800 transition-colors group-hover:translate-x-1">
+    <button className="mt-6 flex items-center text-sky-600 font-semibold text-sm hover:text-sky-800 transition-colors group-hover:translate-x-1">
       En savoir plus <ChevronRight size={16} className="ml-1" />
     </button>
   </div>
@@ -964,7 +982,7 @@ const Services = () => {
       icon: Database,
       title: "Gestion de Données & Formulaires",
       description: "Création de formulaires de collecte de données mobiles et nettoyage de vos bases de données.",
-      color: "from-blue-400 to-blue-600",
+      color: "from-indigo-400 to-indigo-600",
       intro: "Une bonne analyse commence par une collecte de données fiable et structurée.",
       details: [
         "Création de formulaires de saisie automatisés (ODK, KoboCollect) pour smartphones et tablettes.",
@@ -978,7 +996,7 @@ const Services = () => {
       icon: Activity,
       title: "Biostatistique Avancée",
       description: "Modélisation complexe : Analyse de survie (Kaplan-Meier, Cox), Régression et Tests.",
-      color: "from-cyan-400 to-cyan-600",
+      color: "from-sky-400 to-sky-600",
       intro: "Nous transformons vos chiffres en preuves scientifiques robustes pour la prise de décision.",
       details: [
         "Analyses bivariées et multivariées pour éliminer les facteurs de confusion.",
@@ -1023,7 +1041,7 @@ const Services = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal>
           <div className="text-center mb-20">
-            <h2 className="text-sm font-bold text-cyan-600 uppercase tracking-widest mb-3">Nos Domaines d'Intervention</h2>
+            <h2 className="text-sm font-bold text-sky-600 uppercase tracking-widest mb-3">Nos Domaines d'Intervention</h2>
             <h3 className="text-3xl md:text-4xl font-extrabold text-slate-900">Expertise Globale</h3>
             <p className="mt-4 text-gray-500 max-w-2xl mx-auto">
               La complémentarité entre l'analyse de données et la maîtrise des outils informatiques.
@@ -1048,10 +1066,10 @@ const Services = () => {
 // --- CARTE PORTFOLIO ---
 const ProjectCard = ({ title, category, description, tools }) => (
   <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full hover:scale-[1.02] transform">
-    <div className="h-1.5 bg-gradient-to-r from-blue-900 via-blue-700 to-cyan-500"></div>
+    <div className="h-1.5 bg-gradient-to-r from-indigo-900 via-indigo-700 to-sky-500"></div>
     <div className="p-6 flex-1 flex flex-col">
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xs font-bold uppercase tracking-wider text-cyan-600 bg-cyan-50 px-2.5 py-1 rounded-full border border-cyan-100">
+        <span className="text-xs font-bold uppercase tracking-wider text-sky-600 bg-sky-50 px-2.5 py-1 rounded-full border border-sky-100">
           {category}
         </span>
         <Layers size={15} className="text-gray-300" />
@@ -1128,7 +1146,7 @@ const Portfolio = () => {
         <Reveal>
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
             <div className="max-w-2xl">
-              <h2 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-2">Portfolio</h2>
+              <h2 className="text-sm font-bold text-indigo-600 uppercase tracking-widest mb-2">Portfolio</h2>
               <h3 className="text-3xl font-extrabold text-slate-900">Travaux Réalisés</h3>
               <p className="mt-4 text-gray-500">
                 Un aperçu de notre expertise à travers des études concrètes menées dans les hôpitaux et structures de santé de Côte d'Ivoire.
@@ -1138,7 +1156,7 @@ const Portfolio = () => {
               <a
                 href="#contact"
                 onClick={(e) => smoothScrollTo(e, '#contact')}
-                className="inline-flex items-center font-bold text-blue-900 hover:text-cyan-600 transition-colors"
+                className="inline-flex items-center font-bold text-indigo-900 hover:text-sky-600 transition-colors"
               >
                 Discuter d'un projet similaire <ExternalLink size={18} className="ml-2" />
               </a>
@@ -1164,33 +1182,33 @@ const About = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
         <Reveal className="relative mb-12 lg:mb-0">
-          <div className="relative rounded-2xl shadow-2xl bg-blue-900 text-white overflow-hidden p-10 z-10 hover:scale-[1.01] transition-transform duration-500">
-            <div className="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-cyan-500 rounded-full opacity-20 blur-2xl animate-pulse"></div>
+          <div className="relative rounded-2xl shadow-2xl bg-indigo-900 text-white overflow-hidden p-10 z-10 hover:scale-[1.01] transition-transform duration-500">
+            <div className="absolute top-0 right-0 -mr-10 -mt-10 w-40 h-40 bg-sky-500 rounded-full opacity-20 blur-2xl animate-pulse"></div>
             <div className="absolute bottom-0 left-0 -ml-10 -mb-10 w-40 h-40 bg-indigo-500 rounded-full opacity-20 blur-2xl animate-pulse"></div>
-            <BarChart2 size={64} className="mb-6 text-cyan-400" />
+            <BarChart2 size={64} className="mb-6 text-sky-400" />
             <h3 className="text-3xl font-bold mb-2">L'Équipe CEBI Stats</h3>
-            <p className="text-blue-200 font-medium mb-6">Experts en Biostatistique et Informatique</p>
-            <div className="space-y-4 text-sm text-blue-100">
+            <p className="text-indigo-200 font-medium mb-6">Experts en Biostatistique et Informatique</p>
+            <div className="space-y-4 text-sm text-indigo-100">
               {[
                 "Cabinet d'Études Biostatistique & Informatique (CEBI Stats)",
                 "Expert en Santé Publique & Épidémiologie — Ministère de la Santé",
                 "Expert Logiciels & Bureautique",
               ].map((item, i) => (
                 <div key={i} className="flex items-center">
-                  <CheckCircle size={18} className="mr-3 text-cyan-400 flex-shrink-0" />
+                  <CheckCircle size={18} className="mr-3 text-sky-400 flex-shrink-0" />
                   {item}
                 </div>
               ))}
             </div>
           </div>
-          <div className="absolute top-4 -right-4 w-full h-full border-2 border-cyan-200 rounded-2xl z-0"></div>
+          <div className="absolute top-4 -right-4 w-full h-full border-2 border-sky-200 rounded-2xl z-0"></div>
         </Reveal>
 
         <Reveal delay={200}>
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">
             Plus qu'un statisticien,{' '}
             <br />
-            <span className="text-blue-700">un partenaire de décision.</span>
+            <span className="text-indigo-700">un partenaire de décision.</span>
           </h2>
           <div className="prose prose-lg text-gray-600 space-y-6 text-justify">
             <p>
@@ -1209,7 +1227,7 @@ const About = () => (
               <a
                 href="#contact"
                 onClick={(e) => smoothScrollTo(e, '#contact')}
-                className="text-cyan-600 font-bold hover:text-cyan-700 flex items-center"
+                className="text-sky-600 font-bold hover:text-sky-700 flex items-center"
               >
                 Discutons de votre projet <ChevronRight size={20} className="ml-1" />
               </a>
@@ -1225,10 +1243,10 @@ const About = () => (
 const FAQItem = ({ question, answer, isOpen, toggle }) => (
   <div className="border-b border-gray-200 last:border-0">
     <button className="w-full py-6 text-left focus:outline-none flex justify-between items-start group" onClick={toggle}>
-      <span className={`text-lg font-bold pr-8 transition-colors ${isOpen ? 'text-blue-900' : 'text-slate-800 group-hover:text-blue-700'}`}>
+      <span className={`text-lg font-bold pr-8 transition-colors ${isOpen ? 'text-indigo-900' : 'text-slate-800 group-hover:text-indigo-700'}`}>
         {question}
       </span>
-      <div className={`flex-shrink-0 mt-1 flex items-center justify-center w-6 h-6 rounded-full border transition-all ${isOpen ? 'bg-blue-900 border-blue-900 text-white' : 'border-gray-300 text-gray-400 group-hover:border-blue-900 group-hover:text-blue-900'}`}>
+      <div className={`flex-shrink-0 mt-1 flex items-center justify-center w-6 h-6 rounded-full border transition-all ${isOpen ? 'bg-indigo-900 border-indigo-900 text-white' : 'border-gray-300 text-gray-400 group-hover:border-indigo-900 group-hover:text-indigo-900'}`}>
         {isOpen ? <Minus size={14} /> : <Plus size={14} />}
       </div>
     </button>
@@ -1238,7 +1256,7 @@ const FAQItem = ({ question, answer, isOpen, toggle }) => (
           <ul className="space-y-2">
             {answer.map((item, i) => (
               <li key={i} className="flex items-start">
-                <span className="mr-2 mt-1.5 w-1.5 h-1.5 bg-cyan-500 rounded-full flex-shrink-0"></span>
+                <span className="mr-2 mt-1.5 w-1.5 h-1.5 bg-sky-500 rounded-full flex-shrink-0"></span>
                 <span>{item}</span>
               </li>
             ))}
@@ -1287,7 +1305,7 @@ const FAQ = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Reveal>
           <div className="text-center mb-12">
-            <h2 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-2">FAQ</h2>
+            <h2 className="text-sm font-bold text-indigo-600 uppercase tracking-widest mb-2">FAQ</h2>
             <h3 className="text-3xl font-extrabold text-slate-900">Questions Fréquentes</h3>
             <p className="mt-4 text-gray-500">
               Tout ce que vous devez savoir avant de démarrer une collaboration avec CEBI Stats.
@@ -1312,7 +1330,7 @@ const FAQ = () => {
           <a
             href="#contact"
             onClick={(e) => smoothScrollTo(e, '#contact')}
-            className="inline-flex items-center text-blue-900 font-bold hover:text-cyan-600 transition-colors"
+            className="inline-flex items-center text-indigo-900 font-bold hover:text-sky-600 transition-colors"
           >
             <HelpCircle size={18} className="mr-2" /> Posez-nous votre question directement
           </a>
@@ -1393,8 +1411,8 @@ const Contact = () => {
               <div className="space-y-7">
                 {contactItems.map((item, i) => (
                   <div key={i} className="flex items-start group">
-                    <div className="flex-shrink-0 bg-blue-800 p-4 rounded-xl group-hover:bg-cyan-600 transition-colors">
-                      <item.icon className="w-6 h-6 text-cyan-200 group-hover:text-white" />
+                    <div className="flex-shrink-0 bg-indigo-800 p-4 rounded-xl group-hover:bg-sky-600 transition-colors">
+                      <item.icon className="w-6 h-6 text-sky-200 group-hover:text-white" />
                     </div>
                     <div className="ml-5">
                       <h3 className="text-lg font-medium">{item.title}</h3>
@@ -1432,7 +1450,7 @@ const Contact = () => {
                       <input
                         type="text" name={f.name} required={f.required}
                         placeholder={f.placeholder} onChange={handleChange}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none transition"
                       />
                     </div>
                   ))}
@@ -1441,13 +1459,13 @@ const Contact = () => {
                   <label className="block text-sm font-semibold text-gray-700 mb-1">Email</label>
                   <input
                     type="email" name="email" required placeholder="votre@email.com" onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none transition"
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-1">Type de projet</label>
                   <select name="type" onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition">
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none transition">
                     <option>Analyse Statistique (Thèse/Mémoire)</option>
                     <option>Formation & Logiciels</option>
                     <option>Nettoyage de Données</option>
@@ -1458,7 +1476,7 @@ const Contact = () => {
                   <label className="block text-sm font-semibold text-gray-700 mb-1">Message</label>
                   <textarea
                     name="message" rows="4" required placeholder="Décrivez votre besoin..." onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none transition"
                   ></textarea>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-3">
@@ -1467,7 +1485,7 @@ const Contact = () => {
                     <MessageCircle size={19} /> Envoyer par WhatsApp
                   </button>
                   <button type="button" onClick={handleEmailSubmit}
-                    className="flex-1 bg-blue-900 text-white font-bold py-4 rounded-xl hover:bg-blue-800 hover:shadow-lg transition duration-300 transform active:scale-95 flex items-center justify-center gap-2">
+                    className="flex-1 bg-indigo-900 text-white font-bold py-4 rounded-xl hover:bg-indigo-800 hover:shadow-lg transition duration-300 transform active:scale-95 flex items-center justify-center gap-2">
                     <Mail size={19} /> Envoyer par Email
                   </button>
                 </div>
@@ -1490,8 +1508,8 @@ const Footer = () => (
       <div className="grid md:grid-cols-4 gap-8 mb-8">
         <div className="col-span-2">
           <div className="flex items-center text-white mb-4">
-            <BarChart2 size={24} className="mr-2 text-cyan-500" />
-            <span className="font-bold text-xl">CEBI Stats</span>
+            <BarChart2 size={24} className="mr-2" style={{ color: '#3D4DB7' }} />
+            <span className="font-bold text-xl tracking-tight">CEBI <span style={{ color: '#3D4DB7' }}>Stats</span></span>
           </div>
           <p className="text-sm leading-relaxed max-w-xs">
             Cabinet d'Études Biostatistique et Informatique.
@@ -1517,7 +1535,7 @@ const Footer = () => (
               { label: 'Contact',     href: '#contact' },
             ].map((l) => (
               <li key={l.label}>
-                <a href={l.href} onClick={(e) => smoothScrollTo(e, l.href)} className="hover:text-cyan-400 transition cursor-pointer">
+                <a href={l.href} onClick={(e) => smoothScrollTo(e, l.href)} className="hover:text-sky-400 transition cursor-pointer">
                   {l.label}
                 </a>
               </li>
@@ -1529,18 +1547,18 @@ const Footer = () => (
           <ul className="space-y-3 text-sm">
             <li>
               <a href="https://facebook.com/CEBISTATS" target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:text-cyan-400 transition">
+                className="flex items-center gap-2 hover:text-sky-400 transition">
                 <Facebook size={15} /> facebook.com/CEBISTATS
               </a>
             </li>
             <li>
               <a href="https://api.whatsapp.com/send?phone=2250141974132" target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-2 hover:text-cyan-400 transition">
+                className="flex items-center gap-2 hover:text-sky-400 transition">
                 <MessageCircle size={15} /> WhatsApp
               </a>
             </li>
             <li>
-              <a href="mailto:cebi.stat@yahoo.com" className="flex items-center gap-2 hover:text-cyan-400 transition">
+              <a href="mailto:cebi.stat@yahoo.com" className="flex items-center gap-2 hover:text-sky-400 transition">
                 <Mail size={15} /> cebi.stat@yahoo.com
               </a>
             </li>
@@ -1551,7 +1569,7 @@ const Footer = () => (
         <p>&copy; {new Date().getFullYear()} CEBI Stats Abidjan. Tous droits réservés.</p>
         <div className="mt-4 md:mt-0 flex items-center gap-1">
           <span>Design par</span>
-          <span className="text-cyan-500 font-bold">Christophe KOUAKOU</span>
+          <span className="text-sky-500 font-bold">Christophe KOUAKOU</span>
         </div>
       </div>
     </div>
@@ -1573,7 +1591,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="font-sans text-slate-900 antialiased bg-white selection:bg-cyan-100 selection:text-cyan-900">
+    <div className="font-sans text-slate-900 antialiased bg-white selection:bg-sky-100 selection:text-sky-900">
       <GlobalStyles />
       <Navigation />
       <main>
