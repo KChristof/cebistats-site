@@ -278,6 +278,46 @@ const ProcessSection = () => {
 // ============================================================
 // NOUVEAU BANDEAU CTA
 // ============================================================
+// ============================================================
+// VALIDTHÈSE BANNER
+// ============================================================
+const ValidTheseBanner = () => (
+  <section className="py-14 bg-gradient-to-br from-slate-50 to-indigo-50 border-y border-indigo-100">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <Reveal>
+        <div className="flex flex-col md:flex-row items-center gap-8 bg-white rounded-2xl shadow-lg border border-indigo-100 p-8">
+          {/* Icône / badge */}
+          <div className="flex-shrink-0 w-20 h-20 rounded-2xl flex items-center justify-center shadow-inner" style={{ background: 'var(--cebi-indigo)' }}>
+            <Award size={40} className="text-white" />
+          </div>
+          {/* Texte */}
+          <div className="flex-1 text-center md:text-left">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-3" style={{ background: '#EEF0FB', color: 'var(--cebi-indigo)' }}>
+              <ExternalLink size={11} /> Nouveau site spécialisé
+            </div>
+            <h3 className="text-xl md:text-2xl font-extrabold text-slate-900 mb-2">
+              Étudiant en médecine, pharmacie ou odontostomatologie ?
+            </h3>
+            <p className="text-slate-600 text-sm md:text-base max-w-xl">
+              <strong className="font-bold" style={{ color: 'var(--cebi-indigo)' }}>ValidThèse</strong> est notre plateforme dédiée à l'analyse de données de thèse pour les étudiants en sciences de la santé. Méthodes adaptées, délais maîtrisés, résultats validés.
+            </p>
+          </div>
+          {/* Bouton CTA */}
+          <a
+            href="https://cebistats.valithese.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-bold shadow-md hover:shadow-lg transition-all hover:-translate-y-1 whitespace-nowrap"
+            style={{ background: 'var(--cebi-indigo)' }}
+          >
+            Visiter ValidThèse <ExternalLink size={16} />
+          </a>
+        </div>
+      </Reveal>
+    </div>
+  </section>
+);
+
 const CTABanner = () => (
   <section className="py-16 bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-800 relative overflow-hidden">
     <div className="absolute right-0 top-0 w-72 h-72 bg-sky-500 rounded-full opacity-10 blur-3xl pointer-events-none"></div>
@@ -796,6 +836,16 @@ const Navigation = ({ onBlogClick }) => {
                 <BookOpen size={13} /> Blog
               </button>
             )}
+            <a
+              href="https://cebistats.valithese.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border-2 transition-all hover:scale-105"
+              style={{ borderColor: 'var(--cebi-indigo)', color: 'var(--cebi-indigo)' }}
+              title="ValidThèse — analyse de données pour thèses en sciences de la santé"
+            >
+              <ExternalLink size={12} /> ValidThèse
+            </a>
             <Button variant="primary" href="#contact" className="!px-5 !py-2 !text-sm !rounded-lg">
               Devis Gratuit
             </Button>
@@ -839,6 +889,15 @@ const Navigation = ({ onBlogClick }) => {
                 <BookOpen size={16} /> Blog
               </button>
             )}
+            <a
+              href="https://cebistats.valithese.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-3 rounded-lg text-base font-medium transition-colors w-full border-2"
+              style={{ borderColor: 'var(--cebi-indigo)', color: 'var(--cebi-indigo)' }}
+            >
+              <ExternalLink size={16} /> ValidThèse ↗
+            </a>
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, '#contact')}
@@ -1582,11 +1641,18 @@ const Footer = () => (
               { label: 'Outils IA',   href: '#ai-tools' },
               { label: 'À Propos',    href: '#about' },
               { label: 'Contact',     href: '#contact' },
+              { label: 'ValidThèse ↗', href: 'https://cebistats.valithese.com', external: true },
             ].map((l) => (
               <li key={l.label}>
-                <a href={l.href} onClick={(e) => smoothScrollTo(e, l.href)} className="hover:text-sky-400 transition cursor-pointer">
-                  {l.label}
-                </a>
+                {l.external ? (
+                  <a href={l.href} target="_blank" rel="noopener noreferrer" className="hover:text-sky-400 transition cursor-pointer" style={{ color: '#818cf8' }}>
+                    {l.label}
+                  </a>
+                ) : (
+                  <a href={l.href} onClick={(e) => smoothScrollTo(e, l.href)} className="hover:text-sky-400 transition cursor-pointer">
+                    {l.label}
+                  </a>
+                )}
               </li>
             ))}
           </ul>
@@ -1887,6 +1953,7 @@ const App = () => {
         <Services />
         <ProcessSection />
         <Portfolio />
+        <ValidTheseBanner />
         <CTABanner />
         <AITools />
         <About />
