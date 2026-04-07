@@ -712,7 +712,7 @@ const ServiceModal = ({ service, onClose }) => {
 // ============================================================
 // NAVIGATION (avec surlignage de la section active)
 // ============================================================
-const Navigation = () => {
+const Navigation = ({ onBlogClick }) => {
   const [isOpen, setIsOpen]         = useState(false);
   const [scrolled, setScrolled]     = useState(false);
   const [activeSection, setActive]  = useState('home');
@@ -788,6 +788,14 @@ const Navigation = () => {
                 {link.name}
               </a>
             ))}
+            {onBlogClick && (
+              <button
+                onClick={() => { setIsOpen(false); onBlogClick(); }}
+                className={`text-sm font-bold uppercase tracking-wider transition-all duration-200 flex items-center gap-1.5 ${scrolled ? 'text-gray-600 hover:text-sky-600' : 'text-gray-700 hover:text-sky-600'}`}
+              >
+                <BookOpen size={13} /> Blog
+              </button>
+            )}
             <Button variant="primary" href="#contact" className="!px-5 !py-2 !text-sm !rounded-lg">
               Devis Gratuit
             </Button>
@@ -823,6 +831,14 @@ const Navigation = () => {
                 {link.name}
               </a>
             ))}
+            {onBlogClick && (
+              <button
+                onClick={() => { setIsOpen(false); onBlogClick(); }}
+                className="flex items-center gap-2 px-4 py-3 rounded-lg text-base font-medium text-gray-700 hover:text-sky-600 hover:bg-indigo-50 transition-colors w-full"
+              >
+                <BookOpen size={16} /> Blog
+              </button>
+            )}
             <a
               href="#contact"
               onClick={(e) => handleNavClick(e, '#contact')}
@@ -902,49 +918,82 @@ const Hero = () => {
             </Reveal>
           </div>
 
-          {/* Carte droite */}
+          {/* Illustration Dashboard Biostat */}
           <div className="lg:col-span-5 relative hidden lg:block">
-            <Reveal delay={800} className="relative rounded-2xl bg-white p-2 shadow-2xl transform rotate-2 hover:rotate-0 transition-transform duration-500">
-              <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-sky-500 rounded-xl opacity-10"></div>
-              <div className="bg-slate-50 rounded-xl p-8 border border-slate-100">
-                <div className="flex items-center mb-7">
-                  <div className="bg-indigo-900 p-3 rounded-xl mr-4 shadow-lg">
-                    <Activity size={28} className="text-sky-400" />
+            <Reveal delay={800}>
+              <div className="relative">
+                {/* Carte principale : dashboard R */}
+                <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform rotate-1 hover:rotate-0 transition-all duration-500">
+                  {/* Window chrome */}
+                  <div className="bg-slate-800 px-4 py-2.5 flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500 opacity-80"></div>
+                    <div className="w-3 h-3 rounded-full bg-amber-500 opacity-80"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-500 opacity-80"></div>
+                    <span className="ml-3 text-xs text-slate-400 font-mono">analyse_survie.R — CEBI Stats</span>
                   </div>
-                  <div>
-                    <div className="font-bold text-slate-800">L'Équipe CEBI Stats</div>
-                    <div className="text-xs text-gray-500 mt-0.5">Experts certifiés · Abidjan</div>
+
+                  <div className="p-5">
+                    {/* Titre du graphique */}
+                    <div className="flex justify-between items-center mb-3">
+                      <span className="text-xs font-bold text-slate-600">Distribution par groupe — n=247</span>
+                      <span className="text-[10px] bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">✓ Analyse complète</span>
+                    </div>
+
+                    {/* Bar chart */}
+                    <div className="flex items-end gap-1.5 h-28 mb-4 bg-slate-50 rounded-xl px-3 pt-3 pb-0">
+                      {[55,72,48,88,62,95,58,82,70,90].map((h, i) => (
+                        <div key={i} className="flex-1 rounded-t-sm"
+                          style={{
+                            height: `${h}%`,
+                            background: i % 2 === 0
+                              ? 'linear-gradient(to top, #2B3490, #3D4DB7)'
+                              : 'linear-gradient(to top, #1E2566, #2B3490)',
+                            opacity: 0.75 + i * 0.02,
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Résultats stats */}
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { label: 'p-valeur',   value: '< 0.001', cls: 'text-green-700 bg-green-50 border-green-100' },
+                        { label: 'OR [IC95%]', value: '2.34',    cls: 'text-indigo-700 bg-indigo-50 border-indigo-100' },
+                        { label: 'Sensibilité',value: '87.4 %',  cls: 'text-sky-700 bg-sky-50 border-sky-100' },
+                      ].map((s, i) => (
+                        <div key={i} className={`rounded-xl p-2.5 border text-center ${s.cls}`}>
+                          <div className="font-black text-xs">{s.value}</div>
+                          <div className="text-[9px] opacity-70 mt-0.5">{s.label}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Barre de progression survie */}
+                    <div className="mt-4 bg-slate-50 rounded-xl p-3 border border-slate-100">
+                      <div className="flex justify-between text-xs mb-1.5">
+                        <span className="font-semibold text-slate-600">Survie globale Kaplan-Meier</span>
+                        <span className="font-black text-indigo-900">72.4 %</span>
+                      </div>
+                      <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                        <div className="h-2 rounded-full bg-gradient-to-r from-indigo-600 to-sky-500" style={{ width: '72.4%' }}></div>
+                      </div>
+                      <div className="text-[9px] text-slate-400 mt-1">Suivi médian 38 mois · CHU Cocody</div>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-5">
-                  {skills.map((skill, i) => (
-                    <div key={i}>
-                      <div className="flex justify-between text-sm mb-1.5">
-                        <span className="font-semibold text-slate-700">{skill.label}</span>
-                        <span className="text-gray-500 font-bold">{skill.level}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-                        <div
-                          className={`${skill.color} h-2.5 rounded-full transition-all duration-1000 ease-out`}
-                          style={{ width: barsVisible ? `${skill.level}%` : '0%', transitionDelay: `${i * 200}ms` }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
+                {/* Badge flottant : Chi-2 */}
+                <div className="absolute -top-5 -right-5 bg-indigo-900 text-white px-4 py-3 rounded-2xl shadow-xl border border-indigo-700 animate-float">
+                  <div className="text-sky-300 font-bold text-[10px] uppercase tracking-wide mb-0.5">Test Chi²</div>
+                  <div className="text-white font-black text-lg leading-none">Sig. ✓</div>
+                  <div className="text-indigo-300 text-[9px] mt-0.5">p = 0.003</div>
                 </div>
 
-                <div className="mt-7 pt-5 border-t border-slate-200 grid grid-cols-3 gap-3 text-center">
-                  {[
-                    { val: '50+',  label: 'Études',       color: 'text-indigo-900' },
-                    { val: '5+',   label: 'Années',       color: 'text-sky-600' },
-                    { val: '98%',  label: 'Satisfaction', color: 'text-violet-600' },
-                  ].map((s, i) => (
-                    <div key={i} className="bg-white rounded-xl p-3 shadow-sm border border-slate-100">
-                      <div className={`text-xl font-black ${s.color}`}>{s.val}</div>
-                      <div className="text-[10px] text-gray-500 font-medium mt-0.5">{s.label}</div>
-                    </div>
-                  ))}
+                {/* Badge flottant : 50+ études */}
+                <div className="absolute -bottom-5 -left-5 bg-white border border-sky-100 px-4 py-3 rounded-2xl shadow-xl animate-float-delayed">
+                  <div className="text-slate-400 font-bold text-[10px] uppercase tracking-wide mb-0.5">Études réalisées</div>
+                  <div className="text-indigo-900 font-black text-lg leading-none">50 +</div>
+                  <div className="text-slate-400 text-[9px] mt-0.5">depuis 2020 · Abidjan</div>
                 </div>
               </div>
             </Reveal>
@@ -1577,23 +1626,261 @@ const Footer = () => (
 );
 
 // ============================================================
+// BLOG — DONNÉES
+// ============================================================
+const blogArticles = [
+  {
+    id: 1,
+    title: 'Comment choisir le bon test statistique pour votre étude ?',
+    category: 'Biostatistique',
+    date: '12 Mars 2025',
+    readTime: '6 min',
+    author: 'Christophe KOUAKOU',
+    excerpt: "L'utilisation d'un test inadapté est l'erreur la plus fréquente dans les thèses. Voici un guide pratique pour faire le bon choix selon vos variables.",
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80',
+    content: [
+      { type: 'intro', text: "Choisir le mauvais test statistique peut invalider des mois de travail de recherche. Cette erreur est malheureusement très courante chez les étudiants en médecine et en santé publique. Ce guide vous donne les clés pour faire le bon choix." },
+      { type: 'heading', text: "1. La règle d'or : identifier le type de vos variables" },
+      { type: 'paragraph', text: "Avant tout, déterminez la nature de vos variables. Sont-elles quantitatives continues (âge, poids, taux), quantitatives discrètes (nombre d'enfants), ou qualitatives (sexe, diagnostic, groupe) ? C'est la première question à se poser." },
+      { type: 'heading', text: "2. Comparer des moyennes : test t ou ANOVA ?" },
+      { type: 'paragraph', text: "Pour comparer des moyennes entre 2 groupes indépendants, utilisez le test t de Student (si distribution normale) ou le test de Mann-Whitney (si non-normal). Pour 3 groupes ou plus, préférez l'ANOVA (Kruskal-Wallis si non-normal)." },
+      { type: 'heading', text: "3. Comparer des proportions : le test du Chi-2" },
+      { type: 'paragraph', text: "Lorsque vos deux variables sont qualitatives (ex : association entre sexe et maladie), le test du Chi-2 est votre allié. Vérifiez que les effectifs théoriques sont ≥ 5 par case. Sinon, utilisez le test exact de Fisher." },
+      { type: 'tip', text: "💡 Notre outil IA 'Conseiller Stats' peut vous aider à identifier le test adapté à votre situation en quelques secondes. Essayez-le dans la section Outils IA du site." },
+    ],
+  },
+  {
+    id: 2,
+    title: "Analyse de survie : Kaplan-Meier et modèle de Cox expliqués",
+    category: 'Méthodes Avancées',
+    date: '28 Février 2025',
+    readTime: '8 min',
+    author: 'Christophe KOUAKOU',
+    excerpt: "Incontournable en oncologie et en épidémiologie clinique, l'analyse de survie permet d'étudier le temps jusqu'à un événement. Découvrez les deux méthodes clés.",
+    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80',
+    content: [
+      { type: 'intro', text: "L'analyse de survie étudie le délai jusqu'à la survenue d'un événement (décès, rechute, guérison). C'est une méthode statistique spécialisée que vous rencontrerez souvent en recherche clinique, notamment en oncologie." },
+      { type: 'heading', text: "Qu'est-ce que la courbe de Kaplan-Meier ?" },
+      { type: 'paragraph', text: "La courbe de Kaplan-Meier représente la probabilité de survie au fil du temps pour un groupe de patients. Elle prend en compte les données censurées (patients perdus de vue ou en vie à la fin du suivi), ce que les méthodes classiques ne peuvent pas faire." },
+      { type: 'heading', text: "Le modèle de Cox : aller plus loin" },
+      { type: 'paragraph', text: "La régression de Cox (modèle à risques proportionnels) permet d'étudier l'effet simultané de plusieurs facteurs sur la survie. Elle produit des Hazard Ratios (HR) mesurant le risque relatif de l'événement entre groupes, ajusté sur les facteurs de confusion." },
+      { type: 'heading', text: "Quand utiliser l'un ou l'autre ?" },
+      { type: 'paragraph', text: "Kaplan-Meier est idéal pour décrire et comparer visuellement la survie entre 2-3 groupes (avec le test du log-rank). Le modèle de Cox est nécessaire dès que vous voulez ajuster sur des covariables ou obtenir des mesures d'association (HR)." },
+      { type: 'tip', text: "📊 CEBI Stats a réalisé des analyses de survie pour des études en oncologie (cancer du sein, cancer du col de l'utérus) au CHU de Cocody. Contactez-nous pour votre étude." },
+    ],
+  },
+  {
+    id: 3,
+    title: "ODK Collect : révolutionner votre collecte de données sur terrain",
+    category: 'Outils & Méthodes',
+    date: '10 Janvier 2025',
+    readTime: '5 min',
+    author: 'Christophe KOUAKOU',
+    excerpt: "Fini les questionnaires papier et les erreurs de saisie ! ODK Collect transforme votre smartphone en outil de collecte de données professionnel pour les études épidémiologiques.",
+    image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80',
+    content: [
+      { type: 'intro', text: "La collecte de données sur terrain est souvent une étape sous-estimée des études épidémiologiques. Pourtant, une mauvaise collecte peut compromettre toute l'analyse statistique qui suivra." },
+      { type: 'heading', text: "Pourquoi abandonner le papier ?" },
+      { type: 'paragraph', text: "Les questionnaires papier génèrent des erreurs de saisie, des données manquantes et des incohérences difficiles à corriger. ODK Collect permet de définir des règles de validation en temps réel : plages de valeurs acceptables, champs obligatoires, logique de saut conditionnelle." },
+      { type: 'heading', text: "Comment ça fonctionne ?" },
+      { type: 'paragraph', text: "Vous concevez votre formulaire dans Excel (format XLSForm), vous le téléversez sur un serveur KoboToolbox, et vos enquêteurs le téléchargent sur leurs smartphones. Les données sont collectées hors-ligne et synchronisées dès qu'une connexion est disponible." },
+      { type: 'heading', text: "ODK vs KoboToolbox : lequel choisir ?" },
+      { type: 'paragraph', text: "KoboToolbox est la solution recommandée pour les organisations humanitaires et de santé publique car elle offre une interface web conviviale, un hébergement gratuit et une synchronisation simplifiée. ODK est plus technique mais plus flexible pour les projets complexes." },
+      { type: 'tip', text: "🛠️ CEBI Stats vous accompagne dans la création de vos formulaires ODK/KoboToolbox et la formation de vos équipes terrain. Demandez un devis gratuit." },
+    ],
+  },
+];
+
+// ============================================================
+// BLOG PAGE
+// ============================================================
+const BlogPage = ({ onBack, onReadArticle }) => (
+  <div className="min-h-screen bg-slate-50 pt-20">
+    {/* Header */}
+    <div className="bg-gradient-to-br from-indigo-900 via-indigo-800 to-slate-900 text-white py-20 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+      <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-sky-500 rounded-full blur-[100px] opacity-10 animate-pulse"></div>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <button onClick={onBack} className="flex items-center text-indigo-300 hover:text-white mb-8 transition-colors text-sm font-medium group">
+          <ChevronRight size={16} className="mr-1 rotate-180 group-hover:-translate-x-1 transition-transform" /> Retour au site
+        </button>
+        <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/10 border border-white/20 text-sky-300 text-xs font-bold mb-5">
+          <BookOpen size={13} className="mr-2" /> Ressources & Guides
+        </div>
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">Blog CEBI Stats</h1>
+        <p className="text-indigo-200 max-w-xl text-lg">
+          Guides pratiques en biostatistique, analyses avancées et outils de collecte de données pour chercheurs et étudiants.
+        </p>
+      </div>
+    </div>
+
+    {/* Articles grid */}
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {blogArticles.map((article) => (
+          <article
+            key={article.id}
+            className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer group border border-slate-100"
+            onClick={() => onReadArticle(article)}
+          >
+            <div className="h-44 overflow-hidden bg-indigo-50">
+              <img
+                src={article.image}
+                alt={article.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            </div>
+            <div className="p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">{article.category}</span>
+                <span className="text-[11px] text-slate-400">{article.readTime}</span>
+              </div>
+              <h2 className="text-base font-bold text-slate-900 mb-2 leading-snug group-hover:text-indigo-900 transition-colors">{article.title}</h2>
+              <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed">{article.excerpt}</p>
+              <div className="mt-4 flex items-center justify-between border-t border-slate-50 pt-3">
+                <span className="text-[11px] text-slate-400">{article.date}</span>
+                <span className="text-sm font-bold text-indigo-600 group-hover:text-indigo-800 flex items-center gap-1">
+                  Lire <ChevronRight size={14} />
+                </span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {/* CTA bottom */}
+      <div className="mt-16 bg-indigo-900 rounded-2xl p-8 md:p-12 text-white text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+        <Sparkles size={32} className="text-sky-400 mx-auto mb-4" />
+        <h3 className="text-2xl font-extrabold mb-2">Une question sur votre analyse ?</h3>
+        <p className="text-indigo-200 mb-6 max-w-md mx-auto">Utilisez nos outils IA gratuits ou contactez directement l'équipe CEBI Stats.</p>
+        <button
+          onClick={onBack}
+          className="bg-white text-indigo-900 px-8 py-3 rounded-xl font-bold hover:bg-indigo-50 transition-colors inline-flex items-center gap-2"
+        >
+          <BrainCircuit size={18} /> Essayer les Outils IA
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+// ============================================================
+// ARTICLE PAGE
+// ============================================================
+const ArticlePage = ({ article, onBack, onBackToBlog }) => (
+  <div className="min-h-screen bg-white pt-16">
+    {/* Hero image */}
+    <div className="h-64 md:h-80 overflow-hidden relative">
+      <img src={article.image} alt={article.title} className="w-full h-full object-cover" onError={(e) => { e.target.style.background='#1e1b4b'; }} />
+      <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/20 to-indigo-900/80"></div>
+      <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-10">
+        <div className="max-w-3xl mx-auto w-full">
+          <button onClick={onBackToBlog} className="flex items-center text-white/80 hover:text-white mb-4 text-sm font-medium group">
+            <ChevronRight size={15} className="mr-1 rotate-180 group-hover:-translate-x-1 transition-transform" /> Blog
+          </button>
+          <span className="text-[11px] font-bold text-sky-300 bg-white/15 px-3 py-1 rounded-full border border-white/20">{article.category}</span>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-white mt-3 leading-tight">{article.title}</h1>
+        </div>
+      </div>
+    </div>
+
+    {/* Content */}
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Meta */}
+      <div className="flex flex-wrap items-center gap-4 text-sm text-slate-400 mb-10 pb-8 border-b border-slate-100">
+        <span className="flex items-center gap-1.5"><Award size={14} className="text-indigo-400" /> {article.author}</span>
+        <span>{article.date}</span>
+        <span className="flex items-center gap-1.5"><BookOpen size={13} /> {article.readTime} de lecture</span>
+      </div>
+
+      {/* Body */}
+      <div className="space-y-5">
+        {article.content.map((block, i) => {
+          if (block.type === 'intro') return (
+            <p key={i} className="text-lg text-slate-700 font-medium leading-relaxed border-l-4 border-indigo-300 pl-5">{block.text}</p>
+          );
+          if (block.type === 'heading') return (
+            <h2 key={i} className="text-xl font-bold text-indigo-900 mt-8 mb-2">{block.text}</h2>
+          );
+          if (block.type === 'paragraph') return (
+            <p key={i} className="text-slate-600 leading-relaxed">{block.text}</p>
+          );
+          if (block.type === 'tip') return (
+            <div key={i} className="bg-indigo-50 border border-indigo-100 rounded-2xl p-5 text-indigo-800 text-sm font-medium leading-relaxed">{block.text}</div>
+          );
+          return null;
+        })}
+      </div>
+
+      {/* CTA */}
+      <div className="mt-14 bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl p-8 text-center">
+        <h3 className="text-xl font-extrabold mb-2">Besoin d'aide pour votre analyse ?</h3>
+        <p className="text-indigo-200 mb-6 text-sm max-w-sm mx-auto">CEBI Stats vous accompagne de la collecte des données à la rédaction des résultats.</p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button onClick={onBack} className="bg-white text-indigo-900 px-6 py-2.5 rounded-xl font-bold hover:bg-indigo-50 transition-colors text-sm">
+            Demander un devis
+          </button>
+          <button onClick={onBackToBlog} className="bg-white/10 border border-white/20 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-white/20 transition-colors text-sm">
+            Lire d'autres articles
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// ============================================================
 // APP PRINCIPAL
 // ============================================================
 const App = () => {
+  const [page, setPage]       = useState('home');   // 'home' | 'blog' | 'article'
+  const [article, setArticle] = useState(null);
+
   useEffect(() => {
-    document.title = "CEBI Stats | Cabinet Biostatistique & Informatique";
+    const titles = {
+      home:    "CEBI Stats | Cabinet Biostatistique & Informatique",
+      blog:    "Blog | CEBI Stats — Biostatistique & Informatique",
+      article: article ? `${article.title} | Blog CEBI Stats` : "CEBI Stats",
+    };
+    document.title = titles[page] || titles.home;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // favicon
     const existingFavicons = document.querySelectorAll("link[rel~='icon']");
     existingFavicons.forEach(el => el.remove());
     const link = document.createElement('link');
     link.rel = 'icon';
     link.href = '/logo-cebistats.jpg?v=4';
     document.head.appendChild(link);
-  }, []);
+  }, [page, article]);
+
+  const goHome    = () => { setPage('home');    setArticle(null); };
+  const goBlog    = () => { setPage('blog');    setArticle(null); };
+  const goArticle = (a) => { setPage('article'); setArticle(a); };
+
+  if (page === 'blog') return (
+    <div className="font-sans text-slate-900 antialiased bg-white selection:bg-sky-100 selection:text-sky-900">
+      <GlobalStyles />
+      <Navigation onBlogClick={goBlog} />
+      <BlogPage onBack={goHome} onReadArticle={goArticle} />
+      <GeminiAssistant />
+    </div>
+  );
+
+  if (page === 'article') return (
+    <div className="font-sans text-slate-900 antialiased bg-white selection:bg-sky-100 selection:text-sky-900">
+      <GlobalStyles />
+      <Navigation onBlogClick={goBlog} />
+      <ArticlePage article={article} onBack={goHome} onBackToBlog={goBlog} />
+      <GeminiAssistant />
+    </div>
+  );
 
   return (
     <div className="font-sans text-slate-900 antialiased bg-white selection:bg-sky-100 selection:text-sky-900">
       <GlobalStyles />
-      <Navigation />
+      <Navigation onBlogClick={goBlog} />
       <main>
         <Hero />
         <StatsSection />
