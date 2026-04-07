@@ -125,6 +125,13 @@ const Toast = ({ message, type = 'success', onClose }) => {
     info:    'bg-indigo-700',
   };
 
+  const handleClick = (e) => {
+    if (onClick) onClick(e);
+    if (href && href.startsWith('#')) {
+      smoothScrollTo(e, href);
+    }
+  };
+
   return (
     <div className={`fixed bottom-28 left-1/2 -translate-x-1/2 z-[200] ${styles[type]} text-white px-5 py-3 rounded-xl shadow-2xl animate-toast flex items-center gap-3 text-sm font-semibold max-w-xs text-center`}>
       {type === 'success' && <Check size={16} className="flex-shrink-0" />}
@@ -1341,6 +1348,91 @@ const About = () => (
                 Discutons de votre projet <ChevronRight size={20} className="ml-1" />
               </a>
             </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// --- NOUVELLE SECTION : FAQ ---
+const FAQItem = ({ question, answer, isOpen, toggle }) => {
+  return (
+    <div className="border-b border-gray-200 last:border-0">
+      <button
+        className="w-full py-6 text-left focus:outline-none flex justify-between items-start group"
+        onClick={toggle}
+      >
+        <span className={`text-lg font-bold pr-8 transition-colors ${isOpen ? 'text-blue-900' : 'text-slate-800 group-hover:text-blue-700'}`}>
+          {question}
+        </span>
+        <div className={`flex-shrink-0 mt-1 flex items-center justify-center w-6 h-6 rounded-full border transition-all ${isOpen ? 'bg-blue-900 border-blue-900 text-white' : 'border-gray-300 text-gray-400 group-hover:border-blue-900 group-hover:text-blue-900'}`}>
+           {isOpen ? <Minus size={14} /> : <Plus size={14} />}
+        </div>
+      </button>
+      <div 
+        className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[500px] opacity-100 mb-6' : 'max-h-0 opacity-0'}`}
+      >
+        <div className="text-gray-600 leading-relaxed pr-8">
+          {Array.isArray(answer) ? (
+            <ul className="space-y-2">
+              {answer.map((item, i) => (
+                <li key={i} className="flex items-start">
+                  <span className="mr-2 mt-1.5 w-1.5 h-1.5 bg-cyan-500 rounded-full flex-shrink-0"></span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>{answer}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FAQ = () => {
+  const [openIndex, setOpenIndex] = useState(0);
+
+  const faqs = [
+    {
+      question: "Comment procéder pour une demande de prestation ?",
+      answer: "Vous pouvez nous contacter via le formulaire dédié, par email, ou par téléphone. Nous vous recommandons de décrire brièvement votre projet (type d’étude, objectifs principaux, état d’avancement des données). Cela nous permet d’organiser un premier entretien d’évaluation rapide et ciblé, sans engagement, afin de comprendre précisément votre besoin en biostatistique."
+    },
+    {
+      question: "Quelles sont les informations nécessaires pour l’analyse statistique ?",
+      answer: [
+        "Le protocole de recherche (ou une description détaillée de votre méthodologie).",
+        "La base de données (pour évaluation de la qualité, des données manquantes et de la structure).",
+        "Le Plan d’Analyse Statistique (PAS) si celui-ci existe déjà.",
+        "Ces éléments sont essentiels pour déterminer la complexité et les méthodes requises (Score de Propension, Régression de Cox, etc.)."
+      ]
+    },
+    {
+      question: "Comment se déroule la prestation ?",
+      answer: [
+        "Conception : Validation du protocole et du PAS, ainsi que le calcul de la puissance statistique.",
+        "Analyse : Réalisation des analyses avancées (multivariées, Analyse de Survie), incluant la gestion des données complexes.",
+        "Rapport et Rédaction : Livraison d’un rapport d’analyse détaillé et de la section résultats, prêts pour votre manuscrit scientifique."
+      ]
+    },
+    {
+      question: "Quels sont les tarifs pour une prestation en statistique ?",
+      answer: "Nos tarifs sont établis sur devis personnalisé. Nous n’avons pas de forfait standard car le coût dépend de l'étendue de l’accompagnement (consultation ponctuelle ou aide complète) et de la complexité méthodologique de l’étude. Le devis détaillé vous est fourni rapidement après l’évaluation de votre projet."
+    }
+  ];
+
+  return (
+    <section id="faq" className="py-24 bg-slate-50 border-t border-gray-200 scroll-mt-28">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <div className="text-center mb-12">
+            <h2 className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-2">FAQ</h2>
+            <h3 className="text-3xl font-extrabold text-slate-900">Questions Fréquentes</h3>
+            <p className="mt-4 text-gray-500">
+              Tout ce que vous devez savoir avant de démarrer une collaboration avec CEBI Stats.
+            </p>
           </div>
         </Reveal>
       </div>
