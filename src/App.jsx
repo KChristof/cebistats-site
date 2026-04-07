@@ -304,7 +304,7 @@ const ValidTheseBanner = () => (
           </div>
           {/* Bouton CTA */}
           <a
-            href="https://cebistats.valithese.com"
+            href="https://validthese.cebistats.com"
             target="_blank"
             rel="noopener noreferrer"
             className="flex-shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white font-bold shadow-md hover:shadow-lg transition-all hover:-translate-y-1 whitespace-nowrap"
@@ -837,7 +837,7 @@ const Navigation = ({ onBlogClick }) => {
               </button>
             )}
             <a
-              href="https://cebistats.valithese.com"
+              href="https://validthese.cebistats.com"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider border-2 transition-all hover:scale-105"
@@ -890,7 +890,7 @@ const Navigation = ({ onBlogClick }) => {
               </button>
             )}
             <a
-              href="https://cebistats.valithese.com"
+              href="https://validthese.cebistats.com"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-4 py-3 rounded-lg text-base font-medium transition-colors w-full border-2"
@@ -1641,7 +1641,7 @@ const Footer = () => (
               { label: 'Outils IA',   href: '#ai-tools' },
               { label: 'À Propos',    href: '#about' },
               { label: 'Contact',     href: '#contact' },
-              { label: 'ValidThèse ↗', href: 'https://cebistats.valithese.com', external: true },
+              { label: 'ValidThèse ↗', href: 'https://validthese.cebistats.com', external: true },
             ].map((l) => (
               <li key={l.label}>
                 {l.external ? (
