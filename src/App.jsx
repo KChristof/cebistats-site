@@ -30,8 +30,9 @@ const GlobalStyles = () => (
       line-height: 1.6;
     }
     h1, h2, h3, h4, h5 {
-      letter-spacing: -0.025em;
-      line-height: 1.2;
+      font-family: 'Playfair Display', Georgia, serif;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
     }
     p {
       line-height: 1.75;
