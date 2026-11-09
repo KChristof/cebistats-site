@@ -7,25 +7,25 @@ import { whatsapp } from '../data/site.js';
   title="Outils gratuits : choisir son test statistique, calculer la taille d’échantillon"
   description="Guide interactif pour choisir le bon test statistique (t de Student, Chi-2, ANOVA, Mann-Whitney, Cox…) et calculateur de taille d’échantillon pour une proportion. Gratuit, sans inscription."
 >
-  <PageHead eyebrow="Outils gratuits" title="Préparez votre analyse en quelques clics">
+  <PageHead kicker="Outils gratuits" title="Préparez votre analyse en quelques clics">
     Deux outils pour avancer sur votre protocole. Ils donnent une première orientation et ne remplacent pas l’avis d’un statisticien sur votre cas précis.
   </PageHead>
 
   <section class="section" style="padding-top:0">
     <div class="wrap tools-grid">
       <!-- Choix du test -->
-      <div class="card tool" id="choix-du-test">
-        <p class="eyebrow">Outil 1</p>
+      <div class="tool" id="choix-du-test">
+        <p class="kicker">Outil 1</p>
         <h2>Quel test statistique choisir&nbsp;?</h2>
         <p class="tool__intro">Répondez aux questions : le guide vous oriente vers le test adapté.</p>
         <ol class="trail" id="trail" aria-label="Vos réponses"></ol>
         <div id="step" aria-live="polite"></div>
-        <button type="button" class="btn btn--ghost restart" id="restart" hidden>Recommencer</button>
+        <button type="button" class="btn btn--line restart" id="restart" hidden>Recommencer</button>
       </div>
 
       <!-- Taille d'échantillon -->
-      <div class="card tool" id="taille-echantillon">
-        <p class="eyebrow">Outil 2</p>
+      <div class="tool" id="taille-echantillon">
+        <p class="kicker">Outil 2</p>
         <h2>Taille d’échantillon pour une proportion</h2>
         <p class="tool__intro">Formule de Schwartz, utilisée pour les études descriptives transversales.</p>
         <form id="ss" class="ss" onsubmit="return false">
@@ -224,30 +224,30 @@ import { whatsapp } from '../data/site.js';
 
 <style>
   .tools-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; }
-  .tool { padding: clamp(22px, 4vw, 36px); scroll-margin-top: 90px; }
+  .tool { padding: clamp(22px, 4vw, 36px); scroll-margin-top: 90px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
   .tool h2 { font-size: clamp(1.5rem, 2.6vw, 1.9rem); }
   .tool__intro { color: var(--muted); }
   .trail { list-style: none; padding: 0; margin: 0 0 16px; display: flex; flex-wrap: wrap; gap: 6px; }
-  .trail :global(button) { font: 500 .82rem var(--sans); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--brand-100); background: var(--brand-50); color: var(--brand); cursor: pointer; }
+  .trail :global(button) { font: 500 .82rem var(--sans); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--teal-50); color: var(--navy); cursor: pointer; }
   .trail :global(button:hover) { text-decoration: line-through; }
-  #step :global(.q) { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  #step :global(.q) { font-family: var(--display); font-size: 1.3rem; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
   #step :global(.hint) { font-size: .9rem; color: var(--muted); }
   #step :global(.opts) { display: grid; gap: 8px; margin-top: 14px; }
-  #step :global(.opt) { text-align: left; font: 500 1rem var(--sans); padding: 14px 18px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; transition: border-color .15s, background .15s; }
-  #step :global(.opt:hover) { border-color: var(--brand); background: var(--surface); }
-  #step :global(.res) { background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: 12px; padding: 22px; }
-  #step :global(.res__lbl) { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 4px; }
-  #step :global(.res__name) { font-family: var(--serif); font-size: 1.5rem; font-weight: 600; color: var(--brand); margin-bottom: 8px; }
-  #step :global(.res__alt) { font-size: .93rem; padding-left: 12px; border-left: 3px solid var(--accent); }
-  #step :global(pre) { margin: 0; background: var(--ink); color: #e6e4f5; padding: 14px 16px; border-radius: 8px; overflow-x: auto; font: .82rem/1.55 var(--mono); }
+  #step :global(.opt) { text-align: left; font: 500 1rem var(--sans); padding: 14px 18px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--bg); color: var(--ink); cursor: pointer; transition: border-color .15s, background .15s; }
+  #step :global(.opt:hover) { border-color: var(--navy); background: var(--surface); }
+  #step :global(.res) { background: var(--teal-50); border: 1px solid var(--line); border-radius: 12px; padding: 22px; }
+  #step :global(.res__lbl) { font-family: var(--sans); font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 4px; }
+  #step :global(.res__name) { font-family: var(--display); font-size: 1.5rem; font-weight: 600; color: var(--navy); margin-bottom: 8px; }
+  #step :global(.res__alt) { font-size: .93rem; padding-left: 12px; border-left: 3px solid var(--teal); }
+  #step :global(pre) { margin: 0; background: var(--ink); color: #e6e4f5; padding: 14px 16px; border-radius: 8px; overflow-x: auto; font: .82rem/1.55 var(--sans); }
   .restart { margin-top: 16px; padding: 9px 16px; font-size: .9rem; }
   .ss { display: grid; gap: 16px; }
   .ss small { font-size: .82rem; color: var(--muted); }
   .ss__out { margin-top: 22px; padding: 22px; border-radius: 12px; background: var(--ink); color: #c9c7dc; }
-  .ss__lbl { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; margin: 0; }
-  .ss__n { font-family: var(--serif); font-size: 3rem; font-weight: 600; color: #fff; margin: 4px 0; line-height: 1.1; }
-  .ss__detail { font-family: var(--mono); font-size: .78rem; margin: 0; line-height: 1.6; }
+  .ss__lbl { font-family: var(--sans); font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; margin: 0; }
+  .ss__n { font-family: var(--display); font-size: 3rem; font-weight: 600; color: #fff; margin: 4px 0; line-height: 1.1; }
+  .ss__detail { font-family: var(--sans); font-size: .78rem; margin: 0; line-height: 1.6; }
   .help { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
-  .help p { font-family: var(--serif); font-size: 1.3rem; color: var(--ink); margin: 0; max-width: 46ch; }
+  .help p { font-family: var(--display); font-size: 1.3rem; color: var(--ink); margin: 0; max-width: 46ch; }
   @media (max-width: 960px) { .tools-grid { grid-template-columns: 1fr; } }
 </style>

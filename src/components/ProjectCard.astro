@@ -7,14 +7,16 @@ const meta = [project.place, project.year].filter(Boolean).join(' · ');
   <h3>{project.title}</h3>
   <p class="pc__sum">{project.summary}</p>
   {meta && <p class="pc__meta">{meta}</p>}
-  <ul class="chips">{project.methods.map((m: string) => <li class="chip">{m}</li>)}</ul>
+  <ul class="tags">{project.methods.map((m: string) => <li>{m}</li>)}</ul>
+  {project.repo && <a class="pc__repo" href={project.repo} target="_blank" rel="noopener">Code et données anonymisées ↗</a>}
 </article>
 
 <style>
-  .pc { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; gap: 10px; transition: border-color .2s, transform .2s; }
-  .pc:hover { border-color: var(--brand-100); transform: translateY(-2px); }
-  .pc__domain { margin: 0; font-family: var(--mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .07em; color: var(--accent-700); }
+  .pc { background: var(--surface); border-top: 3px solid var(--navy); padding: 22px 22px 24px; display: flex; flex-direction: column; gap: 10px; transition: border-color .2s; }
+  .pc:hover { border-top-color: var(--teal); }
+  .pc__domain { margin: 0; font-size: .88rem; font-weight: 600; color: var(--teal-700); }
   .pc h3 { margin: 0; font-size: 1.15rem; line-height: 1.3; }
   .pc__sum { margin: 0; color: var(--muted); font-size: .95rem; flex: 1; }
-  .pc__meta { margin: 0; font-size: .85rem; color: var(--ink); font-weight: 500; }
+  .pc__meta { margin: 0; font-size: .86rem; color: var(--ink); font-weight: 500; }
+  .pc__repo { font-size: .9rem; font-weight: 600; }
 </style>

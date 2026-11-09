@@ -1,57 +1,47 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageHead from '../components/PageHead.astro';
-import Icon from '../components/Icon.astro';
 import { tools } from '../data/site.js';
 
 const values = [
-  { icon: 'check', title: 'Rigueur', text: 'Chaque méthode est choisie pour une raison, vérifiée et documentée. Pas de test « parce que tout le monde fait comme ça ».' },
-  { icon: 'chat', title: 'Pédagogie', text: 'Vous devez comprendre vos résultats pour les défendre. Nous expliquons, en langage clair, ce que disent vos chiffres.' },
-  { icon: 'lock', title: 'Confidentialité', text: 'Vos données ne servent qu’à votre projet. Elles ne sont jamais partagées et sont supprimées à votre demande.' },
-  { icon: 'clock', title: 'Respect des délais', text: 'Le calendrier est fixé dès le devis, en fonction de votre date de dépôt ou de soutenance.' },
+  { t: 'Rigueur', p: 'Chaque méthode est choisie pour une raison, vérifiée et documentée. Pas de test « parce que tout le monde fait comme ça ».' },
+  { t: 'Pédagogie', p: 'Vous devez comprendre vos résultats pour les défendre. Nous expliquons, en langage clair, ce que disent vos chiffres et leurs limites.' },
+  { t: 'Confidentialité', p: 'Vos données ne servent qu’à votre projet. Elles ne sont jamais partagées et sont supprimées à votre demande.' },
+  { t: 'Délais tenus', p: 'Le calendrier est fixé dès le devis, en fonction de votre date de dépôt ou de soutenance.' },
+];
+const skills = [
+  ['Biostatistique et épidémiologie', 'Plans d’analyse, modèles de régression, analyse de survie, études transversales, cas-témoins et de cohorte.'],
+  ['Gestion de données', 'Conception d’outils de collecte mobile, apurement de bases, contrôle de qualité des données de routine.'],
+  ['Développement', 'Tableaux de bord interactifs, applications web, automatisation de rapports et d’extractions.'],
+  ['Formation', 'Accompagnement des étudiants et des équipes, du protocole à la soutenance.'],
 ];
 ---
 <Base
-  title="À propos : un partenaire de décision, pas seulement un statisticien"
-  description="CEBI Stats est né d’un constat : trop de thèses et d’articles sont retardés faute d’une analyse statistique fiable. Découvrez notre approche, notre expérience en santé publique et nos valeurs."
+  title="Le cabinet : biostatistique et informatique au service de la santé"
+  description="CEBI Stats est né d’un constat : trop de thèses et d’articles sont retardés faute d’une analyse statistique fiable. Notre approche, nos compétences et nos engagements."
 >
-  <PageHead eyebrow="À propos" title="Plus qu’un statisticien, un partenaire de décision" />
+  <PageHead kicker="Le cabinet" title="Un partenaire de décision, pas seulement un prestataire de calculs" />
 
-  <section class="section" style="padding-top:0">
-    <div class="wrap story">
-      <div class="prose">
-        <p class="story__lead">Vous avez les données. Vous avez l’expertise médicale. Mais l’analyse statistique vous freine&nbsp;? Vous n’êtes pas seul.</p>
-        <p>Trop de thèses et d’articles scientifiques sont retardés parce que leurs auteurs peinent à exploiter leurs propres données. Trop souvent, le recours à des personnes non qualifiées conduit à des résultats erronés, ou rejetés par les jurys. Nous avons créé CEBI Stats pour briser ce cercle.</p>
-        <p>Forts d’une expérience au sein du Ministère de la Santé, nous maîtrisons toute la chaîne de production des données&nbsp;: la conception du formulaire de collecte sur tablette (ODK, KoboToolbox), le contrôle de la qualité des données, l’analyse statistique, puis la mise en forme du rapport final.</p>
-        <p>Nous proposons aussi des formations personnalisées et l’installation de vos outils de travail, parce que l’autonomie de nos clients fait partie de leur réussite.</p>
-      </div>
-      <aside class="founder">
-        <div class="founder__mono" aria-hidden="true">CK</div>
-        <p class="founder__name">Christophe KOUAKOU</p>
-        <p class="founder__role">Fondateur · Biostatisticien</p>
-        <ul>
-          <li>Expert en santé publique et épidémiologie</li>
-          <li>Expérience au Ministère de la Santé</li>
-          <li>Systèmes d’information sanitaire (DHIS2)</li>
-          <li>Logiciels et bureautique</li>
-        </ul>
-        <a class="btn btn--primary" href="/contact">Discutons de votre projet</a>
-      </aside>
+  <section class="wrap story">
+    <div class="prose">
+      <p class="story__lead">Vous avez les données. Vous avez l’expertise médicale. Mais l’analyse statistique vous freine. Vous n’êtes pas seul.</p>
+      <p>Trop de thèses et d’articles scientifiques sont retardés parce que leurs auteurs peinent à exploiter leurs propres données. Trop souvent, le recours à des personnes non qualifiées conduit à des résultats erronés, ou rejetés par les jurys. CEBI Stats a été créé pour briser ce cercle.</p>
+      <p>Le cabinet réunit des compétences en biostatistique, en épidémiologie, en gestion de données et en développement informatique. Cette combinaison nous permet de couvrir toute la chaîne : la conception du formulaire de collecte, le contrôle de la qualité des données, l’analyse statistique, puis la restitution sous forme de rapport ou de tableau de bord.</p>
+      <p>Nous proposons aussi des formations et l’installation de vos outils de travail, parce que l’autonomie de nos clients fait partie de leur réussite.</p>
     </div>
+    <aside class="skills">
+      {skills.map(([t, p]) => (<div><h3>{t}</h3><p>{p}</p></div>))}
+    </aside>
   </section>
 
-  <section class="section section--white">
+  <section class="section section--white" style="margin-top:96px">
     <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Nos engagements</p>
-        <h2>Ce sur quoi vous pouvez compter</h2>
-      </div>
-      <div class="grid grid-4">
-        {values.map((v) => (
-          <div class="val">
-            <Icon name={v.icon} />
-            <h3>{v.title}</h3>
-            <p>{v.text}</p>
+      <h2 class="h">Nos engagements</h2>
+      <div class="vals">
+        {values.map((v, i) => (
+          <div data-reveal style={`transition-delay:${i * 70}ms`}>
+            <h3>{v.t}</h3>
+            <p>{v.p}</p>
           </div>
         ))}
       </div>
@@ -60,24 +50,27 @@ const values = [
 
   <section class="section--tight">
     <div class="wrap stack">
-      <p class="eyebrow">Outils maîtrisés</p>
+      <h2>Outils maîtrisés</h2>
       <ul>{tools.map((t) => <li>{t}</li>)}</ul>
+      <a class="btn btn--primary" href="/contact">Discutons de votre projet</a>
     </div>
   </section>
 </Base>
 
 <style>
-  .story { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
-  .story__lead { font-family: var(--serif); font-size: 1.5rem; line-height: 1.4; color: var(--ink); }
-  .founder { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 32px; position: sticky; top: 100px; }
-  .founder__mono { width: 72px; height: 72px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font-family: var(--serif); font-size: 1.6rem; font-weight: 600; margin-bottom: 16px; }
-  .founder__name { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; color: var(--ink); margin: 0; }
-  .founder__role { font-family: var(--mono); font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; color: var(--accent-700); margin: 4px 0 18px; }
-  .founder ul { padding-left: 1.1em; margin: 0 0 24px; color: var(--muted); font-size: .95rem; }
-  .founder li { margin-bottom: 6px; }
-  .val > svg { color: var(--brand); margin-bottom: 12px; }
-  .val p { color: var(--muted); font-size: .95rem; }
-  .stack ul { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 0; }
-  .stack li { font-family: var(--serif); font-weight: 600; font-size: 1.1rem; padding: 10px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); }
-  @media (max-width: 860px) { .story { grid-template-columns: 1fr; } .founder { position: static; } }
+  .story { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .story__lead { font-family: var(--display); font-stretch: 104%; font-weight: 600; font-size: 1.5rem; line-height: 1.35; color: var(--ink); }
+  .skills { border-top: 1px solid var(--ink); }
+  .skills > div { padding: 20px 0; border-bottom: 1px solid var(--line); }
+  .skills h3 { font-size: 1.1rem; margin-bottom: 4px; }
+  .skills p { margin: 0; color: var(--muted); font-size: .96rem; }
+  .h { margin-bottom: 36px; }
+  .vals { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .vals > div { border-top: 3px solid var(--teal); padding-top: 18px; }
+  .vals p { color: var(--muted); margin: 0; font-size: .96rem; }
+  .stack h2 { font-size: 1.5rem; }
+  .stack ul { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; padding: 0; margin: 0 0 32px; }
+  .stack li { font-weight: 600; padding: 10px 16px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--ink); }
+  @media (max-width: 900px) { .story { grid-template-columns: 1fr; } .vals { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .vals { grid-template-columns: 1fr; } }
 </style>

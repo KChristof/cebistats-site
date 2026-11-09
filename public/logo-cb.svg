@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 4 218 246" role="img" aria-label="CEBI Stats">
+  <path d="M207.2 57.3 A106 106 0 1 0 209.2 194.4" fill="none" stroke="#0B3A63" stroke-width="24" stroke-linecap="round"/>
+  <path d="M81 68 H133 A30.25 30.25 0 0 1 133 128.5 H141 A31.75 31.75 0 0 1 141 192 H81 Z M81 128.5 H133" fill="none" stroke="#0B3A63" stroke-width="18" stroke-linejoin="miter"/>
+  <polyline points="96,86 106,86 109.5,93 116,93 121,100 127,100 130.5,106 137,106 143,109" fill="none" stroke="#45A149" stroke-width="5" stroke-linejoin="round"/>
+  <g fill="#fff" stroke="#45A149" stroke-width="2.6">
+    <circle cx="96" cy="86" r="4.6"/><circle cx="121" cy="100" r="4.6"/><circle cx="143" cy="109" r="4.6"/>
+  </g>
+  <rect x="96" y="167" width="12" height="17" rx="1.5" fill="#1B7FC4"/>
+  <rect x="113" y="157" width="11.5" height="27" rx="1.5" fill="#168EB0"/>
+  <rect x="128.5" y="146" width="12" height="38" rx="1.5" fill="#0E9A9A"/>
+</svg>

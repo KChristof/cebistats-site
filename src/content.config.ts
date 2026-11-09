@@ -9,7 +9,7 @@ const blog = defineCollection({
     category: z.string(),
     date: z.coerce.date(),
     readTime: z.string(),
-    author: z.string().default('Christophe KOUAKOU'),
+    author: z.string().default('L’équipe CEBI Stats'),
   }),
 });
 

@@ -1,0 +1,234 @@
+---
+// Banc de démonstration de l'accueil : trois livrables types qui défilent.
+// Toutes les valeurs sont simulées.
+
+// --- Courbes de survie
+const KX0 = 44, KX1 = 452, KY0 = 18, KY1 = 236, T = 60;
+const kx = (t: number) => KX0 + (t / T) * (KX1 - KX0);
+const ky = (s: number) => KY0 + ((1 - s) / 0.6) * (KY1 - KY0);
+const A = [[0, 1], [4, .97], [9, .94], [14, .915], [20, .89], [27, .865], [33, .845], [41, .82], [50, .80]];
+const B = [[0, 1], [3, .95], [6, .9], [10, .84], [15, .775], [21, .715], [28, .66], [36, .615], [45, .575], [54, .55]];
+const step = (p: number[][]) => p.reduce((d, [t, s], i) => i ? `${d} H${kx(t).toFixed(1)} V${ky(s).toFixed(1)}` : `M${kx(t)},${ky(s)}`, '') + ` H${kx(T)}`;
+const sAt = (p: number[][], t: number) => p.filter((q) => q[0] <= t).at(-1)![1];
+
+// --- Forest plot (odds ratios ajustés)
+const rows = [
+  { v: 'Âge ≥ 50 ans', or: 2.1, lo: 1.3, hi: 3.4 },
+  { v: 'Stade III–IV', or: 3.8, lo: 2.2, hi: 6.5 },
+  { v: 'Diabète', or: 1.9, lo: 1.1, hi: 3.2 },
+  { v: 'Tabagisme', or: 1.6, lo: 0.9, hi: 2.8 },
+  { v: 'Sexe masculin', or: 0.9, lo: 0.6, hi: 1.4 },
+];
+const FX0 = 196, FX1 = 452;
+const fx = (v: number) => FX0 + ((Math.log2(v) + 2) / 5) * (FX1 - FX0); // 0,25 → 8
+const fmt = (n: number) => n.toFixed(1).replace('.', ',');
+
+// --- Suivi de collecte
+const sites = [
+  { n: 'Site A', v: 312, c: 320 }, { n: 'Site B', v: 268, c: 300 }, { n: 'Site C', v: 241, c: 300 },
+  { n: 'Site D', v: 198, c: 260 }, { n: 'Site E', v: 142, c: 200 }, { n: 'Site F', v: 87, c: 220 },
+];
+const recus = sites.reduce((a, s) => a + s.v, 0), cible = sites.reduce((a, s) => a + s.c, 0);
+const pct = Math.round((recus / cible) * 100);
+const thousands = (n: number) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+const daily = [12, 18, 25, 31, 28, 35, 42, 38, 47, 51, 44, 56, 61, 58];
+const dmax = 70;
+const spark = daily.map((d, i) => `${i ? 'L' : 'M'}${(i * (180 / (daily.length - 1))).toFixed(1)},${(60 - (d / dmax) * 56).toFixed(1)}`).join(' ');
+
+const tabs = [
+  { id: 'surv', label: 'Survie' },
+  { id: 'reg', label: 'Facteurs de risque' },
+  { id: 'dash', label: 'Suivi de collecte' },
+];
+---
+<div class="bench" data-bench>
+  <div class="bench__tabs" role="tablist" aria-label="Exemples de livrables">
+    {tabs.map((t, i) => (
+      <button role="tab" id={`tab-${t.id}`} aria-controls={`pan-${t.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>
+        {t.label}<i class="bench__bar"></i>
+      </button>
+    ))}
+  </div>
+
+  <div class="bench__stage">
+    <!-- 1. Survie -->
+    <section class="pan is-on" id="pan-surv" role="tabpanel" aria-labelledby="tab-surv">
+      <header><strong>Survie globale par groupe de traitement</strong><span>Kaplan-Meier · log-rank p &lt; 0,001</span></header>
+      <svg viewBox="0 0 480 270" aria-hidden="true">
+        {[1, .9, .8, .7, .6, .5, .4].map((t) => (
+          <g class="ax"><line x1={KX0} x2={KX1} y1={ky(t)} y2={ky(t)} /><text x={KX0 - 8} y={ky(t) + 4} text-anchor="end">{t.toFixed(1).replace('.', ',')}</text></g>
+        ))}
+        {[0, 12, 24, 36, 48, 60].map((t) => <text class="ax" x={kx(t)} y={KY1 + 18} text-anchor="middle">{t}</text>)}
+        <text class="ax" x={KX1} y={KY1 + 34} text-anchor="end">mois</text>
+        <path class="ln ln--b" d={step(B)} pathLength="1" />
+        <path class="ln ln--a" d={step(A)} pathLength="1" />
+        {[7, 17, 24, 38, 46, 56].map((t) => <line class="cs cs--a" x1={kx(t)} x2={kx(t)} y1={ky(sAt(A, t)) - 4} y2={ky(sAt(A, t)) + 4} />)}
+        {[8, 13, 25, 33, 49, 58].map((t) => <line class="cs cs--b" x1={kx(t)} x2={kx(t)} y1={ky(sAt(B, t)) - 4} y2={ky(sAt(B, t)) + 4} />)}
+      </svg>
+      <footer><span class="k k--a">Groupe A</span><span class="k k--b">Groupe B</span><span class="hr">HR 0,46 [0,29–0,73]</span></footer>
+    </section>
+
+    <!-- 2. Forest plot -->
+    <section class="pan" id="pan-reg" role="tabpanel" aria-labelledby="tab-reg" hidden>
+      <header><strong>Facteurs associés au décès à 2 ans</strong><span>Régression logistique · OR ajustés [IC 95 %]</span></header>
+      <svg viewBox="0 0 480 270" aria-hidden="true">
+        <line class="ref" x1={fx(1)} x2={fx(1)} y1="14" y2="226" />
+        {rows.map((r, i) => {
+          const y = 36 + i * 42;
+          const sig = r.lo > 1 || r.hi < 1;
+          return (
+            <g class={`fr ${sig ? 'fr--sig' : ''}`} style={`--d:${i * 90}ms`}>
+              <text x="0" y={y + 4} class="fr__v">{r.v}</text>
+              <text x="182" y={y + 4} text-anchor="end" class="fr__n">{fmt(r.or)} [{fmt(r.lo)}–{fmt(r.hi)}]</text>
+              <line class="fr__ci" x1={fx(r.lo)} x2={fx(r.hi)} y1={y} y2={y} style={`--from:${fx(1)}px`} />
+              <rect class="fr__pt" x={fx(r.or) - 5} y={y - 5} width="10" height="10" />
+            </g>
+          );
+        })}
+        {[0.25, 0.5, 1, 2, 4, 8].map((v) => <text class="ax" x={fx(v)} y="248" text-anchor="middle">{String(v).replace('.', ',')}</text>)}
+        <text class="ax" x={FX0} y="266">← protecteur</text>
+        <text class="ax" x={FX1} y="266" text-anchor="end">facteur de risque →</text>
+      </svg>
+    </section>
+
+    <!-- 3. Suivi de collecte -->
+    <section class="pan" id="pan-dash" role="tabpanel" aria-labelledby="tab-dash" hidden>
+      <header><strong>Enquête ménages · suivi en temps réel</strong><span>Mise à jour automatique depuis KoboToolbox</span></header>
+      <div class="dash">
+        <div class="dash__kpi">
+          <svg viewBox="0 0 120 120" class="ring" aria-hidden="true">
+            <circle cx="60" cy="60" r="50" class="ring__bg" />
+            <circle cx="60" cy="60" r="50" class="ring__fg" pathLength="100" style={`--p:${pct}`} />
+          </svg>
+          <p class="dash__pct">{pct} %</p>
+          <p class="dash__lbl">{thousands(recus)} questionnaires sur {thousands(cible)}</p>
+          <svg viewBox="0 0 180 62" class="spark" aria-hidden="true"><path d={spark} pathLength="1" /></svg>
+          <p class="dash__lbl">Soumissions par jour</p>
+        </div>
+        <ul class="dash__bars">
+          {sites.map((s, i) => {
+            const p = Math.round((s.v / s.c) * 100);
+            return (
+              <li style={`--w:${p}%; --d:${i * 70}ms`} class={p < 50 ? 'low' : ''}>
+                <span>{s.n}</span><b><i></i></b><em>{p} %</em>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </section>
+  </div>
+  <p class="bench__note">Exemples de livrables, données simulées</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-bench]').forEach((bench) => {
+    const tabs = [...bench.querySelectorAll<HTMLButtonElement>('[role=tab]')];
+    const pans = [...bench.querySelectorAll<HTMLElement>('[role=tabpanel]')];
+    const DUR = 7000;
+    let i = 0, timer = 0, paused = false;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function show(n: number, focus = false) {
+      i = (n + tabs.length) % tabs.length;
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+      pans.forEach((p, k) => {
+        p.hidden = k !== i;
+        p.classList.remove('is-on');
+        if (k === i) { void p.offsetWidth; p.classList.add('is-on'); }
+      });
+      if (focus) tabs[i].focus();
+      bench.style.setProperty('--dur', `${DUR}ms`);
+      bench.classList.remove('run'); void bench.offsetWidth;
+      if (!paused && !reduce) bench.classList.add('run');
+      clearTimeout(timer);
+      if (!paused && !reduce) timer = window.setTimeout(() => show(i + 1), DUR);
+    }
+    tabs.forEach((t, k) => {
+      t.addEventListener('click', () => { paused = true; bench.classList.add('stopped'); show(k); });
+      t.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') { paused = true; show(i + 1, true); }
+        if (e.key === 'ArrowLeft') { paused = true; show(i - 1, true); }
+      });
+    });
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !paused) show(i); else clearTimeout(timer);
+    }, { threshold: .4 });
+    io.observe(bench);
+  });
+</script>
+
+<style>
+  .bench { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 30px 60px -30px rgba(6, 34, 61, .35); overflow: hidden; }
+  .bench__tabs { display: flex; border-bottom: 1px solid var(--line); background: #fafbfc; }
+  .bench__tabs button {
+    flex: 1; position: relative; padding: 14px 10px; border: 0; background: none; cursor: pointer;
+    font: 600 .88rem var(--sans); color: var(--muted); border-right: 1px solid var(--line);
+  }
+  .bench__tabs button:last-child { border-right: 0; }
+  .bench__tabs button[aria-selected='true'] { color: var(--navy); background: var(--surface); }
+  .bench__bar { position: absolute; left: 0; bottom: -1px; height: 2px; width: 0; background: var(--teal); }
+  .bench__tabs button[aria-selected='true'] .bench__bar { width: 100%; }
+  .bench.run .bench__tabs button[aria-selected='true'] .bench__bar { animation: fill var(--dur) linear; }
+  @keyframes fill { from { width: 0; } to { width: 100%; } }
+
+  .bench__stage { padding: 20px 22px 6px; min-height: 360px; }
+  .pan header { display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
+  .pan header strong { font-family: var(--display); font-stretch: 104%; font-size: 1.05rem; }
+  .pan header span { font-size: .82rem; color: var(--muted); }
+  .pan svg { width: 100%; height: auto; overflow: visible; }
+  .pan footer { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .84rem; padding-top: 4px; }
+  .k::before { content: ''; display: inline-block; width: 16px; height: 3px; margin-right: 7px; vertical-align: middle; }
+  .k--a::before { background: var(--navy); } .k--b::before { background: var(--teal); }
+  .hr { margin-left: auto; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .bench__note { margin: 0; padding: 0 22px 14px; font-size: .76rem; color: var(--muted); font-style: italic; }
+
+  .ax line { stroke: #e8edf1; }
+  .ax, .ax text { font: 11px var(--sans); fill: var(--muted); }
+  .ln { fill: none; stroke-width: 2.6; stroke-dasharray: 1; }
+  .ln--a { stroke: var(--navy); } .ln--b { stroke: var(--teal); }
+  .cs { stroke-width: 1.5; } .cs--a { stroke: var(--navy); } .cs--b { stroke: var(--teal); }
+  .is-on .ln { animation: draw 1.6s .1s cubic-bezier(.4,0,.2,1) both; }
+  .is-on .ln--b { animation-delay: .3s; }
+  .is-on .cs { animation: fade .5s 1.5s both; }
+  @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes fade { from { opacity: 0; } }
+
+  .ref { stroke: var(--ink); stroke-dasharray: 3 3; }
+  .fr__v { font: 500 13px var(--sans); fill: var(--ink); }
+  .fr__n { font: 12px var(--sans); fill: var(--muted); font-variant-numeric: tabular-nums; }
+  .fr__ci { stroke: #9fb0be; stroke-width: 2; }
+  .fr__pt { fill: #9fb0be; }
+  .fr--sig .fr__ci { stroke: var(--navy); } .fr--sig .fr__pt { fill: var(--navy); }
+  .is-on .fr { animation: rise .5s var(--d) both; }
+  @keyframes rise { from { opacity: 0; transform: translateX(-6px); } }
+
+  .dash { display: grid; grid-template-columns: 170px 1fr; gap: 22px; align-items: center; padding-top: 6px; }
+  .dash__kpi { text-align: center; }
+  .ring { width: 116px; margin: 0 auto; transform: rotate(-90deg); }
+  .ring circle { fill: none; stroke-width: 11; }
+  .ring__bg { stroke: #e8edf1; }
+  .ring__fg { stroke: var(--teal); stroke-dasharray: var(--p) 100; stroke-linecap: round; }
+  .is-on .ring__fg { animation: ring 1.4s cubic-bezier(.3,.7,.2,1) both; }
+  @keyframes ring { from { stroke-dasharray: 0 100; } }
+  .dash__pct { font-family: var(--display); font-stretch: 110%; font-weight: 800; font-size: 1.9rem; color: var(--ink); margin: -78px 0 44px; }
+  .dash__lbl { font-size: .78rem; color: var(--muted); margin: 0 0 8px; }
+  .spark { width: 100%; }
+  .spark path { fill: none; stroke: var(--green); stroke-width: 2.2; stroke-dasharray: 1; }
+  .is-on .spark path { animation: draw 1.5s .4s both; }
+  .dash__bars { list-style: none; padding: 0; margin: 0; display: grid; gap: 13px; }
+  .dash__bars li { display: grid; grid-template-columns: 52px 1fr 40px; align-items: center; gap: 10px; font-size: .84rem; }
+  .dash__bars b { height: 10px; background: #e8edf1; border-radius: 2px; overflow: hidden; }
+  .dash__bars i { display: block; height: 100%; width: var(--w); background: var(--navy); border-radius: 2px; }
+  .dash__bars li.low i { background: #d9822b; }
+  .dash__bars em { font-style: normal; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+  .is-on .dash__bars i { animation: grow 1s var(--d) cubic-bezier(.3,.7,.2,1) both; }
+  @keyframes grow { from { width: 0; } }
+
+  @media (max-width: 520px) {
+    .bench__stage { padding: 16px 14px 4px; min-height: 0; }
+    .bench__tabs button { font-size: .8rem; padding: 12px 6px; }
+    .dash { grid-template-columns: 1fr; }
+    .hr { margin-left: 0; }
+  }
+</style>

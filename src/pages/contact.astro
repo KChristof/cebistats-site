@@ -8,13 +8,13 @@ import { contact, services, whatsapp } from '../data/site.js';
   title="Contact et devis gratuit"
   description="Contactez CEBI Stats à Abidjan pour un devis gratuit : analyse statistique de thèse ou d’article, collecte de données, formation. WhatsApp, e-mail ou formulaire."
 >
-  <PageHead eyebrow="Contact" title="Parlons de votre projet">
+  <PageHead kicker="Contact" title="Parlons de votre projet">
     Décrivez votre besoin en quelques lignes. Nous revenons vers vous rapidement avec des questions ou un devis.
   </PageHead>
 
   <section class="section" style="padding-top:0">
     <div class="wrap contact">
-      <form class="card form" id="contact-form" novalidate>
+      <form class="form" id="contact-form" novalidate>
         <div class="form__row">
           <div class="field"><label for="f-nom">Nom et prénom</label><input id="f-nom" name="nom" autocomplete="name" required /></div>
           <div class="field"><label for="f-tel">Téléphone (facultatif)</label><input id="f-tel" name="tel" type="tel" autocomplete="tel" /></div>
@@ -39,7 +39,7 @@ import { contact, services, whatsapp } from '../data/site.js';
         <p class="form__err" id="form-err" role="alert" hidden>Merci d’indiquer votre nom et de décrire votre projet.</p>
         <div class="btn-row">
           <button class="btn btn--wa" type="submit" data-via="wa">Envoyer par WhatsApp</button>
-          <button class="btn btn--ghost" type="submit" data-via="mail">Envoyer par e-mail</button>
+          <button class="btn btn--line" type="submit" data-via="mail">Envoyer par e-mail</button>
         </div>
         <p class="form__note">Le message s’ouvre dans WhatsApp ou dans votre messagerie, prêt à être envoyé. Aucune donnée n’est enregistrée sur ce site.</p>
       </form>
@@ -100,17 +100,17 @@ import { contact, services, whatsapp } from '../data/site.js';
 
 <style>
   .contact { display: grid; grid-template-columns: 1.5fr 1fr; gap: 32px; align-items: start; }
-  .form { display: grid; gap: 18px; padding: clamp(22px, 4vw, 36px); }
+  .form { display: grid; gap: 18px; padding: clamp(22px, 4vw, 36px); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
   .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   .form__err { margin: 0; color: #b42318; font-weight: 500; font-size: .95rem; }
   .form__note { margin: 0; font-size: .85rem; color: var(--muted); }
   .coords { display: grid; gap: 10px; }
   .coord { display: flex; gap: 14px; align-items: flex-start; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; color: var(--text); }
-  a.coord:hover { border-color: var(--brand); color: var(--text); }
-  .coord > svg { color: var(--brand); flex: none; margin-top: 2px; }
+  a.coord:hover { border-color: var(--navy); color: var(--text); }
+  .coord > svg { color: var(--navy); flex: none; margin-top: 2px; }
   .coord span { display: grid; font-size: .95rem; overflow-wrap: anywhere; }
   .coord strong { color: var(--ink); }
-  .coords__tip { padding: 20px; border-radius: var(--radius); background: var(--accent-50); font-size: .93rem; margin-top: 6px; }
+  .coords__tip { padding: 20px; border-radius: var(--radius); background: var(--teal-50); font-size: .93rem; margin-top: 6px; }
   .coords__tip p { margin: 0 0 6px; }
   .coords__tip ul { margin: 0; padding-left: 1.1em; }
   @media (max-width: 900px) { .contact { grid-template-columns: 1fr; } }

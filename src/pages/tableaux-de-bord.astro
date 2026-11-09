@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import DemoDashboard from '../components/DemoDashboard.astro';
+import { whatsapp } from '../data/site.js';
+
+const uses = [
+  { t: 'Suivi d’enquête en temps réel', p: 'Questionnaires reçus par jour, par enquêteur et par site, comparés aux objectifs. Les retards et les anomalies apparaissent avant la fin de la collecte, quand on peut encore agir.' },
+  { t: 'Indicateurs de programme', p: 'Couvertures, taux, tendances mensuelles, comparaison entre zones, alertes quand un seuil est franchi. Une seule version des chiffres pour toute l’équipe.' },
+  { t: 'Qualité des données de routine', p: 'Complétude, promptitude, valeurs aberrantes, incohérences entre indicateurs : les contrôles tournent automatiquement à chaque mise à jour.' },
+  { t: 'Analyse statistique en ligne', p: 'Tableaux croisés, tests et graphiques recalculés à la demande, filtrés par sous-groupe, exportables pour les rapports.' },
+];
+const sources = ['KoboToolbox', 'ODK Central', 'DHIS2', 'PostgreSQL / MySQL', 'Fichiers Excel et CSV', 'Google Sheets'];
+const steps = [
+  ['Cadrage', 'Quelles décisions le tableau de bord doit-il éclairer, et pour qui ? Nous partons des indicateurs, pas des graphiques.'],
+  ['Maquette', 'Une première version sur vos vraies données, à commenter avant de finaliser.'],
+  ['Mise en ligne', 'Connexion automatique aux sources, accès protégé, hébergement.'],
+  ['Prise en main', 'Formation des utilisateurs, guide, puis maintenance si vous le souhaitez.'],
+];
+---
+<Base
+  title="Tableaux de bord interactifs pour la santé"
+  description="Conception de tableaux de bord interactifs (R Shiny, applications web) branchés sur KoboToolbox, DHIS2 ou vos bases : suivi d’enquête, indicateurs de programme, qualité des données."
+>
+  <PageHead kicker="Tableaux de bord interactifs" title="Des chiffres à jour, consultés par toute l’équipe">
+    Nous concevons des applications de suivi branchées directement sur vos sources de données. Plus de fichiers Excel envoyés par e-mail, plus de versions contradictoires.
+  </PageHead>
+
+  <section class="wrap demo">
+    <DemoDashboard />
+    <p class="demo__note">Démonstration avec des données simulées. Changez la zone, l’indicateur ou la période : tout se recalcule.</p>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="h">Pour quoi faire&nbsp;?</h2>
+      <div class="uses">
+        {uses.map((u) => (
+          <div data-reveal>
+            <h3>{u.t}</h3>
+            <p>{u.p}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy">
+    <div class="wrap src">
+      <div>
+        <p class="kicker">Sources de données</p>
+        <h2>Branché sur ce que vous utilisez déjà</h2>
+        <p class="lead">Les données sont récupérées automatiquement, contrôlées, puis affichées. Rien à ressaisir.</p>
+      </div>
+      <ul class="src__list">{sources.map((s) => <li>{s}</li>)}</ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="h">Comment nous travaillons</h2>
+      <ol class="flow">
+        {steps.map(([t, p], i) => (
+          <li data-reveal style={`transition-delay:${i * 80}ms`}><span>{i + 1}</span><h3>{t}</h3><p>{p}</p></li>
+        ))}
+      </ol>
+      <div class="cta">
+        <p>Technologies : R Shiny, applications web, bases SQL. Accès par mot de passe, consultation sur ordinateur et téléphone.</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/contact?type=tableaux-de-bord">Parler de votre tableau de bord</a>
+          <a class="btn btn--wa" href={whatsapp('Bonjour CEBI Stats, je voudrais un tableau de bord pour :')} target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .demo__note { font-size: .9rem; color: var(--muted); margin-top: 12px; }
+  .h { margin-bottom: 40px; }
+  .uses { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; }
+  .uses > div { padding: 28px 0; border-top: 1px solid var(--ink); }
+  .uses p { color: var(--muted); margin: 0; }
+  .src { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .src__list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.14); }
+  .src__list li { background: var(--navy-900); padding: 22px 20px; color: #fff; font-weight: 600; }
+  .flow { list-style: none; padding: 0; margin: 0 0 56px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; counter-reset: f; }
+  .flow span { font-family: var(--display); font-stretch: 115%; font-weight: 800; font-size: 2.4rem; color: var(--teal); line-height: 1; display: block; margin-bottom: 12px; }
+  .flow p { color: var(--muted); margin: 0; }
+  .cta { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; padding-top: 32px; border-top: 1px solid var(--line); }
+  .cta p { margin: 0; max-width: 52ch; color: var(--muted); }
+  @media (max-width: 860px) {
+    .uses, .src { grid-template-columns: 1fr; }
+    .flow { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 520px) { .flow, .src__list { grid-template-columns: 1fr; } }
+</style>
