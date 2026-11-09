@@ -1,0 +1,65 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, posts } }));
+}
+const { post, posts } = Astro.props;
+const { Content } = await render(post);
+const fmt = (d: Date) => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+const others = posts.filter((p) => p.id !== post.id).slice(0, 2);
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.date.toISOString(),
+  author: { '@type': 'Person', name: post.data.author },
+  publisher: { '@type': 'Organization', name: 'CEBI Stats', logo: { '@type': 'ImageObject', url: 'https://cebistats.com/logo.png' } },
+  inLanguage: 'fr',
+};
+---
+<Base title={post.data.title} description={post.data.description} type="article" jsonLd={ld}>
+  <article class="wrap article">
+    <a class="back" href="/blog">← Tous les articles</a>
+    <p class="eyebrow">{post.data.category}</p>
+    <h1>{post.data.title}</h1>
+    <p class="meta">{post.data.author} · {fmt(post.data.date)} · {post.data.readTime} de lecture</p>
+    <div class="prose">
+      <Content />
+    </div>
+
+    <aside class="cta">
+      <h2>Besoin d’aide pour votre analyse&nbsp;?</h2>
+      <p>CEBI Stats vous accompagne de la collecte des données à la rédaction des résultats.</p>
+      <div class="btn-row">
+        <a class="btn btn--accent" href="/contact">Demander un devis</a>
+        <a class="btn btn--light" href="/outils">Outils gratuits</a>
+      </div>
+    </aside>
+
+    {others.length > 0 && (
+      <nav class="more" aria-label="Autres articles">
+        <p class="eyebrow">À lire aussi</p>
+        {others.map((o) => <a href={`/blog/${o.id}`}>{o.data.title}</a>)}
+      </nav>
+    )}
+  </article>
+</Base>
+
+<style>
+  .article { max-width: 780px; padding-top: clamp(32px, 5vw, 64px); padding-bottom: 80px; }
+  .back { display: inline-block; margin-bottom: 28px; font-size: .92rem; text-decoration: none; }
+  .article h1 { font-size: clamp(2rem, 4.4vw, 3rem); }
+  .meta { color: var(--muted); font-size: .92rem; padding-bottom: 28px; margin-bottom: 32px; border-bottom: 1px solid var(--line); }
+  .prose > :global(p:first-child) { font-family: var(--serif); font-size: 1.3rem; line-height: 1.5; color: var(--ink); }
+  .prose :global(pre) { background: var(--ink) !important; color: #e6e4f5; padding: 16px 18px; border-radius: 10px; overflow-x: auto; font: .85rem/1.6 var(--mono); }
+  .prose :global(pre code) { background: none; padding: 0; color: inherit; }
+  .cta { margin-top: 56px; padding: 36px; border-radius: 18px; background: var(--brand); color: #dcd9f3; }
+  .cta h2 { color: #fff; font-size: 1.6rem; }
+  .more { margin-top: 48px; display: grid; gap: 4px; }
+  .more a { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; text-decoration: none; padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--ink); }
+  .more a:hover { color: var(--brand); }
+</style>

@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { tools } from '../data/site.js';
+
+const values = [
+  { icon: 'check', title: 'Rigueur', text: 'Chaque méthode est choisie pour une raison, vérifiée et documentée. Pas de test « parce que tout le monde fait comme ça ».' },
+  { icon: 'chat', title: 'Pédagogie', text: 'Vous devez comprendre vos résultats pour les défendre. Nous expliquons, en langage clair, ce que disent vos chiffres.' },
+  { icon: 'lock', title: 'Confidentialité', text: 'Vos données ne servent qu’à votre projet. Elles ne sont jamais partagées et sont supprimées à votre demande.' },
+  { icon: 'clock', title: 'Respect des délais', text: 'Le calendrier est fixé dès le devis, en fonction de votre date de dépôt ou de soutenance.' },
+];
+---
+<Base
+  title="À propos : un partenaire de décision, pas seulement un statisticien"
+  description="CEBI Stats est né d’un constat : trop de thèses et d’articles sont retardés faute d’une analyse statistique fiable. Découvrez notre approche, notre expérience en santé publique et nos valeurs."
+>
+  <PageHead eyebrow="À propos" title="Plus qu’un statisticien, un partenaire de décision" />
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap story">
+      <div class="prose">
+        <p class="story__lead">Vous avez les données. Vous avez l’expertise médicale. Mais l’analyse statistique vous freine&nbsp;? Vous n’êtes pas seul.</p>
+        <p>Trop de thèses et d’articles scientifiques sont retardés parce que leurs auteurs peinent à exploiter leurs propres données. Trop souvent, le recours à des personnes non qualifiées conduit à des résultats erronés, ou rejetés par les jurys. Nous avons créé CEBI Stats pour briser ce cercle.</p>
+        <p>Forts d’une expérience au sein du Ministère de la Santé, nous maîtrisons toute la chaîne de production des données&nbsp;: la conception du formulaire de collecte sur tablette (ODK, KoboToolbox), le contrôle de la qualité des données, l’analyse statistique, puis la mise en forme du rapport final.</p>
+        <p>Nous proposons aussi des formations personnalisées et l’installation de vos outils de travail, parce que l’autonomie de nos clients fait partie de leur réussite.</p>
+      </div>
+      <aside class="founder">
+        <div class="founder__mono" aria-hidden="true">CK</div>
+        <p class="founder__name">Christophe KOUAKOU</p>
+        <p class="founder__role">Fondateur · Biostatisticien</p>
+        <ul>
+          <li>Expert en santé publique et épidémiologie</li>
+          <li>Expérience au Ministère de la Santé</li>
+          <li>Systèmes d’information sanitaire (DHIS2)</li>
+          <li>Logiciels et bureautique</li>
+        </ul>
+        <a class="btn btn--primary" href="/contact">Discutons de votre projet</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Nos engagements</p>
+        <h2>Ce sur quoi vous pouvez compter</h2>
+      </div>
+      <div class="grid grid-4">
+        {values.map((v) => (
+          <div class="val">
+            <Icon name={v.icon} />
+            <h3>{v.title}</h3>
+            <p>{v.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="wrap stack">
+      <p class="eyebrow">Outils maîtrisés</p>
+      <ul>{tools.map((t) => <li>{t}</li>)}</ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .story { display: grid; grid-template-columns: 1.5fr 1fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+  .story__lead { font-family: var(--serif); font-size: 1.5rem; line-height: 1.4; color: var(--ink); }
+  .founder { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 32px; position: sticky; top: 100px; }
+  .founder__mono { width: 72px; height: 72px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font-family: var(--serif); font-size: 1.6rem; font-weight: 600; margin-bottom: 16px; }
+  .founder__name { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; color: var(--ink); margin: 0; }
+  .founder__role { font-family: var(--mono); font-size: .76rem; text-transform: uppercase; letter-spacing: .06em; color: var(--accent-700); margin: 4px 0 18px; }
+  .founder ul { padding-left: 1.1em; margin: 0 0 24px; color: var(--muted); font-size: .95rem; }
+  .founder li { margin-bottom: 6px; }
+  .val > svg { color: var(--brand); margin-bottom: 12px; }
+  .val p { color: var(--muted); font-size: .95rem; }
+  .stack ul { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; padding: 0; margin: 0; }
+  .stack li { font-family: var(--serif); font-weight: 600; font-size: 1.1rem; padding: 10px 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); }
+  @media (max-width: 860px) { .story { grid-template-columns: 1fr; } .founder { position: static; } }
+</style>

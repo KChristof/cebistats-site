@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Page introuvable" description="Cette page n’existe pas ou a été déplacée.">
+  <section class="section">
+    <div class="wrap nf">
+      <p class="eyebrow">Erreur 404</p>
+      <h1>Cette page est une valeur manquante.</h1>
+      <p class="lead">Elle n’existe pas ou a été déplacée. Reprenez depuis l’accueil ou contactez-nous.</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href="/">Retour à l’accueil</a>
+        <a class="btn btn--ghost" href="/contact">Nous contacter</a>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>.nf { max-width: 720px; min-height: 40vh; }</style>

@@ -1,0 +1,263 @@
+---
+import Base from '../layouts/Base.astro';
+import SurvivalFigure from '../components/SurvivalFigure.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import Icon from '../components/Icon.astro';
+import { services, projects, steps, faq, tools, contact, whatsapp } from '../data/site.js';
+
+const icons = ['chart', 'database', 'school', 'pen'];
+const featured = [projects[0], projects[2], projects[4], projects[7]];
+const domains = [...new Set(projects.map((p) => p.domain))];
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base
+  title="CEBI Stats | Biostatistique & analyse de données de santé à Abidjan"
+  description="Cabinet de biostatistique et d’informatique à Abidjan : analyse statistique de thèses, mémoires et articles en santé, collecte ODK/Kobo, nettoyage de données, formations R, SPSS, Stata."
+  jsonLd={faqLd}
+>
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="wrap hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow">Cabinet d’études · Abidjan</p>
+        <h1>Vos données de santé, analysées avec <em>rigueur</em>.</h1>
+        <p class="lead">
+          CEBI Stats accompagne étudiants, chercheurs et structures de santé de la collecte des données
+          jusqu’aux résultats prêts à publier : méthodes justifiées, résultats interprétés, explications jusqu’à la soutenance.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/contact">Demander un devis gratuit <Icon name="arrow" size={18} /></a>
+          <a class="btn btn--ghost" href="/realisations">Voir nos réalisations</a>
+        </div>
+        <ul class="hero__proof">
+          <li><Icon name="check" size={18} /> Premier échange gratuit</li>
+          <li><Icon name="check" size={18} /> Tarifs étudiants</li>
+          <li><Icon name="check" size={18} /> Données confidentielles</li>
+        </ul>
+      </div>
+      <div class="hero__fig">
+        <SurvivalFigure />
+      </div>
+    </div>
+    <div class="wrap">
+      <div class="tools" aria-label="Logiciels maîtrisés">
+        <span class="tools__lbl">Nous travaillons avec</span>
+        <ul>{tools.map((t) => <li>{t}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="section section--white" id="services">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <div>
+          <p class="eyebrow">Ce que nous faisons</p>
+          <h2>Toute la chaîne de la donnée, sous un même toit</h2>
+          <p class="lead">Du formulaire de collecte au document final, sans perte d’information entre les étapes.</p>
+        </div>
+        <a class="link-arrow" href="/services">Détail des services</a>
+      </div>
+      <div class="grid grid-4">
+        {services.map((s, i) => (
+          <a class="svc" href={`/services#${s.id}`} data-reveal>
+            <span class="svc__ico"><Icon name={icons[i]} /></span>
+            <span class="svc__num">{s.num}</span>
+            <h3>{s.title}</h3>
+            <p>{s.short}</p>
+            <span class="link-arrow">En savoir plus</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- POUR QUI -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Pour qui</p>
+        <h2>Un accompagnement adapté à votre situation</h2>
+      </div>
+      <div class="grid grid-3">
+        <div class="who" data-reveal>
+          <Icon name="student" />
+          <h3>Étudiants en santé</h3>
+          <p>Thèse de médecine, pharmacie, odontostomatologie ou mémoire de master. Nous partons de votre protocole et de votre base, et nous vous expliquons chaque résultat pour la soutenance.</p>
+          <a class="link-arrow" href={contact.validthese} target="_blank" rel="noopener">Découvrir ValidThèse</a>
+        </div>
+        <div class="who" data-reveal>
+          <Icon name="flask" />
+          <h3>Chercheurs &amp; enseignants</h3>
+          <p>Articles scientifiques, plans d’analyse, analyses multivariées et de survie, réponses aux relecteurs. Tableaux et figures aux normes des revues.</p>
+          <a class="link-arrow" href="/services#biostatistique">Analyses avancées</a>
+        </div>
+        <div class="who" data-reveal>
+          <Icon name="building" />
+          <h3>Structures de santé &amp; ONG</h3>
+          <p>Enquêtes de terrain, outils de collecte mobile, qualité des données de routine, formation des équipes et rapports d’activité.</p>
+          <a class="link-arrow" href="/services#donnees">Collecte &amp; données</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESSUS -->
+  <section class="section section--ink">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Comment ça marche</p>
+        <h2>Un processus simple et transparent</h2>
+        <p class="lead" style="color:#b9b7cc">Vous savez à chaque étape ce qui est fait, pourquoi, et quand vous recevrez la suite.</p>
+      </div>
+      <ol class="steps">
+        {steps.map((s, i) => (
+          <li data-reveal>
+            <span class="steps__n">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- REALISATIONS -->
+  <section class="section" id="portfolio">
+    <div class="wrap">
+      <div class="section-head section-head--row">
+        <div>
+          <p class="eyebrow">Réalisations</p>
+          <h2>Des études menées dans les hôpitaux de Côte d’Ivoire</h2>
+          <p class="lead">{projects.length} études dans {domains.length} spécialités : oncologie, pédiatrie, neurologie, cardiologie, santé publique…</p>
+        </div>
+        <a class="link-arrow" href="/realisations">Toutes les réalisations</a>
+      </div>
+      <div class="grid grid-4">
+        {featured.map((p) => <ProjectCard project={p} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- VALIDTHESE -->
+  <section class="section--tight">
+    <div class="wrap">
+      <div class="vt" data-reveal>
+        <div>
+          <p class="eyebrow">Plateforme dédiée</p>
+          <h2>Étudiant en médecine, pharmacie ou odontostomatologie&nbsp;?</h2>
+          <p>ValidThèse, notre service spécialisé pour l’analyse des données de thèse en sciences de la santé : méthodes adaptées, délais maîtrisés, résultats expliqués.</p>
+        </div>
+        <a class="btn btn--accent" href={contact.validthese} target="_blank" rel="noopener">Visiter ValidThèse ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUTILS -->
+  <section class="section section--white">
+    <div class="wrap tools-teaser">
+      <div>
+        <p class="eyebrow">Outils gratuits</p>
+        <h2>Quel test statistique choisir&nbsp;? Quelle taille d’échantillon&nbsp;?</h2>
+        <p class="lead">Deux outils en accès libre pour préparer votre protocole : un guide pas à pas pour choisir le bon test, et un calculateur de taille d’échantillon.</p>
+        <a class="btn btn--primary" href="/outils">Utiliser les outils</a>
+      </div>
+      <div class="formula" aria-hidden="true">
+        <p class="formula__lbl">Taille d’échantillon (proportion)</p>
+        <p class="formula__eq">n = <span class="frac"><span>Z<sup>2</sup> · p · (1 − p)</span><span>d<sup>2</sup></span></span></p>
+        <p class="formula__ex">Z = 1,96 · p = 0,30 · d = 0,05 → <strong>n = 323</strong></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="wrap faq-grid">
+      <div>
+        <p class="eyebrow">Questions fréquentes</p>
+        <h2>Avant de démarrer</h2>
+        <p class="lead">Vous ne trouvez pas la réponse&nbsp;? Écrivez-nous, nous répondons rapidement.</p>
+        <a class="btn btn--wa" href={whatsapp('Bonjour CEBI Stats, j’ai une question :')} target="_blank" rel="noopener">Poser une question sur WhatsApp</a>
+      </div>
+      <div class="faq">
+        {faq.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding: clamp(40px, 6vw, 80px) 0 0; overflow: hidden; }
+  .hero__grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
+  .hero h1 em { font-style: italic; color: var(--brand); }
+  .hero .lead { margin-bottom: 28px; }
+  .hero__proof { list-style: none; padding: 0; margin: 28px 0 0; display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: .92rem; color: var(--muted); }
+  .hero__proof li { display: inline-flex; align-items: center; gap: 6px; }
+  .hero__proof svg { color: var(--success); }
+  .hero__fig { position: relative; }
+  .hero__fig::before { content: ''; position: absolute; inset: -8% -12% -10% 8%; background: radial-gradient(closest-side, var(--brand-50), transparent); z-index: -1; }
+
+  .tools { display: flex; align-items: center; gap: 12px 28px; flex-wrap: wrap; margin-top: clamp(48px, 6vw, 72px); padding: 22px 0; border-top: 1px solid var(--line); }
+  .tools__lbl { font-family: var(--mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+  .tools ul { display: flex; flex-wrap: wrap; gap: 8px 28px; list-style: none; margin: 0; padding: 0; }
+  .tools li { font-family: var(--serif); font-weight: 600; font-size: 1.1rem; color: var(--ink); opacity: .75; }
+
+  .svc { display: flex; flex-direction: column; gap: 10px; padding: 28px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); text-decoration: none; color: var(--text); position: relative; transition: border-color .2s, background .2s, transform .2s; }
+  .svc:hover { border-color: var(--brand); background: var(--surface); transform: translateY(-3px); color: var(--text); }
+  .svc__ico { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--brand); color: #fff; }
+  .svc__num { position: absolute; top: 28px; right: 28px; font-family: var(--mono); font-size: .8rem; color: var(--muted); }
+  .svc h3 { margin: 8px 0 0; font-size: 1.2rem; }
+  .svc p { margin: 0; font-size: .95rem; color: var(--muted); flex: 1; }
+  .svc .link-arrow { font-size: .92rem; color: var(--brand); }
+
+  .who { padding: 32px 0 0; border-top: 2px solid var(--ink); }
+  .who > svg { color: var(--accent-700); margin-bottom: 14px; }
+  .who p { color: var(--muted); }
+
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; counter-reset: s; }
+  .steps li { padding: 28px 28px 8px 0; border-top: 1px solid rgba(255,255,255,.18); position: relative; }
+  .steps li::before { content: ''; position: absolute; top: -5px; left: 0; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+  .steps__n { font-family: var(--mono); font-size: .8rem; color: #f0b46e; }
+  .steps h3 { margin: 10px 0 8px; font-size: 1.2rem; }
+  .steps p { font-size: .95rem; margin: 0; }
+
+  .vt { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; padding: clamp(28px, 4vw, 48px); border-radius: 20px; background: var(--brand); color: #dcd9f3; position: relative; overflow: hidden; }
+  .vt::after { content: ''; position: absolute; right: -60px; bottom: -80px; width: 260px; height: 260px; border-radius: 50%; border: 40px solid rgba(255,255,255,.06); }
+  .vt > div { max-width: 640px; position: relative; z-index: 1; }
+  .vt h2 { color: #fff; font-size: clamp(1.5rem, 2.6vw, 2rem); }
+  .vt .eyebrow { color: #f0b46e; }
+  .vt p:last-child { margin: 0; }
+  .vt .btn { position: relative; z-index: 1; }
+
+  .tools-teaser { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center; }
+  .formula { border: 1px dashed var(--brand-100); background: var(--brand-50); border-radius: 18px; padding: 32px; text-align: center; }
+  .formula__lbl { font-family: var(--mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  .formula__eq { font-family: var(--serif); font-size: clamp(1.4rem, 3vw, 2rem); color: var(--ink); display: flex; justify-content: center; align-items: center; gap: 12px; margin: 16px 0; }
+  .frac { display: inline-grid; text-align: center; }
+  .frac span:first-child { border-bottom: 1.5px solid var(--ink); padding: 0 6px 4px; }
+  .frac span:last-child { padding-top: 4px; }
+  .formula__ex { font-family: var(--mono); font-size: .85rem; margin: 0; color: var(--muted); }
+  .formula__ex strong { color: var(--brand); }
+
+  .faq-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+  .faq-grid > div:first-child { position: sticky; top: 100px; }
+
+  @media (max-width: 960px) {
+    .hero__grid, .tools-teaser, .faq-grid { grid-template-columns: 1fr; }
+    .faq-grid > div:first-child { position: static; }
+    .steps { grid-template-columns: 1fr 1fr; row-gap: 16px; }
+  }
+  @media (max-width: 560px) {
+    .steps { grid-template-columns: 1fr; }
+    .btn-row .btn { flex: 1 1 100%; }
+  }
+</style>

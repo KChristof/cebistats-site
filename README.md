@@ -1,16 +1,27 @@
-# React + Vite
+# cebistats.com — v2
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Site vitrine statique de CEBI Stats, construit avec [Astro](https://astro.build).
 
-Currently, two official plugins are available:
+## Commandes
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm install
+npm run dev      # aperçu local : http://localhost:4321
+npm run build    # génère le site dans dist/
+```
 
-## React Compiler
+## Où modifier le contenu
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Contenu | Fichier |
+|---|---|
+| Coordonnées, services, réalisations, étapes, FAQ, logiciels | `src/data/site.js` |
+| Articles du blog (un fichier Markdown par article) | `src/content/blog/*.md` |
+| Couleurs, polices | `src/styles/global.css` (variables `:root`) |
+| Pages | `src/pages/*.astro` |
 
-## Expanding the ESLint configuration
+Pour ajouter un article : copier un fichier de `src/content/blog/`, changer l'en-tête (title, description, category, date, readTime) et le texte.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Déploiement (Vercel)
+
+Vercel détecte Astro automatiquement (commande `npm run build`, dossier `dist`).
+Le sitemap (`/sitemap-index.xml`) et le `robots.txt` sont générés.

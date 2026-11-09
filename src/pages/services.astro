@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Icon from '../components/Icon.astro';
+import { services, whatsapp } from '../data/site.js';
+const icons = ['chart', 'database', 'school', 'pen'];
+---
+<Base
+  title="Services : biostatistique, collecte de données, formation"
+  description="Analyse statistique de thèses et d’articles (régression, analyse de survie, Cox), formulaires ODK/KoboToolbox, nettoyage de données, formations R, SPSS, Stata, Excel, mise en forme de documents."
+>
+  <PageHead eyebrow="Services" title="Quatre métiers, une seule exigence : des résultats justes">
+    De la conception de l’outil de collecte jusqu’au document final. Vous pouvez faire appel à nous pour une étape précise ou pour tout le projet.
+  </PageHead>
+
+  <nav class="wrap toc" aria-label="Services">
+    {services.map((s) => <a href={`#${s.id}`}><span>{s.num}</span>{s.title}</a>)}
+  </nav>
+
+  {services.map((s, i) => (
+    <section class={`section svc-detail ${i % 2 ? 'section--white' : ''}`} id={s.id}>
+      <div class="wrap svc-detail__grid">
+        <div class="svc-detail__intro">
+          <span class="svc-detail__ico"><Icon name={icons[i]} size={28} /></span>
+          <p class="eyebrow">Service {s.num}</p>
+          <h2>{s.title}</h2>
+          <p class="lead">{s.lead}</p>
+          <p class="svc-detail__aud"><strong>Pour&nbsp;:</strong> {s.audience}</p>
+          <a class="btn btn--primary" href={`/contact?type=${s.id}`}>Demander un devis</a>
+        </div>
+        <div class="svc-detail__lists">
+          <div>
+            <h3>Ce que nous faisons</h3>
+            <ul class="ticks">{s.methods.map((m) => <li>{m}</li>)}</ul>
+          </div>
+          <div class="deliv">
+            <h3>Ce que vous recevez</h3>
+            <ul class="ticks">{s.deliverables.map((d) => <li>{d}</li>)}</ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  ))}
+
+  <section class="section--tight">
+    <div class="wrap cta-strip">
+      <p>Votre besoin ne rentre dans aucune case&nbsp;? Décrivez-le, nous vous dirons honnêtement si nous pouvons vous aider.</p>
+      <a class="btn btn--wa" href={whatsapp()} target="_blank" rel="noopener">Nous écrire sur WhatsApp</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; padding-bottom: 8px; }
+  .toc a { display: inline-flex; gap: 8px; align-items: center; padding: 9px 16px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); text-decoration: none; color: var(--ink); font-weight: 500; font-size: .92rem; }
+  .toc a:hover { border-color: var(--brand); color: var(--brand); }
+  .toc span { font-family: var(--mono); font-size: .75rem; color: var(--accent-700); }
+  .svc-detail { scroll-margin-top: 72px; }
+  .svc-detail__grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+  .svc-detail__ico { width: 56px; height: 56px; border-radius: 14px; display: grid; place-items: center; background: var(--brand); color: #fff; margin-bottom: 20px; }
+  .svc-detail__aud { font-size: .95rem; color: var(--muted); margin-bottom: 28px; }
+  .svc-detail__lists { display: grid; gap: 28px; }
+  .svc-detail__lists h3 { font-family: var(--mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 500; margin-bottom: 14px; }
+  .deliv { background: var(--accent-50); border-radius: var(--radius); padding: 24px 28px; }
+  .deliv h3 { color: var(--accent-700) !important; }
+  .ticks { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .ticks li { padding: 11px 0 11px 30px; border-bottom: 1px solid var(--line); position: relative; }
+  .deliv .ticks li { border-color: rgba(163, 90, 18, .15); }
+  .ticks li:last-child { border-bottom: 0; }
+  .ticks li::before { content: ''; position: absolute; left: 2px; top: 19px; width: 14px; height: 8px; border-left: 2px solid var(--success); border-bottom: 2px solid var(--success); transform: rotate(-45deg); }
+  .cta-strip { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .cta-strip p { font-family: var(--serif); font-size: 1.35rem; color: var(--ink); margin: 0; max-width: 40ch; }
+  @media (max-width: 860px) { .svc-detail__grid { grid-template-columns: 1fr; } }
+</style>
