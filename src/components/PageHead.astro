@@ -1,0 +1,16 @@
+---
+const { eyebrow, title } = Astro.props;
+---
+<header class="ph">
+  <div class="wrap">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    {Astro.slots.has('default') && <p class="lead"><slot /></p>}
+  </div>
+</header>
+
+<style>
+  .ph { padding: clamp(48px, 7vw, 88px) 0 clamp(32px, 4vw, 48px); }
+  .ph h1 { max-width: 20ch; font-size: clamp(2.1rem, 4.6vw, 3.4rem); }
+  .ph .lead { margin: 0; }
+</style>

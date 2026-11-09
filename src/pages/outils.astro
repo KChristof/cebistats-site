@@ -1,0 +1,253 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import { whatsapp } from '../data/site.js';
+---
+<Base
+  title="Outils gratuits : choisir son test statistique, calculer la taille d’échantillon"
+  description="Guide interactif pour choisir le bon test statistique (t de Student, Chi-2, ANOVA, Mann-Whitney, Cox…) et calculateur de taille d’échantillon pour une proportion. Gratuit, sans inscription."
+>
+  <PageHead eyebrow="Outils gratuits" title="Préparez votre analyse en quelques clics">
+    Deux outils pour avancer sur votre protocole. Ils donnent une première orientation et ne remplacent pas l’avis d’un statisticien sur votre cas précis.
+  </PageHead>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap tools-grid">
+      <!-- Choix du test -->
+      <div class="card tool" id="choix-du-test">
+        <p class="eyebrow">Outil 1</p>
+        <h2>Quel test statistique choisir&nbsp;?</h2>
+        <p class="tool__intro">Répondez aux questions : le guide vous oriente vers le test adapté.</p>
+        <ol class="trail" id="trail" aria-label="Vos réponses"></ol>
+        <div id="step" aria-live="polite"></div>
+        <button type="button" class="btn btn--ghost restart" id="restart" hidden>Recommencer</button>
+      </div>
+
+      <!-- Taille d'échantillon -->
+      <div class="card tool" id="taille-echantillon">
+        <p class="eyebrow">Outil 2</p>
+        <h2>Taille d’échantillon pour une proportion</h2>
+        <p class="tool__intro">Formule de Schwartz, utilisée pour les études descriptives transversales.</p>
+        <form id="ss" class="ss" onsubmit="return false">
+          <div class="field">
+            <label for="ss-p">Prévalence attendue p (%)</label>
+            <input id="ss-p" name="p" type="number" inputmode="decimal" min="0.1" max="99.9" step="0.1" value="50" />
+            <small>Issue de la littérature. À défaut, 50 % donne la taille maximale.</small>
+          </div>
+          <div class="field">
+            <label for="ss-d">Précision souhaitée d (%)</label>
+            <input id="ss-d" name="d" type="number" inputmode="decimal" min="0.5" max="30" step="0.5" value="5" />
+            <small>Marge d’erreur absolue, souvent 5 %.</small>
+          </div>
+          <div class="field">
+            <label for="ss-c">Niveau de confiance</label>
+            <select id="ss-c" name="c">
+              <option value="1.645">90 %</option>
+              <option value="1.96" selected>95 %</option>
+              <option value="2.576">99 %</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ss-n">Taille de la population (facultatif)</label>
+            <input id="ss-n" name="N" type="number" inputmode="numeric" min="1" step="1" placeholder="ex. 1200" />
+            <small>Si elle est connue et limitée (correction pour population finie).</small>
+          </div>
+          <div class="field">
+            <label for="ss-r">Taux de non-réponse prévu (%)</label>
+            <input id="ss-r" name="r" type="number" inputmode="decimal" min="0" max="50" step="1" value="10" />
+          </div>
+        </form>
+        <div class="ss__out" aria-live="polite">
+          <p class="ss__lbl">Nombre de sujets à inclure</p>
+          <p class="ss__n" id="ss-result">—</p>
+          <p class="ss__detail" id="ss-detail"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight">
+    <div class="wrap help">
+      <p>Un doute sur le résultat, un plan d’échantillonnage plus complexe (grappes, comparaison de groupes)&nbsp;?</p>
+      <a class="btn btn--wa" href={whatsapp('Bonjour CEBI Stats, j’ai une question sur le choix de mon test / ma taille d’échantillon :')} target="_blank" rel="noopener">Demander l’avis d’un statisticien</a>
+    </div>
+  </section>
+</Base>
+
+<script>
+  type Opt = { label: string; next: string };
+  type Node = { q: string; hint?: string; opts: Opt[] };
+  type Res = { name: string; why: string; alt?: string; r: string };
+
+  const tree: Record<string, Node> = {
+    start: { q: 'Quel est l’objectif de votre analyse ?', opts: [
+      { label: 'Comparer des groupes', next: 'cmp_var' },
+      { label: 'Mesurer la liaison entre deux variables quantitatives', next: 'cor_norm' },
+      { label: 'Expliquer un résultat par plusieurs facteurs (ajustement)', next: 'reg_y' },
+      { label: 'Étudier un délai jusqu’à un événement (décès, rechute…)', next: 'surv' },
+    ]},
+    cmp_var: { q: 'La variable que vous comparez est…', hint: 'Exemples : âge, glycémie (quantitative) ; sexe, guérison oui/non (qualitative).', opts: [
+      { label: 'Quantitative (mesure, nombre)', next: 'q_groups' },
+      { label: 'Qualitative (catégories)', next: 'c_paired' },
+    ]},
+    q_groups: { q: 'Combien de groupes comparez-vous ?', opts: [
+      { label: '2 groupes', next: 'q2_paired' },
+      { label: '3 groupes ou plus', next: 'q3_paired' },
+    ]},
+    q2_paired: { q: 'Les mesures sont-elles…', hint: 'Appariées : mêmes sujets mesurés deux fois (avant/après), ou paires de sujets appariés.', opts: [
+      { label: 'Indépendantes (sujets différents)', next: 'q2i_norm' },
+      { label: 'Appariées (mêmes sujets)', next: 'q2p_norm' },
+    ]},
+    q3_paired: { q: 'Les mesures sont-elles…', opts: [
+      { label: 'Indépendantes (sujets différents)', next: 'q3i_norm' },
+      { label: 'Répétées sur les mêmes sujets', next: 'q3p_norm' },
+    ]},
+    q2i_norm: { q: 'La variable suit-elle une loi normale dans chaque groupe ?', hint: 'Vérifiez avec un histogramme ou le test de Shapiro-Wilk. Avec plus de 30 sujets par groupe, on peut souvent répondre oui.', opts: [
+      { label: 'Oui, ou plus de 30 sujets par groupe', next: '=ttest' }, { label: 'Non, ou petits effectifs', next: '=mw' } ]},
+    q2p_norm: { q: 'Les différences (après − avant) suivent-elles une loi normale ?', opts: [
+      { label: 'Oui', next: '=tpaired' }, { label: 'Non', next: '=wilcox' } ]},
+    q3i_norm: { q: 'La variable suit-elle une loi normale dans chaque groupe ?', opts: [
+      { label: 'Oui', next: '=anova' }, { label: 'Non', next: '=kw' } ]},
+    q3p_norm: { q: 'La variable suit-elle une loi normale ?', opts: [
+      { label: 'Oui', next: '=rmanova' }, { label: 'Non', next: '=friedman' } ]},
+    c_paired: { q: 'Les groupes sont-ils…', opts: [
+      { label: 'Indépendants (sujets différents)', next: 'c_eff' },
+      { label: 'Appariés, 2 mesures (avant/après)', next: '=mcnemar' },
+      { label: 'Appariés, 3 mesures ou plus', next: '=cochran' },
+    ]},
+    c_eff: { q: 'Les effectifs théoriques sont-ils tous ≥ 5 ?', hint: 'Effectif théorique d’une case = total de la ligne × total de la colonne ÷ total général.', opts: [
+      { label: 'Oui', next: '=chi2' }, { label: 'Non, ou je ne sais pas', next: '=fisher' } ]},
+    cor_norm: { q: 'Les deux variables suivent-elles une loi normale (relation linéaire) ?', opts: [
+      { label: 'Oui', next: '=pearson' }, { label: 'Non, ou relation non linéaire', next: '=spearman' } ]},
+    reg_y: { q: 'Le résultat à expliquer est…', opts: [
+      { label: 'Quantitatif continu (tension, poids…)', next: '=linreg' },
+      { label: 'Binaire (oui / non)', next: '=logreg' },
+      { label: 'Un nombre d’événements (comptage)', next: '=poisson' },
+      { label: 'Un délai jusqu’à un événement', next: '=cox' },
+    ]},
+    surv: { q: 'Que voulez-vous faire ?', opts: [
+      { label: 'Décrire la survie et comparer 2 ou 3 groupes', next: '=km' },
+      { label: 'Mesurer l’effet de plusieurs facteurs, ajusté', next: '=cox' },
+    ]},
+  };
+
+  const results: Record<string, Res> = {
+    ttest: { name: 'Test t de Student (indépendant)', why: 'Compare les moyennes de deux groupes indépendants.', alt: 'Si les variances sont inégales, utilisez la version de Welch (par défaut dans R).', r: 't.test(age ~ groupe, data = df)' },
+    mw: { name: 'Test de Mann-Whitney (Wilcoxon rang)', why: 'Compare deux groupes indépendants sans supposer la normalité. Présentez médianes et intervalles interquartiles.', r: 'wilcox.test(age ~ groupe, data = df)' },
+    tpaired: { name: 'Test t apparié', why: 'Compare deux mesures sur les mêmes sujets (avant / après).', r: 't.test(df$apres, df$avant, paired = TRUE)' },
+    wilcox: { name: 'Test des rangs signés de Wilcoxon', why: 'Version non paramétrique du test t apparié.', r: 'wilcox.test(df$apres, df$avant, paired = TRUE)' },
+    anova: { name: 'ANOVA à un facteur', why: 'Compare les moyennes de 3 groupes ou plus.', alt: 'Si le résultat est significatif, faites des comparaisons deux à deux (Tukey).', r: 'summary(aov(age ~ groupe, data = df))\nTukeyHSD(aov(age ~ groupe, data = df))' },
+    kw: { name: 'Test de Kruskal-Wallis', why: 'Compare 3 groupes ou plus sans hypothèse de normalité.', alt: 'Comparaisons deux à deux : test de Dunn avec correction de Bonferroni.', r: 'kruskal.test(age ~ groupe, data = df)' },
+    rmanova: { name: 'ANOVA à mesures répétées', why: 'Compare 3 mesures ou plus sur les mêmes sujets.', alt: 'Un modèle mixte est souvent préférable s’il y a des données manquantes.', r: 'library(rstatix)\nanova_test(df, dv = valeur, wid = id, within = temps)' },
+    friedman: { name: 'Test de Friedman', why: 'Version non paramétrique de l’ANOVA à mesures répétées.', r: 'friedman.test(valeur ~ temps | id, data = df)' },
+    chi2: { name: 'Test du Chi-2 d’indépendance', why: 'Teste l’association entre deux variables qualitatives.', r: 'chisq.test(table(df$sexe, df$maladie))' },
+    fisher: { name: 'Test exact de Fisher', why: 'Remplace le Chi-2 lorsque des effectifs théoriques sont inférieurs à 5.', r: 'fisher.test(table(df$sexe, df$maladie))' },
+    mcnemar: { name: 'Test de McNemar', why: 'Compare une proportion mesurée deux fois sur les mêmes sujets.', r: 'mcnemar.test(table(df$avant, df$apres))' },
+    cochran: { name: 'Test Q de Cochran', why: 'Compare une variable binaire mesurée 3 fois ou plus sur les mêmes sujets.', r: 'library(rstatix)\ncochran_qtest(df, reponse ~ temps | id)' },
+    pearson: { name: 'Corrélation de Pearson', why: 'Mesure la force d’une relation linéaire entre deux variables quantitatives.', r: 'cor.test(df$poids, df$taille, method = "pearson")' },
+    spearman: { name: 'Corrélation de Spearman', why: 'Mesure une relation monotone, sans hypothèse de normalité.', r: 'cor.test(df$poids, df$taille, method = "spearman")' },
+    linreg: { name: 'Régression linéaire multiple', why: 'Explique un résultat quantitatif par plusieurs facteurs. Donne des coefficients ajustés.', alt: 'Vérifiez la normalité des résidus et l’absence de colinéarité.', r: 'summary(lm(tas ~ age + sexe + imc, data = df))' },
+    logreg: { name: 'Régression logistique', why: 'Explique un résultat binaire par plusieurs facteurs. Donne des odds ratios (OR) ajustés.', alt: 'Comptez environ 10 événements par variable introduite dans le modèle.', r: 'm <- glm(deces ~ age + sexe + stade, family = binomial, data = df)\nexp(cbind(OR = coef(m), confint(m)))' },
+    poisson: { name: 'Régression de Poisson (ou binomiale négative)', why: 'Explique un nombre d’événements. Donne des ratios d’incidence (IRR).', alt: 'Si la variance dépasse nettement la moyenne (surdispersion), passez à la binomiale négative.', r: 'glm(nb_crises ~ age + traitement, family = poisson, data = df)' },
+    km: { name: 'Kaplan-Meier et test du log-rank', why: 'Estime la courbe de survie en tenant compte des données censurées, et compare les groupes.', r: 'library(survival)\nfit <- survfit(Surv(delai, deces) ~ groupe, data = df)\nsurvdiff(Surv(delai, deces) ~ groupe, data = df)' },
+    cox: { name: 'Modèle de Cox', why: 'Mesure l’effet de plusieurs facteurs sur le délai de survenue. Donne des hazard ratios (HR) ajustés.', alt: 'Vérifiez l’hypothèse des risques proportionnels (résidus de Schoenfeld).', r: 'library(survival)\nm <- coxph(Surv(delai, deces) ~ age + stade + traitement, data = df)\nsummary(m); cox.zph(m)' },
+  };
+
+  const stepEl = document.getElementById('step')!;
+  const trailEl = document.getElementById('trail')!;
+  const restartEl = document.getElementById('restart')!;
+  let path: { node: string; answer: string }[] = [];
+
+  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]!));
+
+  function render(id: string) {
+    trailEl.innerHTML = path.map((p, i) => `<li><button type="button" data-back="${i}">${esc(p.answer)}</button></li>`).join('');
+    restartEl.hidden = path.length === 0;
+    if (id.startsWith('=')) {
+      const r = results[id.slice(1)];
+      stepEl.innerHTML = `
+        <div class="res">
+          <p class="res__lbl">Test recommandé</p>
+          <p class="res__name">${esc(r.name)}</p>
+          <p>${esc(r.why)}</p>
+          ${r.alt ? `<p class="res__alt">${esc(r.alt)}</p>` : ''}
+          <p class="res__lbl">Dans R</p>
+          <pre><code>${esc(r.r)}</code></pre>
+        </div>`;
+      return;
+    }
+    const n = tree[id];
+    stepEl.innerHTML = `
+      <p class="q">${esc(n.q)}</p>
+      ${n.hint ? `<p class="hint">${esc(n.hint)}</p>` : ''}
+      <div class="opts">${n.opts.map((o, i) => `<button type="button" class="opt" data-i="${i}">${esc(o.label)}</button>`).join('')}</div>`;
+    stepEl.querySelectorAll<HTMLButtonElement>('.opt').forEach((b) => b.addEventListener('click', () => {
+      const o = n.opts[Number(b.dataset.i)];
+      path.push({ node: id, answer: o.label });
+      render(o.next);
+      stepEl.querySelector<HTMLElement>('.opt')?.focus();
+    }));
+  }
+  trailEl.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-back]');
+    if (!b) return;
+    const i = Number(b.dataset.back);
+    const node = path[i].node;
+    path = path.slice(0, i);
+    render(node);
+  });
+  restartEl.addEventListener('click', () => { path = []; render('start'); });
+  render('start');
+
+  // Taille d'échantillon
+  const ss = document.getElementById('ss') as HTMLFormElement;
+  const out = document.getElementById('ss-result')!;
+  const detail = document.getElementById('ss-detail')!;
+  const fmt = (x: number) => x.toLocaleString('fr-FR');
+  function calc() {
+    const f = new FormData(ss);
+    const p = Number(f.get('p')) / 100, d = Number(f.get('d')) / 100, z = Number(f.get('c'));
+    const N = Number(f.get('N')) || 0, r = Math.min(0.9, Math.max(0, Number(f.get('r')) / 100 || 0));
+    if (!(p > 0 && p < 1 && d > 0 && d < 1)) { out.textContent = '—'; detail.textContent = 'Vérifiez p (entre 0 et 100 %) et d.'; return; }
+    const n0 = (z * z * p * (1 - p)) / (d * d);
+    const n1 = N > 0 ? n0 / (1 + (n0 - 1) / N) : n0;
+    const n = Math.ceil(Math.ceil(n1) / (1 - r));
+    out.textContent = fmt(n);
+    const parts = [`n₀ = ${fmt(z)}² × ${fmt(p)} × ${fmt(+(1 - p).toFixed(3))} ÷ ${fmt(d)}² = ${fmt(Math.ceil(n0))}`];
+    if (N > 0) parts.push(`après correction pour une population de ${fmt(N)} : ${fmt(Math.ceil(n1))}`);
+    if (r > 0) parts.push(`majoré de ${fmt(r * 100)} % pour la non-réponse : ${fmt(n)}`);
+    detail.textContent = parts.join(' · ');
+  }
+  ss.addEventListener('input', calc);
+  calc();
+</script>
+
+<style>
+  .tools-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; }
+  .tool { padding: clamp(22px, 4vw, 36px); scroll-margin-top: 90px; }
+  .tool h2 { font-size: clamp(1.5rem, 2.6vw, 1.9rem); }
+  .tool__intro { color: var(--muted); }
+  .trail { list-style: none; padding: 0; margin: 0 0 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .trail :global(button) { font: 500 .82rem var(--sans); padding: 5px 10px; border-radius: 6px; border: 1px solid var(--brand-100); background: var(--brand-50); color: var(--brand); cursor: pointer; }
+  .trail :global(button:hover) { text-decoration: line-through; }
+  #step :global(.q) { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+  #step :global(.hint) { font-size: .9rem; color: var(--muted); }
+  #step :global(.opts) { display: grid; gap: 8px; margin-top: 14px; }
+  #step :global(.opt) { text-align: left; font: 500 1rem var(--sans); padding: 14px 18px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); cursor: pointer; transition: border-color .15s, background .15s; }
+  #step :global(.opt:hover) { border-color: var(--brand); background: var(--surface); }
+  #step :global(.res) { background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: 12px; padding: 22px; }
+  #step :global(.res__lbl) { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 4px; }
+  #step :global(.res__name) { font-family: var(--serif); font-size: 1.5rem; font-weight: 600; color: var(--brand); margin-bottom: 8px; }
+  #step :global(.res__alt) { font-size: .93rem; padding-left: 12px; border-left: 3px solid var(--accent); }
+  #step :global(pre) { margin: 0; background: var(--ink); color: #e6e4f5; padding: 14px 16px; border-radius: 8px; overflow-x: auto; font: .82rem/1.55 var(--mono); }
+  .restart { margin-top: 16px; padding: 9px 16px; font-size: .9rem; }
+  .ss { display: grid; gap: 16px; }
+  .ss small { font-size: .82rem; color: var(--muted); }
+  .ss__out { margin-top: 22px; padding: 22px; border-radius: 12px; background: var(--ink); color: #c9c7dc; }
+  .ss__lbl { font-family: var(--mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; margin: 0; }
+  .ss__n { font-family: var(--serif); font-size: 3rem; font-weight: 600; color: #fff; margin: 4px 0; line-height: 1.1; }
+  .ss__detail { font-family: var(--mono); font-size: .78rem; margin: 0; line-height: 1.6; }
+  .help { display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .help p { font-family: var(--serif); font-size: 1.3rem; color: var(--ink); margin: 0; max-width: 46ch; }
+  @media (max-width: 960px) { .tools-grid { grid-template-columns: 1fr; } }
+</style>

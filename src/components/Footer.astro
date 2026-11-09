@@ -1,0 +1,64 @@
+---
+import { contact, nav, services, whatsapp } from '../data/site.js';
+const year = new Date().getFullYear();
+---
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr__cta">
+      <div>
+        <h2>Un projet, une base de données, une échéance ?</h2>
+        <p>Décrivez-nous votre besoin. Le premier échange est gratuit et sans engagement.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn--accent" href="/contact">Demander un devis</a>
+        <a class="btn btn--light" href={whatsapp()} target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+
+    <div class="ftr__grid">
+      <div class="ftr__about">
+        <p class="ftr__brand">CEBI Stats</p>
+        <p>Cabinet d’Études Biostatistique &amp; Informatique. Analyse de données de santé, collecte, formation et mise en forme, à Abidjan.</p>
+      </div>
+      <div>
+        <p class="ftr__h">Services</p>
+        <ul>{services.map((s) => <li><a href={`/services#${s.id}`}>{s.title}</a></li>)}</ul>
+      </div>
+      <div>
+        <p class="ftr__h">Le cabinet</p>
+        <ul>
+          {nav.map((n) => <li><a href={n.href}>{n.label}</a></li>)}
+          <li><a href="/contact">Contact</a></li>
+          <li><a href={contact.validthese} target="_blank" rel="noopener">ValidThèse ↗</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="ftr__h">Contact</p>
+        <ul>
+          <li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>
+          <li><a href={`tel:+${contact.phoneIntl}`}>{contact.phoneDisplay}</a></li>
+          <li><a href={contact.facebook} target="_blank" rel="noopener">Facebook</a></li>
+          <li>{contact.city}</li>
+        </ul>
+      </div>
+    </div>
+    <p class="ftr__legal">© {year} CEBI Stats. Tous droits réservés.</p>
+  </div>
+</footer>
+
+<style>
+  .ftr { background: var(--ink); color: #b9b7cc; padding: 72px 0 32px; font-size: .95rem; }
+  .ftr a { color: #dedcef; text-decoration: none; }
+  .ftr a:hover { color: #fff; text-decoration: underline; }
+  .ftr__cta { display: flex; justify-content: space-between; align-items: center; gap: 32px; flex-wrap: wrap; padding-bottom: 56px; border-bottom: 1px solid rgba(255,255,255,.1); }
+  .ftr__cta h2 { color: #fff; font-size: clamp(1.6rem, 3vw, 2.2rem); margin-bottom: .3em; }
+  .ftr__cta p { margin: 0; }
+  .ftr__grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px; padding: 56px 0; }
+  .ftr__brand { font-family: var(--serif); font-size: 1.4rem; color: #fff; margin-bottom: .4em; }
+  .ftr__about p:last-child { max-width: 34ch; }
+  .ftr__h { font-family: var(--mono); font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: #f0b46e; }
+  .ftr ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .ftr__legal { margin: 0; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.1); font-size: .85rem; }
+  @media (max-width: 860px) { .ftr__grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 520px) { .ftr__grid { grid-template-columns: 1fr; gap: 32px; } }
+</style>
