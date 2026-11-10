@@ -10,7 +10,7 @@ const fmt = (d: Date) => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 
   title="Blog : guides de biostatistique et de collecte de données"
   description="Guides pratiques en biostatistique, analyse de survie, choix des tests statistiques et collecte de données mobile, pour chercheurs et étudiants en santé."
 >
-  <PageHead eyebrow="Blog" title="Guides pratiques pour chercheurs et étudiants">
+  <PageHead kicker="Blog" title="Guides pratiques pour chercheurs et étudiants">
     Biostatistique, méthodes avancées et outils de collecte, expliqués simplement.
   </PageHead>
 
@@ -25,7 +25,7 @@ const fmt = (d: Date) => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 
             </div>
             <h2>{p.data.title}</h2>
             <p>{p.data.description}</p>
-            <span class="link-arrow">Lire l’article</span>
+            <span class="more">Lire l’article</span>
           </a>
         ))}
       </div>
@@ -34,13 +34,13 @@ const fmt = (d: Date) => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 
 </Base>
 
 <style>
-  .posts { border-top: 1px solid var(--line); }
+  .posts { border-top: 1px solid var(--ink); }
   .post { display: grid; grid-template-columns: 220px 1fr; column-gap: 40px; padding: 32px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--text); }
-  .post:hover h2 { color: var(--brand); }
+  .post:hover h2 { color: var(--navy); }
   .post__meta { grid-row: span 3; display: grid; align-content: start; gap: 6px; font-size: .88rem; color: var(--muted); }
-  .post__cat { font-family: var(--mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .07em; color: var(--accent-700); }
+  .post__cat { font-weight: 600; color: var(--teal-700); }
   .post h2 { font-size: clamp(1.35rem, 2.4vw, 1.7rem); margin-bottom: 8px; transition: color .2s; }
   .post p { color: var(--muted); max-width: 70ch; margin-bottom: 12px; }
-  .post .link-arrow { color: var(--brand); font-size: .95rem; }
+  .post .more { color: var(--navy); font-size: .95rem; }
   @media (max-width: 720px) { .post { grid-template-columns: 1fr; } .post__meta { grid-row: auto; margin-bottom: 8px; } }
 </style>

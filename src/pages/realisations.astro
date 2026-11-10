@@ -7,28 +7,36 @@ const domains = [...new Set(projects.map((p) => p.domain))];
 ---
 <Base
   title="Réalisations : études en santé en Côte d’Ivoire"
-  description="Analyses de survie en oncologie, études pronostiques, enquêtes CAP, études transversales : aperçu des études menées par CEBI Stats dans les CHU et structures de santé de Côte d’Ivoire."
+  description="Analyses de survie en oncologie, études pronostiques, enquêtes CAP, études transversales : les études menées par CEBI Stats avec des équipes hospitalières et des chercheurs en Côte d’Ivoire."
 >
-  <PageHead eyebrow="Réalisations" title="Des études concrètes, dans des contextes variés">
-    Un aperçu des travaux menés avec des médecins, des étudiants et des équipes hospitalières. Les données restent la propriété de nos clients : nous ne présentons que le sujet et les méthodes.
+  <PageHead kicker="Réalisations" title="Des études menées avec des équipes de terrain">
+    Les données restent la propriété de nos clients. Nous présentons le sujet et les méthodes, jamais les résultats non publiés.
   </PageHead>
 
-  <section class="section" style="padding-top:0">
-    <div class="wrap">
-      <div class="filters" role="group" aria-label="Filtrer par spécialité">
-        <button type="button" aria-pressed="true" data-f="*">Toutes <span>{projects.length}</span></button>
-        {domains.map((d) => (
-          <button type="button" aria-pressed="false" data-f={d}>{d} <span>{projects.filter((p) => p.domain === d).length}</span></button>
-        ))}
-      </div>
-      <div class="grid grid-3" id="projects">
-        {projects.map((p) => <ProjectCard project={p} />)}
-      </div>
+  <section class="wrap" style="padding-bottom:96px">
+    <div class="filters" role="group" aria-label="Filtrer par spécialité">
+      <button type="button" aria-pressed="true" data-f="*">Toutes <span>{projects.length}</span></button>
+      {domains.map((d) => (
+        <button type="button" aria-pressed="false" data-f={d}>{d} <span>{projects.filter((p) => p.domain === d).length}</span></button>
+      ))}
+    </div>
+    <div class="grid cards" id="projects">
+      {projects.map((p) => <ProjectCard project={p} />)}
+    </div>
 
-      <div class="similar">
-        <p>Vous préparez une étude dans l’un de ces domaines&nbsp;?</p>
-        <a class="btn btn--primary" href="/contact">Discuter d’un projet similaire</a>
-        <a class="btn btn--ghost" href={whatsapp('Bonjour CEBI Stats, je prépare une étude similaire à vos réalisations :')} target="_blank" rel="noopener">WhatsApp</a>
+    <div class="also">
+      <div>
+        <h2>Tableaux de bord de suivi</h2>
+        <p>Nous concevons aussi des applications de suivi d’enquêtes et d’indicateurs, branchées sur KoboToolbox ou DHIS2.</p>
+        <a class="more" href="/tableaux-de-bord">Voir la démonstration →</a>
+      </div>
+      <div>
+        <h2>Un projet similaire&nbsp;?</h2>
+        <p>Décrivez-nous votre étude : type, effectif, état des données, échéance.</p>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/contact">Demander un devis</a>
+          <a class="btn btn--line" href={whatsapp('Bonjour CEBI Stats, je prépare une étude similaire :')} target="_blank" rel="noopener">WhatsApp</a>
+        </div>
       </div>
     </div>
   </section>
@@ -45,13 +53,17 @@ const domains = [...new Set(projects.map((p) => p.domain))];
 </script>
 
 <style>
-  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
-  .filters button { font: 500 .92rem var(--sans); padding: 9px 15px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
-  .filters button span { font-family: var(--mono); font-size: .74rem; color: var(--muted); }
-  .filters button:hover { border-color: var(--brand); }
-  .filters button[aria-pressed='true'] { background: var(--brand); border-color: var(--brand); color: #fff; }
-  .filters button[aria-pressed='true'] span { color: #cfcaf5; }
+  .filters { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+  .filters button { font: 500 .92rem var(--sans); padding: 8px 14px; border-radius: 4px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; display: inline-flex; gap: 8px; align-items: center; }
+  .filters button span { font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .filters button:hover { border-color: var(--ink); }
+  .filters button[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .filters button[aria-pressed='true'] span { color: #9fb2c4; }
+  .cards { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
   #projects [hidden] { display: none; }
-  .similar { margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
-  .similar p { font-family: var(--serif); font-size: 1.35rem; color: var(--ink); margin: 0 auto 0 0; }
+  .also { margin-top: 80px; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .also > div { background: var(--surface); padding: clamp(24px, 4vw, 40px); }
+  .also h2 { font-size: 1.5rem; }
+  .also p { color: var(--muted); }
+  @media (max-width: 760px) { .also { grid-template-columns: 1fr; } }
 </style>

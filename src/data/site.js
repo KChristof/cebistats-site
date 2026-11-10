@@ -1,9 +1,9 @@
 // Source unique des contenus du site : modifier ici, toutes les pages suivent.
 
 export const contact = {
-  email: 'cebi.stat@yahoo.com',
-  phoneDisplay: '+225 01 41 97 41 32',
-  phoneIntl: '2250141974132',
+  email: 'contact@cebistats.com',
+  phoneDisplay: '+225 01 52 71 48 98',
+  phoneIntl: '2250152714898',
   facebook: 'https://facebook.com/CEBISTATS',
   city: 'Abidjan, Côte d’Ivoire',
   validthese: 'https://validthese.cebistats.com/',
@@ -14,25 +14,26 @@ export const whatsapp = (text = 'Bonjour CEBI Stats, je voudrais des information
 
 export const nav = [
   { href: '/services', label: 'Services' },
+  { href: '/tableaux-de-bord', label: 'Tableaux de bord' },
   { href: '/realisations', label: 'Réalisations' },
   { href: '/outils', label: 'Outils' },
   { href: '/blog', label: 'Blog' },
-  { href: '/a-propos', label: 'À propos' },
+  { href: '/a-propos', label: 'Le cabinet' },
 ];
 
-export const tools = ['R', 'SPSS', 'Stata', 'Epi Info', 'ODK', 'KoboToolbox', 'Excel', 'DHIS2'];
+export const tools = ['R', 'Shiny', 'Stata', 'SPSS', 'Python', 'Epi Info', 'KoboToolbox', 'ODK', 'DHIS2', 'Excel'];
 
 export const services = [
   {
     id: 'biostatistique',
-    num: '01',
-    title: 'Biostatistique & analyse de données',
-    short: 'Analyses descriptives, tests comparatifs, régressions et analyse de survie, interprétées pour votre manuscrit.',
-    lead: 'Le cœur de notre métier : choisir la bonne méthode, l’appliquer correctement et vous rendre des résultats que vous pouvez défendre devant un jury ou un comité de lecture.',
+    title: 'Biostatistique',
+    tagline: 'Analyser',
+    short: 'Tests, régressions, analyse de survie. Des résultats interprétés, prêts pour le manuscrit.',
+    lead: 'Choisir la bonne méthode, l’appliquer correctement, et vous rendre des résultats que vous pouvez défendre devant un jury ou un comité de lecture.',
     methods: [
       'Statistiques descriptives et tableaux de résultats',
       'Tests comparatifs : t de Student, ANOVA, Chi-2, Fisher, Mann-Whitney, Kruskal-Wallis',
-      'Régression linéaire et logistique (uni- et multivariée)',
+      'Régression linéaire, logistique, de Poisson (uni- et multivariée)',
       'Analyse de survie : Kaplan-Meier, log-rank, modèle de Cox',
       'Calcul de taille d’échantillon et de puissance',
       'Plan d’analyse statistique (PAS)',
@@ -41,73 +42,96 @@ export const services = [
       'Rapport d’analyse interprété',
       'Section « Résultats » prête à intégrer',
       'Tableaux et figures aux normes de publication',
-      'Scripts R / Stata / SPSS sur demande',
+      'Scripts R, Stata ou SPSS sur demande',
     ],
     audience: 'Thèses de médecine, pharmacie et odontostomatologie, mémoires, articles scientifiques.',
   },
   {
     id: 'donnees',
-    num: '02',
     title: 'Collecte & gestion de données',
-    short: 'Formulaires mobiles ODK / KoboToolbox, apurement et structuration de vos bases de données.',
-    lead: 'Une analyse ne vaut que ce que valent les données. Nous concevons des outils de collecte qui évitent les erreurs à la source et nous remettons en état les bases existantes.',
+    tagline: 'Collecter',
+    short: 'Formulaires KoboToolbox et ODK, apurement et documentation de vos bases.',
+    lead: 'Une analyse ne vaut que ce que valent les données. Nous concevons des outils de collecte qui évitent les erreurs à la source, et nous remettons en état les bases existantes.',
     methods: [
-      'Conception de formulaires XLSForm (ODK, KoboToolbox)',
-      'Règles de validation, sauts conditionnels, champs obligatoires',
-      'Déploiement sur tablette ou smartphone, collecte hors-ligne',
+      'Formulaires XLSForm (KoboToolbox, ODK) avec contrôles de saisie',
+      'Sauts conditionnels, champs obligatoires, plages de valeurs',
+      'Collecte hors ligne sur tablette ou smartphone',
       'Nettoyage : doublons, valeurs aberrantes, données manquantes',
       'Recodage, fusion de fichiers, dictionnaire des variables',
-      'Contrôle qualité des données de routine (DHIS2)',
+      'Contrôle de cohérence de données de routine',
     ],
     deliverables: [
       'Formulaire testé et déployé',
-      'Base de données propre et documentée',
-      'Journal des corrections effectuées',
+      'Base propre et documentée',
+      'Journal des corrections',
       'Formation des enquêteurs',
     ],
     audience: 'Enquêtes de terrain, études hospitalières, programmes de santé, ONG.',
   },
   {
-    id: 'formation',
-    num: '03',
-    title: 'Formation & logiciels',
-    short: 'Formations sur mesure en statistique, R, SPSS, Excel et bureautique. Installation et maintenance.',
-    lead: 'Nous croyons à l’autonomie de nos clients. Nos formations partent de vos propres données et de vos besoins réels.',
+    id: 'tableaux-de-bord',
+    title: 'Tableaux de bord interactifs',
+    tagline: 'Piloter',
+    short: 'Applications de suivi en ligne, branchées sur vos données, mises à jour sans intervention.',
+    lead: 'Un tableau de bord remplace des dizaines de fichiers Excel envoyés par e-mail. Vos équipes consultent les mêmes chiffres, à jour, filtrés selon leurs besoins.',
     methods: [
-      'Initiation et perfectionnement : R, SPSS, Stata, Epi Info',
+      'Applications R Shiny et tableaux de bord web',
+      'Connexion directe à KoboToolbox, DHIS2, bases SQL ou fichiers Excel',
+      'Suivi de collecte : complétude, objectifs, alertes par enquêteur ou par site',
+      'Indicateurs, cartes, séries temporelles, filtres par période et zone',
+      'Contrôles qualité automatiques des données',
+      'Accès protégé par mot de passe, export Excel et PDF',
+    ],
+    deliverables: [
+      'Application en ligne, accessible sur ordinateur et téléphone',
+      'Mise à jour automatique des données',
+      'Guide d’utilisation et formation',
+      'Maintenance sur devis',
+    ],
+    audience: 'Coordinations d’enquêtes, programmes de santé, ONG, directions et services hospitaliers.',
+  },
+  {
+    id: 'formation',
+    title: 'Formation & logiciels',
+    tagline: 'Transmettre',
+    short: 'Formations sur mesure en R, Stata, SPSS, Excel. Installation et maintenance.',
+    lead: 'L’autonomie de nos clients fait partie du travail. Nos formations partent de vos propres données et de vos besoins réels.',
+    methods: [
+      'Initiation et perfectionnement : R, Stata, SPSS, Epi Info',
       'Excel avancé : tableaux croisés, formules, graphiques',
-      'Bureautique : Word (mise en forme de thèse), PowerPoint',
+      'Word pour la thèse : styles, sommaire, numérotation automatique',
       'Installation et configuration de logiciels',
       'Maintenance informatique',
     ],
     deliverables: [
       'Sessions individuelles ou en groupe',
-      'Supports de cours et exercices',
-      'Accompagnement après la formation',
+      'Supports et exercices sur vos données',
+      'Suivi après la formation',
     ],
     audience: 'Étudiants, équipes de recherche, personnel administratif et de santé.',
   },
   {
     id: 'edition',
-    num: '04',
     title: 'Mise en forme & infographie',
-    short: 'Mise en page de thèses et rapports, graphiques, posters scientifiques et supports visuels.',
+    tagline: 'Présenter',
+    short: 'Mise en page de thèses et rapports, figures, posters et diaporamas de soutenance.',
     lead: 'Un bon résultat mérite une présentation claire. Nous mettons en forme vos documents et produisons des visuels lisibles.',
     methods: [
       'Mise en page de thèses, mémoires et rapports',
-      'Sommaires, listes de tableaux et figures automatiques',
+      'Sommaires, listes de tableaux et de figures automatiques',
       'Graphiques et figures scientifiques',
       'Posters de congrès et diaporamas de soutenance',
-      'Visuels et supports de communication',
     ],
     deliverables: [
-      'Document final au format Word et PDF',
+      'Document final en Word et PDF',
       'Fichiers sources des visuels',
     ],
     audience: 'Soutenances, congrès, rapports institutionnels.',
   },
 ];
 
+// Pour ajouter une étude : copier un bloc. `repo` (facultatif) = lien vers un dépôt
+// GitHub de l'organisation du cabinet, avec données anonymisées.
 export const projects = [
   {
     domain: 'Oncologie',
@@ -128,7 +152,7 @@ export const projects = [
     title: 'Délais de prise en charge des urgences chirurgicales pédiatriques',
     year: '2023',
     place: 'CHU de Cocody',
-    summary: 'Mesure et facteurs associés aux délais de prise en charge.',
+    summary: 'Mesure des délais de prise en charge et facteurs associés.',
     methods: ['Analyses descriptives', 'Tests comparatifs'],
   },
   {
@@ -149,7 +173,7 @@ export const projects = [
     domain: 'Santé au travail',
     title: 'Lésions auditives et nuisances sonores chez les téléopérateurs',
     year: '2010–2020',
-    summary: 'Étude des atteintes auditives liées à l’exposition au bruit.',
+    summary: 'Atteintes auditives liées à l’exposition au bruit.',
     methods: ['Étude longitudinale', 'Audiométrie'],
   },
   {
@@ -171,20 +195,20 @@ export const projects = [
 
 export const steps = [
   {
-    title: 'Vous nous présentez le projet',
-    text: 'Par WhatsApp, e-mail ou formulaire. Un premier échange gratuit et sans engagement pour comprendre votre besoin et l’état de vos données.',
+    title: 'Premier échange',
+    text: 'Par WhatsApp, e-mail ou formulaire. Gratuit et sans engagement : nous regardons votre besoin et l’état de vos données.',
   },
   {
     title: 'Devis et plan d’analyse',
-    text: 'Vous recevez un devis clair. Nous validons ensemble les objectifs, les variables et les méthodes avant de commencer.',
+    text: 'Un devis clair, un calendrier calé sur votre échéance. Objectifs, variables et méthodes sont validés avec vous avant de commencer.',
   },
   {
-    title: 'Analyse et échanges',
-    text: 'Nous traitons les données (R, SPSS, Stata) et vous tenons informé. Chaque choix de méthode est expliqué.',
+    title: 'Analyse',
+    text: 'Traitement dans R, Stata ou SPSS. Chaque choix de méthode est expliqué ; vous êtes tenu informé.',
   },
   {
     title: 'Livraison et explications',
-    text: 'Rapport interprété, tableaux et figures prêts à intégrer. Nous restons disponibles pour vous préparer à la soutenance.',
+    text: 'Rapport interprété, tableaux et figures prêts à intégrer. Nous restons disponibles jusqu’à la soutenance.',
   },
 ];
 
@@ -207,10 +231,10 @@ export const faq = [
   },
   {
     q: 'Mes données restent-elles confidentielles ?',
-    a: 'Oui. Vos données ne sont utilisées que pour votre projet, ne sont jamais partagées et sont supprimées à votre demande en fin de prestation. Nous travaillons de préférence sur des bases anonymisées.',
+    a: 'Oui. Vos données ne servent qu’à votre projet, ne sont jamais partagées et sont supprimées à votre demande en fin de prestation. Nous travaillons de préférence sur des bases anonymisées.',
   },
   {
     q: 'Travaillez-vous à distance ?',
-    a: 'Oui. Nous sommes basés à Abidjan et accompagnons aussi des clients dans toute la Côte d’Ivoire et à l’étranger, par WhatsApp, e-mail et visioconférence.',
+    a: 'Oui. Le cabinet est basé à Abidjan et accompagne des clients dans toute la Côte d’Ivoire et à l’étranger, par WhatsApp, e-mail et visioconférence.',
   },
 ];

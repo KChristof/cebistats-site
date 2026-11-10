@@ -1,13 +1,14 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import SurvivalFigure from '../components/SurvivalFigure.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import Icon from '../components/Icon.astro';
+import HeroBench from '../components/HeroBench.astro';
+import Pipeline from '../components/Pipeline.astro';
+import DemoDashboard from '../components/DemoDashboard.astro';
 import { services, projects, steps, faq, tools, contact, whatsapp } from '../data/site.js';
 
-const icons = ['chart', 'database', 'school', 'pen'];
-const featured = [projects[0], projects[2], projects[4], projects[7]];
-const domains = [...new Set(projects.map((p) => p.domain))];
+const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
+const fmtDate = (d: Date) => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+const topics = projects.map((p) => p.title);
 const faqLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
@@ -15,249 +16,329 @@ const faqLd = {
 };
 ---
 <Base
-  title="CEBI Stats | Biostatistique & analyse de données de santé à Abidjan"
-  description="Cabinet de biostatistique et d’informatique à Abidjan : analyse statistique de thèses, mémoires et articles en santé, collecte ODK/Kobo, nettoyage de données, formations R, SPSS, Stata."
+  title="CEBI Stats | Biostatistique, données et tableaux de bord en santé, Abidjan"
+  description="Cabinet de biostatistique et d’informatique à Abidjan : analyse statistique de thèses et d’articles en santé, collecte KoboToolbox/ODK, tableaux de bord interactifs, formations R, Stata, SPSS."
   jsonLd={faqLd}
 >
-  <!-- HERO -->
-  <section class="hero" id="home">
+  <!-- Accueil -->
+  <section class="hero">
     <div class="wrap hero__grid">
       <div class="hero__copy">
-        <p class="eyebrow">Cabinet d’études · Abidjan</p>
-        <h1>Vos données de santé, analysées avec <em>rigueur</em>.</h1>
-        <p class="lead">
-          CEBI Stats accompagne étudiants, chercheurs et structures de santé de la collecte des données
-          jusqu’aux résultats prêts à publier : méthodes justifiées, résultats interprétés, explications jusqu’à la soutenance.
+        <p class="hero__place">Cabinet d’études · Abidjan</p>
+        <h1>Des chiffres justes pour décider en santé.</h1>
+        <p class="hero__lead">
+          Analyse statistique de thèses et d’articles, collecte de données sur le terrain,
+          tableaux de bord de suivi. Nous prenons vos données là où elles sont et nous vous rendons
+          des résultats que vous pouvez défendre.
         </p>
         <div class="btn-row">
-          <a class="btn btn--primary" href="/contact">Demander un devis gratuit <Icon name="arrow" size={18} /></a>
-          <a class="btn btn--ghost" href="/realisations">Voir nos réalisations</a>
+          <a class="btn btn--primary" href="/contact">Demander un devis</a>
+          <a class="btn btn--line" href="/realisations">Voir les études menées</a>
         </div>
-        <ul class="hero__proof">
-          <li><Icon name="check" size={18} /> Premier échange gratuit</li>
-          <li><Icon name="check" size={18} /> Tarifs étudiants</li>
-          <li><Icon name="check" size={18} /> Données confidentielles</li>
+        <p class="hero__note">Premier échange gratuit · tarifs étudiants · données confidentielles</p>
+      </div>
+      <div class="hero__bench">
+        <HeroBench />
+      </div>
+    </div>
+  </section>
+
+  <!-- Bandeau des sujets étudiés -->
+  <div class="ticker" aria-label="Quelques sujets d’études">
+    <div class="ticker__track">
+      {[0, 1].map((k) => (
+        <ul aria-hidden={k === 1 ? 'true' : undefined}>
+          {topics.map((t) => <li>{t}</li>)}
         </ul>
-      </div>
-      <div class="hero__fig">
-        <SurvivalFigure />
-      </div>
+      ))}
     </div>
+  </div>
+
+  <!-- Services -->
+  <section class="section svc" id="services">
     <div class="wrap">
-      <div class="tools" aria-label="Logiciels maîtrisés">
-        <span class="tools__lbl">Nous travaillons avec</span>
-        <ul>{tools.map((t) => <li>{t}</li>)}</ul>
+      <div class="svc__head">
+        <h2>Cinq métiers autour de la donnée de santé</h2>
+        <p class="lead">Vous pouvez nous confier une étape précise ou tout le projet, du formulaire au rapport.</p>
+      </div>
+      <div class="svc__grid" data-svc>
+        <ul class="svc__list" role="tablist" aria-label="Services">
+          {services.map((s, i) => (
+            <li>
+              <button role="tab" aria-selected={i === 0 ? 'true' : 'false'} aria-controls={`svc-${s.id}`} id={`svct-${s.id}`} tabindex={i === 0 ? 0 : -1}>
+                <span class="svc__verb">{s.tagline}</span>
+                <span class="svc__name">{s.title}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+        <div class="svc__panels">
+          {services.map((s, i) => (
+            <div class="svc__panel" role="tabpanel" id={`svc-${s.id}`} aria-labelledby={`svct-${s.id}`} hidden={i !== 0}>
+              <p class="svc__lead">{s.lead}</p>
+              <ul class="svc__methods">{s.methods.slice(0, 5).map((m) => <li>{m}</li>)}</ul>
+              <p class="svc__aud">{s.audience}</p>
+              <a class="more" href={`/services#${s.id}`}>Détail et livrables →</a>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- SERVICES -->
-  <section class="section section--white" id="services">
+  <Pipeline />
+
+  <!-- Tableaux de bord -->
+  <section class="section section--navy dashsec">
     <div class="wrap">
-      <div class="section-head section-head--row">
+      <div class="dashsec__head">
         <div>
-          <p class="eyebrow">Ce que nous faisons</p>
-          <h2>Toute la chaîne de la donnée, sous un même toit</h2>
-          <p class="lead">Du formulaire de collecte au document final, sans perte d’information entre les étapes.</p>
+          <p class="kicker">Tableaux de bord interactifs</p>
+          <h2>Vos indicateurs à jour, sans ressaisie</h2>
         </div>
-        <a class="link-arrow" href="/services">Détail des services</a>
+        <p class="lead">Nous construisons des applications de suivi branchées sur vos sources (KoboToolbox, DHIS2, bases SQL, Excel). Essayez les filtres ci-dessous.</p>
       </div>
-      <div class="grid grid-4">
-        {services.map((s, i) => (
-          <a class="svc" href={`/services#${s.id}`} data-reveal>
-            <span class="svc__ico"><Icon name={icons[i]} /></span>
-            <span class="svc__num">{s.num}</span>
-            <h3>{s.title}</h3>
-            <p>{s.short}</p>
-            <span class="link-arrow">En savoir plus</span>
-          </a>
-        ))}
+      <DemoDashboard />
+      <div class="dashsec__foot">
+        <ul class="dashsec__pts">
+          <li><strong>Suivi de collecte</strong> par enquêteur, par site, avec alertes</li>
+          <li><strong>Contrôles qualité</strong> automatiques des données de routine</li>
+          <li><strong>Accès protégé</strong>, sur ordinateur comme sur téléphone</li>
+        </ul>
+        <a class="btn btn--teal" href="/tableaux-de-bord">En savoir plus</a>
       </div>
     </div>
   </section>
 
-  <!-- POUR QUI -->
-  <section class="section">
+  <!-- Réalisations -->
+  <section class="section" id="portfolio">
     <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Pour qui</p>
-        <h2>Un accompagnement adapté à votre situation</h2>
+      <div class="work__head">
+        <h2>Quelques études menées</h2>
+        <a class="more" href="/realisations">Toutes les réalisations →</a>
       </div>
-      <div class="grid grid-3">
-        <div class="who" data-reveal>
-          <Icon name="student" />
-          <h3>Étudiants en santé</h3>
-          <p>Thèse de médecine, pharmacie, odontostomatologie ou mémoire de master. Nous partons de votre protocole et de votre base, et nous vous expliquons chaque résultat pour la soutenance.</p>
-          <a class="link-arrow" href={contact.validthese} target="_blank" rel="noopener">Découvrir ValidThèse</a>
-        </div>
-        <div class="who" data-reveal>
-          <Icon name="flask" />
-          <h3>Chercheurs &amp; enseignants</h3>
-          <p>Articles scientifiques, plans d’analyse, analyses multivariées et de survie, réponses aux relecteurs. Tableaux et figures aux normes des revues.</p>
-          <a class="link-arrow" href="/services#biostatistique">Analyses avancées</a>
-        </div>
-        <div class="who" data-reveal>
-          <Icon name="building" />
-          <h3>Structures de santé &amp; ONG</h3>
-          <p>Enquêtes de terrain, outils de collecte mobile, qualité des données de routine, formation des équipes et rapports d’activité.</p>
-          <a class="link-arrow" href="/services#donnees">Collecte &amp; données</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROCESSUS -->
-  <section class="section section--ink">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">Comment ça marche</p>
-        <h2>Un processus simple et transparent</h2>
-        <p class="lead" style="color:#b9b7cc">Vous savez à chaque étape ce qui est fait, pourquoi, et quand vous recevrez la suite.</p>
-      </div>
-      <ol class="steps">
-        {steps.map((s, i) => (
+      <ol class="work">
+        {projects.slice(0, 6).map((p) => (
           <li data-reveal>
-            <span class="steps__n">{String(i + 1).padStart(2, '0')}</span>
-            <h3>{s.title}</h3>
-            <p>{s.text}</p>
+            <span class="work__dom">{p.domain}</span>
+            <span class="work__title">{p.title}{p.place && <small>{p.place}</small>}</span>
+            <span class="work__m">{p.methods.join(' · ')}</span>
+            <span class="work__y">{p.year ?? ''}</span>
           </li>
         ))}
       </ol>
     </div>
   </section>
 
-  <!-- REALISATIONS -->
-  <section class="section" id="portfolio">
-    <div class="wrap">
-      <div class="section-head section-head--row">
-        <div>
-          <p class="eyebrow">Réalisations</p>
-          <h2>Des études menées dans les hôpitaux de Côte d’Ivoire</h2>
-          <p class="lead">{projects.length} études dans {domains.length} spécialités : oncologie, pédiatrie, neurologie, cardiologie, santé publique…</p>
-        </div>
-        <a class="link-arrow" href="/realisations">Toutes les réalisations</a>
-      </div>
-      <div class="grid grid-4">
-        {featured.map((p) => <ProjectCard project={p} />)}
-      </div>
-    </div>
-  </section>
-
-  <!-- VALIDTHESE -->
-  <section class="section--tight">
-    <div class="wrap">
-      <div class="vt" data-reveal>
-        <div>
-          <p class="eyebrow">Plateforme dédiée</p>
-          <h2>Étudiant en médecine, pharmacie ou odontostomatologie&nbsp;?</h2>
-          <p>ValidThèse, notre service spécialisé pour l’analyse des données de thèse en sciences de la santé : méthodes adaptées, délais maîtrisés, résultats expliqués.</p>
-        </div>
-        <a class="btn btn--accent" href={contact.validthese} target="_blank" rel="noopener">Visiter ValidThèse ↗</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- OUTILS -->
+  <!-- Démarche -->
   <section class="section section--white">
-    <div class="wrap tools-teaser">
+    <div class="wrap how">
+      <div class="how__intro">
+        <h2>Comment se passe une collaboration</h2>
+        <p class="lead">Pas de boîte noire : vous savez ce qui est fait, pourquoi, et quand vous recevez la suite.</p>
+        <a class="btn btn--wa" href={whatsapp('Bonjour CEBI Stats, je voudrais présenter mon projet :')} target="_blank" rel="noopener">Présenter mon projet sur WhatsApp</a>
+      </div>
+      <ol class="how__steps">
+        {steps.map((s, i) => (
+          <li data-reveal style={`transition-delay:${i * 80}ms`}>
+            <span class="how__n">{i + 1}</span>
+            <div><h3>{s.title}</h3><p>{s.text}</p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ValidThèse -->
+  <section class="vt">
+    <div class="wrap vt__in">
+      <p class="vt__q">Étudiant en médecine, pharmacie ou odontostomatologie&nbsp;?</p>
+      <p class="vt__t">ValidThèse, notre service dédié à l’analyse des données de thèse en sciences de la santé.</p>
+      <a class="btn btn--light" href={contact.validthese} target="_blank" rel="noopener">Aller sur ValidThèse ↗</a>
+    </div>
+  </section>
+
+  <!-- Blog + outils -->
+  <section class="section">
+    <div class="wrap read">
       <div>
-        <p class="eyebrow">Outils gratuits</p>
-        <h2>Quel test statistique choisir&nbsp;? Quelle taille d’échantillon&nbsp;?</h2>
-        <p class="lead">Deux outils en accès libre pour préparer votre protocole : un guide pas à pas pour choisir le bon test, et un calculateur de taille d’échantillon.</p>
-        <a class="btn btn--primary" href="/outils">Utiliser les outils</a>
+        <div class="work__head">
+          <h2>À lire</h2>
+          <a class="more" href="/blog">Tous les articles →</a>
+        </div>
+        <ul class="posts">
+          {posts.map((p) => (
+            <li>
+              <a href={`/blog/${p.id}`}>
+                <span class="posts__cat">{p.data.category}</span>
+                <span class="posts__t">{p.data.title}</span>
+                <span class="posts__d">{fmtDate(p.data.date)} · {p.data.readTime}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
-      <div class="formula" aria-hidden="true">
-        <p class="formula__lbl">Taille d’échantillon (proportion)</p>
-        <p class="formula__eq">n = <span class="frac"><span>Z<sup>2</sup> · p · (1 − p)</span><span>d<sup>2</sup></span></span></p>
-        <p class="formula__ex">Z = 1,96 · p = 0,30 · d = 0,05 → <strong>n = 323</strong></p>
-      </div>
+      <aside class="toolbox">
+        <p class="kicker">Outils gratuits</p>
+        <h3>Préparez votre protocole</h3>
+        <p>Trouvez le test statistique adapté en quelques questions, ou calculez la taille d’échantillon de votre étude.</p>
+        <div class="toolbox__eq" aria-hidden="true">n = Z² · p(1 − p) / d²</div>
+        <a class="btn btn--primary" href="/outils">Ouvrir les outils</a>
+        <p class="toolbox__stack">{tools.join(' · ')}</p>
+      </aside>
     </div>
   </section>
 
   <!-- FAQ -->
-  <section class="section" id="faq">
+  <section class="section section--white" id="faq">
     <div class="wrap faq-grid">
       <div>
-        <p class="eyebrow">Questions fréquentes</p>
-        <h2>Avant de démarrer</h2>
-        <p class="lead">Vous ne trouvez pas la réponse&nbsp;? Écrivez-nous, nous répondons rapidement.</p>
-        <a class="btn btn--wa" href={whatsapp('Bonjour CEBI Stats, j’ai une question :')} target="_blank" rel="noopener">Poser une question sur WhatsApp</a>
+        <h2>Questions fréquentes</h2>
+        <p class="lead">Une autre question&nbsp;? Écrivez à <a href={`mailto:${contact.email}`}>{contact.email}</a>.</p>
       </div>
       <div class="faq">
-        {faq.map((f) => (
-          <details>
-            <summary>{f.q}</summary>
-            <p>{f.a}</p>
-          </details>
-        ))}
+        {faq.map((f) => (<details><summary>{f.q}</summary><p>{f.a}</p></details>))}
       </div>
     </div>
   </section>
 </Base>
 
+<script>
+  const root = document.querySelector<HTMLElement>('[data-svc]');
+  if (root) {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[role=tab]')];
+    const pans = [...root.querySelectorAll<HTMLElement>('[role=tabpanel]')];
+    const show = (i: number, focus = false) => {
+      tabs.forEach((t, k) => { t.setAttribute('aria-selected', String(k === i)); t.tabIndex = k === i ? 0 : -1; });
+      pans.forEach((p, k) => { p.hidden = k !== i; });
+      if (focus) tabs[i].focus();
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => {
+        show(i);
+        if (matchMedia('(max-width: 1000px)').matches) pans[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+      t.addEventListener('mouseenter', () => { if (matchMedia('(hover: hover)').matches) show(i); });
+      t.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); show((i + 1) % tabs.length, true); }
+        if (e.key === 'ArrowUp') { e.preventDefault(); show((i - 1 + tabs.length) % tabs.length, true); }
+      });
+    });
+  }
+</script>
+
 <style>
-  .hero { padding: clamp(40px, 6vw, 80px) 0 0; overflow: hidden; }
-  .hero__grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
-  .hero h1 em { font-style: italic; color: var(--brand); }
-  .hero .lead { margin-bottom: 28px; }
-  .hero__proof { list-style: none; padding: 0; margin: 28px 0 0; display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: .92rem; color: var(--muted); }
-  .hero__proof li { display: inline-flex; align-items: center; gap: 6px; }
-  .hero__proof svg { color: var(--success); }
-  .hero__fig { position: relative; }
-  .hero__fig::before { content: ''; position: absolute; inset: -8% -12% -10% 8%; background: radial-gradient(closest-side, var(--brand-50), transparent); z-index: -1; }
+  /* Accueil */
+  .hero { padding: clamp(36px, 6vw, 72px) 0 clamp(48px, 6vw, 80px); position: relative; overflow: hidden; }
+  .hero::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 48px 48px; opacity: .45;
+    mask-image: radial-gradient(ellipse 70% 60% at 75% 45%, #000 20%, transparent 75%);
+  }
+  .hero__grid { display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+  .hero__place { font-weight: 600; color: var(--teal-700); margin-bottom: 18px; }
+  .hero h1 { max-width: 12ch; }
+  .hero__lead { font-size: 1.18rem; color: var(--muted); max-width: 48ch; margin-bottom: 30px; }
+  .hero__note { margin: 22px 0 0; font-size: .9rem; color: var(--muted); }
+  @keyframes up { from { opacity: 0; transform: translateY(10px); } }
 
-  .tools { display: flex; align-items: center; gap: 12px 28px; flex-wrap: wrap; margin-top: clamp(48px, 6vw, 72px); padding: 22px 0; border-top: 1px solid var(--line); }
-  .tools__lbl { font-family: var(--mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
-  .tools ul { display: flex; flex-wrap: wrap; gap: 8px 28px; list-style: none; margin: 0; padding: 0; }
-  .tools li { font-family: var(--serif); font-weight: 600; font-size: 1.1rem; color: var(--ink); opacity: .75; }
+  /* Bandeau */
+  .ticker { background: var(--navy); color: #cfe0ec; overflow: hidden; padding: 16px 0; }
+  .ticker__track { display: flex; width: max-content; animation: scroll 70s linear infinite; }
+  .ticker:hover .ticker__track { animation-play-state: paused; }
+  .ticker ul { display: flex; list-style: none; margin: 0; padding: 0; }
+  .ticker li { white-space: nowrap; padding: 0 28px; font-weight: 500; position: relative; }
+  .ticker li::after { content: ''; position: absolute; right: -3px; top: 50%; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); transform: translateY(-50%); }
+  @keyframes scroll { to { transform: translateX(-50%); } }
 
-  .svc { display: flex; flex-direction: column; gap: 10px; padding: 28px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); text-decoration: none; color: var(--text); position: relative; transition: border-color .2s, background .2s, transform .2s; }
-  .svc:hover { border-color: var(--brand); background: var(--surface); transform: translateY(-3px); color: var(--text); }
-  .svc__ico { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--brand); color: #fff; }
-  .svc__num { position: absolute; top: 28px; right: 28px; font-family: var(--mono); font-size: .8rem; color: var(--muted); }
-  .svc h3 { margin: 8px 0 0; font-size: 1.2rem; }
-  .svc p { margin: 0; font-size: .95rem; color: var(--muted); flex: 1; }
-  .svc .link-arrow { font-size: .92rem; color: var(--brand); }
+  /* Services */
+  .svc__head { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: end; margin-bottom: 48px; }
+  .svc__head h2 { margin: 0; max-width: 16ch; }
+  .svc__head .lead { margin: 0; }
+  .svc__grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(24px, 5vw, 72px); align-items: start; }
+  .svc__list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--ink); }
+  .svc__list button {
+    width: 100%; text-align: left; display: grid; grid-template-columns: 120px 1fr; align-items: baseline; gap: 12px;
+    padding: 20px 0; background: none; border: 0; border-bottom: 1px solid var(--line); cursor: pointer; color: var(--muted);
+    transition: color .2s, box-shadow .2s;
+  }
+  .svc__verb { font-size: .9rem; font-weight: 600; color: var(--teal-700); }
+  .svc__name { font-family: var(--display); font-stretch: 110%; font-weight: 700; font-size: clamp(1.3rem, 2.5vw, 1.9rem); letter-spacing: -.02em; line-height: 1.15; }
+  .svc__list button[aria-selected='true'] { color: var(--ink); box-shadow: inset 0 -3px 0 var(--teal); }
+  .svc__list button:hover { color: var(--ink); }
+  .svc__panels { position: sticky; top: 110px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: clamp(22px, 3vw, 36px); }
+  .svc__panel { animation: up .4s both; }
+  .svc__lead { font-size: 1.12rem; color: var(--ink); }
+  .svc__methods { list-style: none; padding: 0; margin: 0 0 20px; }
+  .svc__methods li { padding: 9px 0 9px 22px; border-bottom: 1px solid #edf1f4; position: relative; font-size: .97rem; }
+  .svc__methods li::before { content: ''; position: absolute; left: 2px; top: 17px; width: 8px; height: 8px; background: var(--teal); }
+  .svc__aud { font-size: .92rem; color: var(--muted); }
 
-  .who { padding: 32px 0 0; border-top: 2px solid var(--ink); }
-  .who > svg { color: var(--accent-700); margin-bottom: 14px; }
-  .who p { color: var(--muted); }
+  /* Tableaux de bord */
+  .dashsec__head { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: end; margin-bottom: 36px; }
+  .dashsec__head h2 { margin: 0; }
+  .dashsec__head .lead { margin: 0; }
+  .dashsec__foot { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; margin-top: 32px; }
+  .dashsec__pts { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px 32px; }
+  .dashsec__pts li { max-width: 30ch; }
 
-  .steps { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; counter-reset: s; }
-  .steps li { padding: 28px 28px 8px 0; border-top: 1px solid rgba(255,255,255,.18); position: relative; }
-  .steps li::before { content: ''; position: absolute; top: -5px; left: 0; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
-  .steps__n { font-family: var(--mono); font-size: .8rem; color: #f0b46e; }
-  .steps h3 { margin: 10px 0 8px; font-size: 1.2rem; }
-  .steps p { font-size: .95rem; margin: 0; }
+  /* Réalisations */
+  .work__head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+  .work__head h2 { margin: 0; }
+  .work { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--ink); }
+  .work li { display: grid; grid-template-columns: 160px 1fr 260px 90px; gap: 20px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid var(--line); transition: background .2s; }
+  .work li:hover { background: var(--surface); }
+  .work__dom { font-weight: 600; color: var(--teal-700); font-size: .92rem; }
+  .work__title { font-family: var(--display); font-stretch: 104%; font-weight: 600; font-size: 1.15rem; color: var(--ink); line-height: 1.3; }
+  .work__title small { display: block; font-family: var(--sans); font-weight: 400; font-size: .86rem; color: var(--muted); margin-top: 3px; }
+  .work__m { font-size: .9rem; color: var(--muted); }
+  .work__y { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
 
-  .vt { display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap; padding: clamp(28px, 4vw, 48px); border-radius: 20px; background: var(--brand); color: #dcd9f3; position: relative; overflow: hidden; }
-  .vt::after { content: ''; position: absolute; right: -60px; bottom: -80px; width: 260px; height: 260px; border-radius: 50%; border: 40px solid rgba(255,255,255,.06); }
-  .vt > div { max-width: 640px; position: relative; z-index: 1; }
-  .vt h2 { color: #fff; font-size: clamp(1.5rem, 2.6vw, 2rem); }
-  .vt .eyebrow { color: #f0b46e; }
-  .vt p:last-child { margin: 0; }
-  .vt .btn { position: relative; z-index: 1; }
+  /* Démarche */
+  .how { display: grid; grid-template-columns: 1fr 1.3fr; gap: clamp(32px, 6vw, 96px); align-items: start; }
+  .how__intro { position: sticky; top: 110px; }
+  .how__steps { list-style: none; padding: 0; margin: 0; }
+  .how__steps li { display: grid; grid-template-columns: 64px 1fr; gap: 20px; padding: 28px 0; border-bottom: 1px solid var(--line); }
+  .how__steps li:first-child { padding-top: 0; }
+  .how__n { font-family: var(--display); font-stretch: 115%; font-weight: 800; font-size: 2.6rem; line-height: 1; color: var(--teal); }
+  .how__steps h3 { margin-bottom: 6px; }
+  .how__steps p { margin: 0; color: var(--muted); }
 
-  .tools-teaser { display: grid; grid-template-columns: 1.2fr 1fr; gap: 48px; align-items: center; }
-  .formula { border: 1px dashed var(--brand-100); background: var(--brand-50); border-radius: 18px; padding: 32px; text-align: center; }
-  .formula__lbl { font-family: var(--mono); font-size: .74rem; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
-  .formula__eq { font-family: var(--serif); font-size: clamp(1.4rem, 3vw, 2rem); color: var(--ink); display: flex; justify-content: center; align-items: center; gap: 12px; margin: 16px 0; }
-  .frac { display: inline-grid; text-align: center; }
-  .frac span:first-child { border-bottom: 1.5px solid var(--ink); padding: 0 6px 4px; }
-  .frac span:last-child { padding-top: 4px; }
-  .formula__ex { font-family: var(--mono); font-size: .85rem; margin: 0; color: var(--muted); }
-  .formula__ex strong { color: var(--brand); }
+  /* ValidThèse */
+  .vt { background: var(--teal-700); color: #e2f5f4; }
+  .vt__in { display: grid; grid-template-columns: 1fr 1.2fr auto; gap: 28px; align-items: center; padding-top: 40px; padding-bottom: 40px; }
+  .vt__q { font-family: var(--display); font-stretch: 106%; font-weight: 700; font-size: clamp(1.3rem, 2.2vw, 1.7rem); color: #fff; margin: 0; line-height: 1.2; }
+  .vt__t { margin: 0; }
+
+  /* Lecture */
+  .read { display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: start; }
+  .posts { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--ink); }
+  .posts a { display: grid; gap: 4px; padding: 20px 0; border-bottom: 1px solid var(--line); text-decoration: none; }
+  .posts__cat { font-size: .85rem; font-weight: 600; color: var(--teal-700); }
+  .posts__t { font-family: var(--display); font-stretch: 104%; font-weight: 600; font-size: 1.25rem; color: var(--ink); line-height: 1.25; }
+  .posts a:hover .posts__t { color: var(--navy-700); text-decoration: underline; text-decoration-thickness: 1px; }
+  .posts__d { font-size: .85rem; color: var(--muted); }
+  .toolbox { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 30px; }
+  .toolbox p { color: var(--muted); }
+  .toolbox__eq { font-family: Georgia, 'Times New Roman', serif; font-style: italic; font-size: 1.35rem; color: var(--navy); padding: 16px 0; margin-bottom: 20px; border-block: 1px dashed var(--line); text-align: center; }
+  .toolbox__stack { margin: 22px 0 0; font-size: .82rem; }
 
   .faq-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
-  .faq-grid > div:first-child { position: sticky; top: 100px; }
 
-  @media (max-width: 960px) {
-    .hero__grid, .tools-teaser, .faq-grid { grid-template-columns: 1fr; }
-    .faq-grid > div:first-child { position: static; }
-    .steps { grid-template-columns: 1fr 1fr; row-gap: 16px; }
+  @media (max-width: 1000px) {
+    .hero__grid, .svc__grid, .how, .read, .faq-grid { grid-template-columns: 1fr; }
+    .svc__head, .dashsec__head { grid-template-columns: 1fr; gap: 12px; }
+    .svc__panels, .how__intro { position: static; }
+    .work li { grid-template-columns: 1fr 70px; gap: 4px 16px; }
+    .work__dom { grid-column: 1 / -1; }
+    .work__m { grid-column: 1; }
+    .work__y { grid-row: 2; grid-column: 2; }
+    .vt__in { grid-template-columns: 1fr; gap: 12px; }
+    .vt__in .btn { justify-self: start; }
   }
   @media (max-width: 560px) {
-    .steps { grid-template-columns: 1fr; }
+    .svc__list button { grid-template-columns: 1fr; gap: 2px; }
     .btn-row .btn { flex: 1 1 100%; }
   }
 </style>
