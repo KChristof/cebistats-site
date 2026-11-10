@@ -103,10 +103,26 @@ const steps = [
       dots.forEach((d) => d.classList.toggle('is-active', d.dataset.dot === n));
     };
     set('0');
+    // Grand écran : l'illustration suit le défilement. Mobile : elle défile seule, et un toucher sur une étape l'affiche.
+    const mobile = matchMedia('(max-width: 900px)');
     const io = new IntersectionObserver((entries) => {
+      if (mobile.matches) return;
       entries.forEach((e) => { if (e.isIntersecting) set((e.target as HTMLElement).dataset.step!); });
     }, { rootMargin: '-45% 0px -45% 0px' });
     steps.forEach((s) => io.observe(s));
+
+    let paused = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let visible = false;
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0.3 }).observe(fig);
+    window.setInterval(() => {
+      if (!mobile.matches || paused || !visible) return;
+      set(String((Number(fig.dataset.active) + 1) % steps.length));
+    }, 3500);
+    steps.forEach((s) => s.addEventListener('click', () => {
+      if (!mobile.matches) return;
+      paused = true;
+      set(s.dataset.step!);
+    }));
   }
 </script>
 
@@ -161,8 +177,15 @@ const steps = [
 
   @media (max-width: 900px) {
     .pipe__grid { grid-template-columns: 1fr; gap: 0; }
-    .pipe__stick { grid-row: 1; top: 82px; z-index: 2; background: var(--bg); padding: 8px 0 12px; }
+    .pipe__stick { position: static; grid-row: 1; padding: 0 0 24px; }
     .pipe__fig { aspect-ratio: 4 / 2.9; max-width: 460px; margin: 0 auto; }
-    .pipe__steps li, .pipe__steps li:first-child { min-height: 52vh; padding-top: 24px; justify-content: flex-start; }
+    .pipe__steps li, .pipe__steps li:first-child {
+      min-height: 0; justify-content: flex-start; padding: 14px 0 14px 18px; opacity: 1; cursor: pointer;
+      border-left: 3px solid var(--line); transition: border-color .3s;
+    }
+    .pipe__steps li.is-active { border-left-color: var(--teal); }
+    .pipe__k { margin-bottom: 4px; }
+    .pipe__steps h3 { font-size: 1.25rem; margin-bottom: 4px; }
+    .pipe__steps p { font-size: 1rem; margin: 0; }
   }
 </style>

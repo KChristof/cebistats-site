@@ -4,11 +4,11 @@ import PageHead from '../components/PageHead.astro';
 import { services, whatsapp } from '../data/site.js';
 ---
 <Base
-  title="Services : biostatistique, collecte de données, tableaux de bord, formation"
-  description="Analyse statistique de thèses et d’articles (régression, analyse de survie, Cox), formulaires KoboToolbox/ODK, nettoyage de données, tableaux de bord interactifs, formations R, Stata, SPSS."
+  title="Services : biostatistique, collecte de données, tableaux de bord, formation, sites internet"
+  description="Analyse statistique de thèses et d’articles (régression, analyse de survie, Cox), formulaires KoboToolbox/ODK, nettoyage de données, tableaux de bord interactifs, formations R, Stata, SPSS, conception de sites internet."
 >
   <PageHead kicker="Services" title="Ce que nous faisons, et ce que vous recevez">
-    Vous pouvez faire appel à nous pour une étape précise ou pour tout le projet, de l’outil de collecte au document final.
+    Vous pouvez faire appel à nous pour une étape précise ou pour tout le projet, de l’outil de collecte jusqu’au site en ligne.
   </PageHead>
 
   <div class="wrap layout">
@@ -52,8 +52,8 @@ import { services, whatsapp } from '../data/site.js';
   .layout { display: grid; grid-template-columns: 240px 1fr; gap: clamp(32px, 6vw, 96px); padding-bottom: 96px; }
   .toc { position: sticky; top: 110px; align-self: start; }
   .toc ul { list-style: none; padding: 0; margin: 0 0 24px; border-left: 2px solid var(--line); }
-  .toc a { display: block; padding: 8px 0 8px 16px; margin-left: -2px; border-left: 2px solid transparent; text-decoration: none; color: var(--muted); font-weight: 500; }
-  .toc a:hover { color: var(--ink); border-left-color: var(--teal); }
+  .toc ul a { display: block; padding: 8px 0 8px 16px; margin-left: -2px; border-left: 2px solid transparent; text-decoration: none; color: var(--muted); font-weight: 500; }
+  .toc ul a:hover { color: var(--ink); border-left-color: var(--teal); }
   .svc { padding-bottom: 64px; margin-bottom: 64px; border-bottom: 1px solid var(--line); scroll-margin-top: 100px; }
   .svc__verb { font-weight: 600; color: var(--teal-700); margin-bottom: 6px; }
   .svc__lead { font-size: 1.2rem; color: var(--ink); max-width: 58ch; margin-bottom: 32px; }
@@ -71,7 +71,7 @@ import { services, whatsapp } from '../data/site.js';
     .layout { grid-template-columns: 1fr; }
     .toc { position: static; }
     .toc ul { display: flex; flex-wrap: wrap; border: 0; gap: 4px 16px; }
-    .toc a { padding: 4px 0; border: 0; margin: 0; text-decoration: underline; }
+    .toc ul a { padding: 4px 0; border: 0; margin: 0; text-decoration: underline; }
     .svc__cols { grid-template-columns: 1fr; gap: 24px; }
   }
 </style>
