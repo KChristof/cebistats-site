@@ -42,7 +42,10 @@ const isActive = (href: string) => path === href || path.startsWith(href + '/');
 </script>
 
 <style>
-  .hdr { position: sticky; top: 0; z-index: 50; background: rgba(245, 247, 248, .9); backdrop-filter: blur(12px); border-bottom: 1px solid transparent; transition: border-color .2s; }
+  /* Le flou est porté par un pseudo-élément : un backdrop-filter sur .hdr ferait de l'en-tête
+     le bloc de référence du menu mobile (position: fixed), qui serait alors réduit à quelques pixels. */
+  .hdr { position: sticky; top: 0; z-index: 50; border-bottom: 1px solid transparent; transition: border-color .2s; }
+  .hdr::before { content: ''; position: absolute; inset: 0; z-index: -1; background: rgba(245, 247, 248, .9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
   .hdr.is-scrolled { border-bottom-color: var(--line); }
   .hdr__in { display: flex; align-items: center; gap: 24px; height: 74px; }
   .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; flex: none; }
