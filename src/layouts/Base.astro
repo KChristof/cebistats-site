@@ -16,6 +16,15 @@ const fullTitle = title.includes('CEBI Stats') ? title : `${title} | CEBI Stats`
 const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site);
 const ogImage = new URL(image, Astro.site);
 
+// Nom du site affiché par Google au-dessus du lien (données structurées WebSite)
+const site = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "CEBI Stats",
+  alternateName: "Cabinet d’Études Biostatistique & Informatique",
+  url: "https://cebistats.com/",
+};
+
 const org = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
@@ -37,8 +46,11 @@ const org = {
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/logo-cb.png" />
+    <link rel="icon" href="/favicon-48.png" type="image/png" sizes="48x48" />
+    <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
     <meta name="theme-color" content="#0b3a63" />
 
     <meta property="og:type" content={type} />
@@ -56,6 +68,7 @@ const org = {
 
     <script is:inline>document.documentElement.classList.add('js');</script>
     <script type="application/ld+json" set:html={JSON.stringify(org)} />
+    {Astro.url.pathname === "/" && <script type="application/ld+json" set:html={JSON.stringify(site)} />}
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
